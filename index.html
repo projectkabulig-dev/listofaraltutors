@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>External ARAL Tutor Registration | SDO Romblon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c2733;
+    --muted: #5b6b7a;
+    --paper: #f3f6f9;
+    --card: #ffffff;
+    --line: #c9d4de;
+    --brand: #0f4c75;
+    --brand-dark: #0a3555;
+    --warn-bg: #fff3cf;
+    --warn-line: #d9a21b;
+    --warn-ink: #5c4300;
+    --ok: #1f7a4d;
+    --err: #b3261e;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+  header {
+    background: var(--brand);
+    color: #fff;
+    padding: 28px 20px 26px;
+  }
+  header .wrap { max-width: 640px; margin: 0 auto; }
+  header p { margin: 0 0 4px; font-size: 0.95rem; opacity: 0.9; }
+  header h1 { margin: 0; font-size: 1.65rem; line-height: 1.2; }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 20px;
+  }
+  .intro { margin: 0 0 20px; color: var(--muted); }
+  .field { margin-bottom: 20px; }
+  label, .label { display: block; font-weight: 700; margin-bottom: 6px; }
+  .hint { display: block; font-weight: 400; color: var(--muted); font-size: 0.9rem; }
+  input[type="text"] {
+    width: 100%;
+    font: inherit;
+    padding: 12px 12px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--ink);
+  }
+  input[readonly] { background: #eef2f6; color: var(--ink); }
+  input:focus-visible, button:focus-visible, .opt:focus-visible, input[type="checkbox"]:focus-visible {
+    outline: 3px solid #f2b431;
+    outline-offset: 2px;
+  }
+  input[aria-invalid="true"] { border-color: var(--err); }
+  .error { color: var(--err); font-size: 0.9rem; margin-top: 4px; min-height: 0; }
+
+  /* searchable school picker */
+  .combo { position: relative; }
+  .combo input { padding-right: 40px; }
+  .combo .chev {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    pointer-events: none; color: var(--muted); font-size: 0.8rem;
+  }
+  .listbox {
+    position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+    z-index: 10;
+    max-height: 280px; overflow-y: auto;
+    background: #fff;
+    border: 1.5px solid var(--brand);
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(15, 40, 60, 0.18);
+    margin: 0; padding: 4px 0; list-style: none;
+  }
+  .listbox[hidden] { display: none; }
+  .opt { padding: 9px 12px; cursor: pointer; }
+  .opt .d { display: block; font-size: 0.85rem; color: var(--muted); }
+  .opt:hover, .opt.active { background: #e3eef7; }
+  .opt[aria-selected="true"] { font-weight: 700; }
+  .none { padding: 10px 12px; color: var(--muted); }
+
+  /* approval warning */
+  .warning {
+    background: var(--warn-bg);
+    border: 1.5px solid var(--warn-line);
+    border-left-width: 6px;
+    border-radius: 8px;
+    padding: 14px 14px 12px;
+    color: var(--warn-ink);
+    margin-bottom: 20px;
+  }
+  .warning[hidden] { display: none; }
+  .warning strong { display: block; margin-bottom: 4px; }
+  .warning p { margin: 0 0 10px; }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 700; margin: 0; cursor: pointer; }
+  .check input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--brand); }
+
+  button.primary {
+    width: 100%;
+    font: inherit; font-weight: 700;
+    padding: 14px;
+    border: 0; border-radius: 8px;
+    background: var(--brand); color: #fff;
+    cursor: pointer;
+  }
+  button.primary:hover:not(:disabled) { background: var(--brand-dark); }
+  button.primary:disabled { background: #9db3c4; cursor: not-allowed; }
+  .status { margin-top: 12px; font-size: 0.95rem; }
+  .status.bad { color: var(--err); }
+
+  /* success */
+  .done[hidden], form[hidden] { display: none; }
+  .done h2 { margin: 0 0 6px; color: var(--ok); font-size: 1.35rem; }
+  .done dl { margin: 16px 0 20px; }
+  .done dt { font-size: 0.85rem; color: var(--muted); }
+  .done dd { margin: 0 0 10px; font-weight: 700; }
+  button.secondary {
+    font: inherit; font-weight: 700;
+    padding: 12px 16px;
+    border: 1.5px solid var(--brand); border-radius: 8px;
+    background: #fff; color: var(--brand); cursor: pointer;
+  }
+  footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 0 16px 32px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p>Schools Division Office of Romblon</p>
+    <h1>External ARAL Tutor Registration</h1>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+
+    <form id="form" novalidate>
+      <p class="intro">Ilagay ang buong pangalan at piliin ang paaralang itinalaga sa iyo.</p>
+
+      <div class="field">
+        <label for="fullName">Full name
+          <span class="hint">First name, Middle name, Last name</span>
+        </label>
+        <input type="text" id="fullName" name="fullName" autocomplete="name" aria-describedby="nameErr">
+        <div class="error" id="nameErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="schoolInput" id="schoolLabel">School assignment
+          <span class="hint">Mag-type ng bahagi ng pangalan para mahanap, tapos pumili sa listahan.</span>
+        </label>
+        <div class="combo">
+          <input type="text" id="schoolInput" role="combobox" aria-autocomplete="list"
+                 aria-expanded="false" aria-controls="schoolList" aria-describedby="schoolErr"
+                 autocomplete="off" placeholder="Hanapin ang school">
+          <span class="chev" aria-hidden="true">&#9660;</span>
+          <ul class="listbox" id="schoolList" role="listbox" aria-labelledby="schoolLabel" hidden></ul>
+        </div>
+        <div class="error" id="schoolErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="district">District
+          <span class="hint">Awtomatikong lalabas kapag napili na ang school.</span>
+        </label>
+        <input type="text" id="district" readonly tabindex="-1" placeholder="Hihintayin ang pagpili ng school">
+      </div>
+
+      <div class="warning" id="warning" hidden>
+        <strong>Paalala bago mag-submit</strong>
+        <p>Dapat nakausap mo na ang School Head at inaprubahan na ng paaralan ang iyong assignment dito.
+           (You must have talked with the School Head, and the school must have approved your assignment.)</p>
+        <label class="check" for="approved">
+          <input type="checkbox" id="approved">
+          <span>Nakausap ko na ang School Head at aprubado na ng paaralan ang aking assignment.</span>
+        </label>
+        <div class="error" id="approveErr" role="alert"></div>
+      </div>
+
+      <button type="submit" class="primary" id="submitBtn" disabled>Submit registration</button>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="done" id="done" hidden aria-live="polite">
+      <h2>Natanggap na ang registration mo</h2>
+      <dl>
+        <dt>Full name</dt><dd id="doneName"></dd>
+        <dt>School assignment</dt><dd id="doneSchool"></dd>
+        <dt>District</dt><dd id="doneDistrict"></dd>
+      </dl>
+      <button type="button" class="secondary" id="again">Mag-register ng isa pang tutor</button>
+    </section>
+
+  </div>
+</main>
+
+<footer>Curriculum Implementation Division, SDO Romblon</footer>
+
+<script src="schools.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // I-paste dito ang Web app URL mula sa Google Apps Script (tingnan ang gabay).
+  var SCRIPT_URL = "PASTE_WEB_APP_URL_HERE";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $("form"), nameEl = $("fullName"), input = $("schoolInput"), list = $("schoolList");
+  var districtEl = $("district"), warning = $("warning"), approved = $("approved");
+  var submitBtn = $("submitBtn"), statusEl = $("status");
+
+  // Alphabetical, by district then school, so the list is easy to scan.
+  var data = SCHOOLS.slice().sort(function (a, b) {
+    return a.school.localeCompare(b.school) || a.district.localeCompare(b.district);
+  });
+
+  var selected = null;     // chosen entry from data
+  var activeIdx = -1;      // keyboard highlight
+  var shown = [];          // entries currently listed
+  var sending = false;
+
+  /* ---------- school picker ---------- */
+  function renderList(query) {
+    var q = (query || "").trim().toLowerCase();
+    shown = data.filter(function (s) {
+      return !q || s.school.toLowerCase().indexOf(q) !== -1 || s.district.toLowerCase().indexOf(q) !== -1;
+    });
+    list.innerHTML = "";
+    if (!shown.length) {
+      var n = document.createElement("li");
+      n.className = "none"; n.textContent = "Walang nahanap. Subukan ang ibang salita.";
+      n.setAttribute("role", "presentation");
+      list.appendChild(n);
+    }
+    shown.forEach(function (s, i) {
+      var li = document.createElement("li");
+      li.className = "opt"; li.id = "opt-" + i;
+      li.setAttribute("role", "option");
+      li.setAttribute("aria-selected", selected === s ? "true" : "false");
+      var t = document.createElement("span"); t.textContent = s.school;
+      var d = document.createElement("span"); d.className = "d"; d.textContent = s.district;
+      li.appendChild(t); li.appendChild(d);
+      li.addEventListener("mousedown", function (e) { e.preventDefault(); choose(s); });
+      list.appendChild(li);
+    });
+    activeIdx = -1;
+  }
+
+  function openList() {
+    renderList(selected ? "" : input.value);
+    list.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+  }
+  function closeList() {
+    list.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
+  }
+  function highlight(i) {
+    var opts = list.querySelectorAll(".opt");
+    if (!opts.length) return;
+    activeIdx = (i + opts.length) % opts.length;
+    opts.forEach(function (o, k) { o.classList.toggle("active", k === activeIdx); });
+    input.setAttribute("aria-activedescendant", opts[activeIdx].id);
+    opts[activeIdx].scrollIntoView({ block: "nearest" });
+  }
+
+  function choose(s) {
+    selected = s;
+    input.value = s.school;
+    districtEl.value = s.district;
+    warning.hidden = false;
+    $("schoolErr").textContent = "";
+    input.removeAttribute("aria-invalid");
+    closeList();
+    updateSubmit();
+  }
+  function clearChoice() {
+    selected = null;
+    districtEl.value = "";
+    warning.hidden = true;
+    approved.checked = false;
+    $("approveErr").textContent = "";
+    updateSubmit();
+  }
+
+  input.addEventListener("focus", function () {
+    if (selected) input.select();
+    openList();
+  });
+  input.addEventListener("click", function () { if (list.hidden) openList(); });
+  input.addEventListener("input", function () {
+    if (selected) clearChoice();   // typing again means choosing again
+    openList();
+  });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) openList(); highlight(activeIdx + 1); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); if (list.hidden) openList(); highlight(activeIdx - 1); }
+    else if (e.key === "Enter") {
+      if (!list.hidden && activeIdx >= 0 && shown[activeIdx]) { e.preventDefault(); choose(shown[activeIdx]); }
+      else if (!list.hidden) { e.preventDefault(); }
+    }
+    else if (e.key === "Escape") { closeList(); }
+  });
+  // Typed text that was not picked from the list is not accepted.
+  input.addEventListener("blur", function () {
+    closeList();
+    if (!selected) input.value = "";
+  });
+
+  /* ---------- validation ---------- */
+  function nameOk() {
+    var v = nameEl.value.trim().replace(/\s+/g, " ");
+    var words = v.split(" ").filter(function (w) { return /[A-Za-z\u00C0-\u024F]/.test(w); });
+    return words.length >= 2;
+  }
+  function updateSubmit() {
+    submitBtn.disabled = sending || !(selected && approved.checked);
+  }
+  approved.addEventListener("change", function () {
+    if (approved.checked) $("approveErr").textContent = "";
+    updateSubmit();
+  });
+  nameEl.addEventListener("input", function () {
+    if (nameOk()) { $("nameErr").textContent = ""; nameEl.removeAttribute("aria-invalid"); }
+  });
+
+  /* ---------- submit ---------- */
+  function setStatus(msg, bad) {
+    statusEl.textContent = msg || "";
+    statusEl.className = "status" + (bad ? " bad" : "");
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (sending) return;
+
+    var problem = false;
+    if (!nameOk()) {
+      $("nameErr").textContent = "Ilagay ang buong pangalan (first at last name man lang).";
+      nameEl.setAttribute("aria-invalid", "true");
+      nameEl.focus(); problem = true;
+    }
+    if (!selected) {
+      $("schoolErr").textContent = "Pumili ng school mula sa listahan.";
+      input.setAttribute("aria-invalid", "true");
+      if (!problem) input.focus();
+      problem = true;
+    }
+    if (selected && !approved.checked) {
+      $("approveErr").textContent = "I-check ang kahon para makapag-submit.";
+      problem = true;
+    }
+    if (problem) return;
+
+    if (SCRIPT_URL.indexOf("PASTE_WEB_APP_URL") === 0) {
+      setStatus("Hindi pa nakakabit ang Google Sheet. Ilagay muna ang Web app URL sa index.html.", true);
+      return;
+    }
+
+    var payload = {
+      fullName: nameEl.value.trim().replace(/\s+/g, " "),
+      school: selected.school,
+      district: selected.district,
+      approvalConfirmed: true
+    };
+
+    sending = true; updateSubmit();
+    submitBtn.textContent = "Sine-save...";
+    setStatus("");
+
+    // text/plain avoids a CORS preflight, which Apps Script does not answer.
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (!res || !res.ok) throw new Error((res && res.error) || "Hindi na-save.");
+      $("doneName").textContent = payload.fullName;
+      $("doneSchool").textContent = payload.school;
+      $("doneDistrict").textContent = payload.district;
+      form.hidden = true; $("done").hidden = false;
+      $("done").querySelector("h2").setAttribute("tabindex", "-1");
+      $("done").querySelector("h2").focus();
+    })
+    .catch(function () {
+      setStatus("Hindi na-save ang registration. Tingnan ang internet at subukan ulit. Kung hindi pa rin, ipaalam sa CID.", true);
+    })
+    .then(function () {
+      sending = false;
+      submitBtn.textContent = "Submit registration";
+      updateSubmit();
+    });
+  });
+
+  $("again").addEventListener("click", function () {
+    form.reset();
+    clearChoice();
+    input.value = "";
+    setStatus("");
+    $("done").hidden = true; form.hidden = false;
+    nameEl.focus();
+  });
+})();
+</script>
+</body>
+</html>
