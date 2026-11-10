@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>External ARAL Tutor Registration | SDO Romblon</title>
+<title>External ARAL Tutors | SDO Romblon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
     --err: #b3261e;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0;
@@ -31,119 +32,111 @@
     background: var(--paper);
     line-height: 1.5;
   }
-  header {
-    background: var(--brand);
-    color: #fff;
-    padding: 28px 20px 26px;
-  }
+  header { background: var(--brand); color: #fff; padding: 28px 20px 26px; }
   header .wrap { max-width: 640px; margin: 0 auto; }
   header p { margin: 0 0 4px; font-size: 0.95rem; opacity: 0.9; }
   header h1 { margin: 0; font-size: 1.65rem; line-height: 1.2; }
   main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
-  .card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 22px 20px;
-  }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 22px 20px; }
+  h2 { margin: 0 0 6px; font-size: 1.35rem; line-height: 1.25; }
+  h2:focus { outline: none; }
   .intro { margin: 0 0 20px; color: var(--muted); }
+  .back { display: inline-block; margin-bottom: 14px; color: var(--brand); font-weight: 700; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+
+  /* landing */
+  .tiles { display: grid; gap: 14px; margin-top: 18px; }
+  .tile {
+    display: block; text-decoration: none; color: var(--ink);
+    border: 2px solid var(--brand); border-radius: 10px; padding: 18px 18px 16px; background: #fff;
+  }
+  .tile strong { display: block; font-size: 1.2rem; color: var(--brand); margin-bottom: 2px; }
+  .tile span { color: var(--muted); }
+  .tile:hover { background: #e3eef7; }
+
   .field { margin-bottom: 20px; }
   label, .label { display: block; font-weight: 700; margin-bottom: 6px; }
   .hint { display: block; font-weight: 400; color: var(--muted); font-size: 0.9rem; }
-  input[type="text"] {
-    width: 100%;
-    font: inherit;
-    padding: 12px 12px;
-    border: 1.5px solid var(--line);
-    border-radius: 8px;
-    background: #fff;
-    color: var(--ink);
+  input[type="text"], select {
+    width: 100%; font: inherit; padding: 12px; color: var(--ink);
+    border: 1.5px solid var(--line); border-radius: 8px; background: #fff;
   }
-  input[readonly] { background: #eef2f6; color: var(--ink); }
-  input:focus-visible, button:focus-visible, .opt:focus-visible, input[type="checkbox"]:focus-visible {
-    outline: 3px solid #f2b431;
-    outline-offset: 2px;
+  input[readonly] { background: #eef2f6; }
+  input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible,
+  .opt:focus-visible, input[type="checkbox"]:focus-visible {
+    outline: 3px solid #f2b431; outline-offset: 2px;
   }
-  input[aria-invalid="true"] { border-color: var(--err); }
-  .error { color: var(--err); font-size: 0.9rem; margin-top: 4px; min-height: 0; }
+  input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--err); }
+  .error { color: var(--err); font-size: 0.9rem; margin-top: 4px; }
 
-  /* sex choice */
-  .choices { display: flex; gap: 12px; flex-wrap: wrap; border: 0; margin: 0; padding: 0; }
-  .choices legend { font-weight: 700; margin-bottom: 6px; padding: 0; }
-  .choice {
-    flex: 1 1 140px; display: flex; align-items: center; gap: 10px;
-    padding: 12px; margin: 0; font-weight: 400;
-    border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; background: #fff;
-  }
-  .choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
-  .choice:has(input:checked) { border-color: var(--brand); background: #e3eef7; font-weight: 700; }
-  .choice:has(input:focus-visible) { outline: 3px solid #f2b431; outline-offset: 2px; }
-
-  /* searchable school picker */
+  /* searchable picker */
   .combo { position: relative; }
   .combo input { padding-right: 40px; }
-  .combo .chev {
-    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
-    pointer-events: none; color: var(--muted); font-size: 0.8rem;
-  }
+  .combo .chev { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--muted); font-size: 0.8rem; }
   .listbox {
-    position: absolute; left: 0; right: 0; top: calc(100% + 4px);
-    z-index: 10;
-    max-height: 280px; overflow-y: auto;
-    background: #fff;
-    border: 1.5px solid var(--brand);
-    border-radius: 8px;
-    box-shadow: 0 6px 18px rgba(15, 40, 60, 0.18);
-    margin: 0; padding: 4px 0; list-style: none;
+    position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 10;
+    max-height: 280px; overflow-y: auto; background: #fff;
+    border: 1.5px solid var(--brand); border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(15, 40, 60, 0.18); margin: 0; padding: 4px 0; list-style: none;
   }
-  .listbox[hidden] { display: none; }
   .opt { padding: 9px 12px; cursor: pointer; }
   .opt .d { display: block; font-size: 0.85rem; color: var(--muted); }
   .opt:hover, .opt.active { background: #e3eef7; }
   .opt[aria-selected="true"] { font-weight: 700; }
   .none { padding: 10px 12px; color: var(--muted); }
 
-  /* approval warning */
-  .warning {
-    background: var(--warn-bg);
-    border: 1.5px solid var(--warn-line);
-    border-left-width: 6px;
-    border-radius: 8px;
-    padding: 14px 14px 12px;
-    color: var(--warn-ink);
-    margin-bottom: 20px;
+  /* sex choice */
+  .choices { display: flex; gap: 12px; flex-wrap: wrap; border: 0; margin: 0; padding: 0; }
+  .choices legend { font-weight: 700; margin-bottom: 6px; padding: 0; }
+  .choice {
+    flex: 1 1 140px; display: flex; align-items: center; gap: 10px; padding: 12px; margin: 0; font-weight: 400;
+    border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; background: #fff;
   }
-  .warning[hidden] { display: none; }
+  .choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
+  .choice:has(input:checked) { border-color: var(--brand); background: #e3eef7; font-weight: 700; }
+  .choice:has(input:focus-visible) { outline: 3px solid #f2b431; outline-offset: 2px; }
+
+  /* notices */
+  .warning {
+    background: var(--warn-bg); border: 1.5px solid var(--warn-line); border-left-width: 6px;
+    border-radius: 8px; padding: 14px 14px 12px; color: var(--warn-ink); margin-bottom: 20px;
+  }
   .warning strong { display: block; margin-bottom: 4px; }
   .warning p { margin: 0 0 10px; }
+  .warning p:last-child { margin-bottom: 0; }
   .check { display: flex; gap: 10px; align-items: flex-start; font-weight: 700; margin: 0; cursor: pointer; }
   .check input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--brand); }
+  .infobox { background: #eef2f6; border-radius: 8px; padding: 12px 14px; margin-top: 10px; }
+  .infobox small { display: block; color: var(--muted); }
+  .infobox b { display: block; }
+  .meetingbox { background: #e3eef7; border-left: 6px solid var(--brand); border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-weight: 700; }
 
   button.primary {
-    width: 100%;
-    font: inherit; font-weight: 700;
-    padding: 14px;
-    border: 0; border-radius: 8px;
-    background: var(--brand); color: #fff;
-    cursor: pointer;
+    width: 100%; font: inherit; font-weight: 700; padding: 14px; border: 0; border-radius: 8px;
+    background: var(--brand); color: #fff; cursor: pointer;
   }
   button.primary:hover:not(:disabled) { background: var(--brand-dark); }
   button.primary:disabled { background: #9db3c4; cursor: not-allowed; }
+  button.secondary {
+    font: inherit; font-weight: 700; padding: 12px 16px; border: 1.5px solid var(--brand);
+    border-radius: 8px; background: #fff; color: var(--brand); cursor: pointer;
+  }
+  button.linkbtn {
+    font: inherit; background: none; border: 0; padding: 4px 0; color: var(--brand);
+    text-decoration: underline; cursor: pointer; text-align: left;
+  }
   .status { margin-top: 12px; font-size: 0.95rem; }
   .status.bad { color: var(--err); }
+  .loading { color: var(--muted); padding: 8px 0; }
 
-  /* success */
-  .done[hidden], form[hidden] { display: none; }
-  .done h2 { margin: 0 0 6px; color: var(--ok); font-size: 1.35rem; }
+  .teach-group { margin: 0 0 12px; }
+  .teach-group .sub { font-weight: 700; margin: 0 0 6px; }
+  .done h2 { color: var(--ok); }
+  .done h2.dup { color: var(--brand); }
   .done dl { margin: 16px 0 20px; }
   .done dt { font-size: 0.85rem; color: var(--muted); }
   .done dd { margin: 0 0 10px; font-weight: 700; }
-  button.secondary {
-    font: inherit; font-weight: 700;
-    padding: 12px 16px;
-    border: 1.5px solid var(--brand); border-radius: 8px;
-    background: #fff; color: var(--brand); cursor: pointer;
-  }
+  .done .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 0 16px 32px; }
 </style>
 </head>
@@ -152,14 +145,34 @@
 <header>
   <div class="wrap">
     <p>Schools Division Office of Romblon</p>
-    <h1>External ARAL Tutor Registration</h1>
+    <h1>External ARAL Tutors</h1>
   </div>
 </header>
 
 <main>
-  <div class="card">
+
+  <!-- ================= LANDING ================= -->
+  <section class="card" id="view-home">
+    <h2 tabindex="-1">Ano ang gagawin mo?</h2>
+    <p class="intro">Pumili ng isa.</p>
+    <div class="tiles">
+      <a class="tile" href="#registration">
+        <strong>Registration</strong>
+        <span>Para sa external ARAL tutor na magrerehistro ng pangalan at school assignment.</span>
+      </a>
+      <a class="tile" href="#attendance">
+        <strong>Attendance in the meeting</strong>
+        <span>Para sa virtual orientation o meeting. Pipiliin ang petsa ng meeting at ang pangalan mo.</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= REGISTRATION ================= -->
+  <section class="card" id="view-register" hidden>
+    <a class="back" href="#">&larr; Bumalik sa simula</a>
 
     <form id="form" novalidate>
+      <h2 tabindex="-1">Registration</h2>
       <p class="intro">Ilagay ang buong pangalan at piliin ang paaralang itinalaga sa iyo.</p>
 
       <div class="field">
@@ -216,17 +229,164 @@
     </form>
 
     <section class="done" id="done" hidden aria-live="polite">
-      <h2>Natanggap na ang registration mo</h2>
+      <h2 tabindex="-1">Natanggap na ang registration mo</h2>
       <dl>
         <dt>Full name</dt><dd id="doneName"></dd>
         <dt>Sex</dt><dd id="doneSex"></dd>
         <dt>School assignment</dt><dd id="doneSchool"></dd>
         <dt>District</dt><dd id="doneDistrict"></dd>
       </dl>
-      <button type="button" class="secondary" id="again">Mag-register ng isa pang tutor</button>
+      <div class="actions">
+        <button type="button" class="secondary" id="again">Mag-register ng isa pang tutor</button>
+        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+      </div>
     </section>
+  </section>
 
-  </div>
+  <!-- ================= ATTENDANCE ================= -->
+  <section class="card" id="view-attendance" hidden>
+    <a class="back" href="#">&larr; Bumalik sa simula</a>
+    <h2 tabindex="-1" id="attTitle">Attendance in the meeting</h2>
+
+    <div class="loading" id="attLoading">Kinukuha ang listahan...</div>
+
+    <div id="attLoadErr" hidden>
+      <p class="status bad">Hindi makuha ang listahan. Tingnan ang internet at subukan ulit.</p>
+      <button type="button" class="secondary" id="attRetry">Subukan ulit</button>
+    </div>
+
+    <div id="attNone" hidden>
+      <div class="warning">
+        <strong>Walang bukas na meeting ngayon</strong>
+        <p>Hintayin ang anunsyo ng CID kung kailan magbubukas ang attendance.</p>
+      </div>
+    </div>
+
+    <form id="attForm" novalidate hidden>
+      <p class="intro">Piliin ang petsa ng meeting at ang pangalan mo.</p>
+
+      <div class="field">
+        <label for="meetSel">Petsa ng meeting</label>
+        <select id="meetSel" aria-describedby="meetErr"></select>
+        <div class="meetingbox" id="meetTitle" hidden></div>
+        <div class="error" id="meetErr" role="alert"></div>
+      </div>
+
+      <!-- nakarehistro -->
+      <div id="listedBlock">
+        <div class="field">
+          <label for="tutorInput" id="tutorLabel">Pangalan mo
+            <span class="hint">Mag-type ng bahagi ng pangalan para mahanap, tapos pumili sa listahan.</span>
+          </label>
+          <div class="combo">
+            <input type="text" id="tutorInput" role="combobox" aria-autocomplete="list"
+                   aria-expanded="false" aria-controls="tutorList" aria-describedby="tutorErr"
+                   autocomplete="off" placeholder="Hanapin ang pangalan mo">
+            <span class="chev" aria-hidden="true">&#9660;</span>
+            <ul class="listbox" id="tutorList" role="listbox" aria-labelledby="tutorLabel" hidden></ul>
+          </div>
+          <div class="error" id="tutorErr" role="alert"></div>
+          <div class="infobox" id="tutorInfo" hidden>
+            <small>School assignment</small><b id="tiSchool"></b>
+            <small style="margin-top:6px">District</small><b id="tiDistrict"></b>
+          </div>
+        </div>
+        <button type="button" class="linkbtn" id="toManual">Wala pa ang pangalan ko sa listahan</button>
+      </div>
+
+      <!-- wala pa sa listahan -->
+      <div id="manualBlock" hidden>
+        <div class="warning">
+          <strong>Wala pa sa listahan?</strong>
+          <p>Mairerekord pa rin ang attendance mo. Pero kailangan mo ring mag-register sa
+             <a href="#registration">Registration</a> pagkatapos.</p>
+        </div>
+
+        <div class="field">
+          <label for="attName">Full name
+            <span class="hint">First name, Middle name, Last name</span>
+          </label>
+          <input type="text" id="attName" autocomplete="name" aria-describedby="attNameErr">
+          <div class="error" id="attNameErr" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <fieldset class="choices" aria-describedby="attSexErr">
+            <legend>Sex</legend>
+            <label class="choice"><input type="radio" name="asex" value="Male"> Male (Lalaki)</label>
+            <label class="choice"><input type="radio" name="asex" value="Female"> Female (Babae)</label>
+          </fieldset>
+          <div class="error" id="attSexErr" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="attSchoolInput" id="attSchoolLabel">School assignment
+            <span class="hint">Mag-type ng bahagi ng pangalan para mahanap, tapos pumili sa listahan.</span>
+          </label>
+          <div class="combo">
+            <input type="text" id="attSchoolInput" role="combobox" aria-autocomplete="list"
+                   aria-expanded="false" aria-controls="attSchoolList" aria-describedby="attSchoolErr"
+                   autocomplete="off" placeholder="Hanapin ang school">
+            <span class="chev" aria-hidden="true">&#9660;</span>
+            <ul class="listbox" id="attSchoolList" role="listbox" aria-labelledby="attSchoolLabel" hidden></ul>
+          </div>
+          <div class="error" id="attSchoolErr" role="alert"></div>
+        </div>
+
+        <div class="field">
+          <label for="attDistrict">District
+            <span class="hint">Awtomatikong lalabas kapag napili na ang school.</span>
+          </label>
+          <input type="text" id="attDistrict" readonly tabindex="-1" placeholder="Hihintayin ang pagpili ng school">
+        </div>
+
+        <button type="button" class="linkbtn" id="toListed">Nasa listahan ako, piliin ang pangalan ko</button>
+      </div>
+
+      <div class="field" style="margin-top:20px">
+        <fieldset class="choices" style="display:block" aria-describedby="teachErr">
+          <legend>Ano ang tuturuan mo?
+            <span class="hint">Piliin lahat ng tumutugma. Kahit isa ay kailangan.</span>
+          </legend>
+          <div class="teach-group">
+            <p class="sub">Reading</p>
+            <div class="choices">
+              <label class="choice"><input type="checkbox" name="teach" value="re"> Elementary</label>
+              <label class="choice"><input type="checkbox" name="teach" value="rh"> High School</label>
+            </div>
+          </div>
+          <div class="teach-group">
+            <p class="sub">Math</p>
+            <div class="choices">
+              <label class="choice"><input type="checkbox" name="teach" value="me"> Elementary</label>
+              <label class="choice"><input type="checkbox" name="teach" value="mh"> High School</label>
+            </div>
+          </div>
+        </fieldset>
+        <div class="error" id="teachErr" role="alert"></div>
+      </div>
+
+      <button type="submit" class="primary" id="attSubmit">Submit attendance</button>
+      <div class="status" id="attStatus" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="done" id="attDone" hidden aria-live="polite">
+      <h2 tabindex="-1" id="attDoneTitle">Naitala na ang attendance mo</h2>
+      <p id="attDoneNote" class="intro" hidden></p>
+      <dl>
+        <dt>Meeting</dt><dd id="adMeeting"></dd>
+        <dt>Full name</dt><dd id="adName"></dd>
+        <dt>School assignment</dt><dd id="adSchool"></dd>
+        <dt>District</dt><dd id="adDistrict"></dd>
+        <div id="adTeachRow"><dt>Tuturuan</dt><dd id="adTeach"></dd></div>
+      </dl>
+      <div class="actions">
+        <button type="button" class="secondary" id="attAgain">Mag-record para sa ibang tao</button>
+        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+      </div>
+    </section>
+  </section>
+
 </main>
 
 <footer>Curriculum Implementation Division, SDO Romblon</footer>
@@ -236,134 +396,193 @@
 (function () {
   "use strict";
 
-  // I-paste dito ang Web app URL mula sa Google Apps Script (tingnan ang gabay).
+  // Web app URL mula sa Google Apps Script
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwO3MqeFTIY-tiVGG_4Q2KTl4O-TQ7LCZXO-Up1-Up1uKzJT6ZZD_9dMma-BwPuAQTu/exec";
 
   var $ = function (id) { return document.getElementById(id); };
-  var form = $("form"), nameEl = $("fullName"), input = $("schoolInput"), list = $("schoolList");
-  var districtEl = $("district"), warning = $("warning"), approved = $("approved");
-  var submitBtn = $("submitBtn"), statusEl = $("status");
-
-  // Alphabetical, by district then school, so the list is easy to scan.
-  var data = SCHOOLS.slice().sort(function (a, b) {
+  var schools = SCHOOLS.slice().sort(function (a, b) {
     return a.school.localeCompare(b.school) || a.district.localeCompare(b.district);
   });
 
-  var selected = null;     // chosen entry from data
-  var activeIdx = -1;      // keyboard highlight
-  var shown = [];          // entries currently listed
-  var sending = false;
+  /* =============== shared helpers =============== */
 
-  /* ---------- school picker ---------- */
-  function renderList(query) {
-    var q = (query || "").trim().toLowerCase();
-    shown = data.filter(function (s) {
-      return !q || s.school.toLowerCase().indexOf(q) !== -1 || s.district.toLowerCase().indexOf(q) !== -1;
-    });
-    list.innerHTML = "";
-    if (!shown.length) {
-      var n = document.createElement("li");
-      n.className = "none"; n.textContent = "Walang nahanap. Subukan ang ibang salita.";
-      n.setAttribute("role", "presentation");
-      list.appendChild(n);
-    }
-    shown.forEach(function (s, i) {
-      var li = document.createElement("li");
-      li.className = "opt"; li.id = "opt-" + i;
-      li.setAttribute("role", "option");
-      li.setAttribute("aria-selected", selected === s ? "true" : "false");
-      var t = document.createElement("span"); t.textContent = s.school;
-      var d = document.createElement("span"); d.className = "d"; d.textContent = s.district;
-      li.appendChild(t); li.appendChild(d);
-      li.addEventListener("mousedown", function (e) { e.preventDefault(); choose(s); });
-      list.appendChild(li);
-    });
-    activeIdx = -1;
-  }
-
-  function openList() {
-    renderList(selected ? "" : input.value);
-    list.hidden = false;
-    input.setAttribute("aria-expanded", "true");
-  }
-  function closeList() {
-    list.hidden = true;
-    input.setAttribute("aria-expanded", "false");
-    input.removeAttribute("aria-activedescendant");
-  }
-  function highlight(i) {
-    var opts = list.querySelectorAll(".opt");
-    if (!opts.length) return;
-    activeIdx = (i + opts.length) % opts.length;
-    opts.forEach(function (o, k) { o.classList.toggle("active", k === activeIdx); });
-    input.setAttribute("aria-activedescendant", opts[activeIdx].id);
-    opts[activeIdx].scrollIntoView({ block: "nearest" });
-  }
-
-  function choose(s) {
-    selected = s;
-    input.value = s.school;
-    districtEl.value = s.district;
-    warning.hidden = false;
-    $("schoolErr").textContent = "";
-    input.removeAttribute("aria-invalid");
-    closeList();
-    updateSubmit();
-  }
-  function clearChoice() {
-    selected = null;
-    districtEl.value = "";
-    warning.hidden = true;
-    approved.checked = false;
-    $("approveErr").textContent = "";
-    updateSubmit();
-  }
-
-  input.addEventListener("focus", function () {
-    if (selected) input.select();
-    openList();
-  });
-  input.addEventListener("click", function () { if (list.hidden) openList(); });
-  input.addEventListener("input", function () {
-    if (selected) clearChoice();   // typing again means choosing again
-    openList();
-  });
-  input.addEventListener("keydown", function (e) {
-    if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) openList(); highlight(activeIdx + 1); }
-    else if (e.key === "ArrowUp") { e.preventDefault(); if (list.hidden) openList(); highlight(activeIdx - 1); }
-    else if (e.key === "Enter") {
-      if (!list.hidden && activeIdx >= 0 && shown[activeIdx]) { e.preventDefault(); choose(shown[activeIdx]); }
-      else if (!list.hidden) { e.preventDefault(); }
-    }
-    else if (e.key === "Escape") { closeList(); }
-  });
-  // Typed text that was not picked from the list is not accepted.
-  input.addEventListener("blur", function () {
-    closeList();
-    if (!selected) input.value = "";
-  });
-
-  /* ---------- validation ---------- */
-  function nameOk() {
-    var v = nameEl.value.trim().replace(/\s+/g, " ");
+  function nameOk(value) {
+    var v = String(value || "").trim().replace(/\s+/g, " ");
     var words = v.split(" ").filter(function (w) { return /[A-Za-z\u00C0-\u024F]/.test(w); });
     return words.length >= 2;
   }
-  function updateSubmit() {
-    submitBtn.disabled = sending || !(selected && approved.checked);
+  function cleanName(value) { return String(value || "").trim().replace(/\s+/g, " "); }
+
+  function postJSON(payload) {
+    // text/plain avoids a CORS preflight, which Apps Script does not answer.
+    return fetch(SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(function (r) { return r.json(); });
   }
+  function getAction(action) {
+    return fetch(SCRIPT_URL + "?action=" + action + "&t=" + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error("bad response");
+        return res;
+      });
+  }
+
+  function fmtDate(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+    if (!m) return iso || "";
+    var d = new Date(+m[1], +m[2] - 1, +m[3]);
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear() + " (" + days[d.getDay()] + ")";
+  }
+
+  /* =============== searchable picker (used 3 times) =============== */
+
+  function makeCombo(cfg) {
+    var input = cfg.input, list = cfg.list, selected = null, shown = [], active = -1;
+    var LIMIT = cfg.limit || 150;
+
+    function render(query) {
+      var q = (query || "").trim().toLowerCase();
+      var all = cfg.items();
+      var matches = all.filter(function (it) {
+        return !q || cfg.text(it).toLowerCase().indexOf(q) !== -1 || (cfg.sub(it) || "").toLowerCase().indexOf(q) !== -1;
+      });
+      shown = matches.slice(0, LIMIT);
+      list.innerHTML = "";
+      if (!shown.length) {
+        var n = document.createElement("li");
+        n.className = "none"; n.textContent = cfg.emptyMsg || "Walang nahanap. Subukan ang ibang salita.";
+        n.setAttribute("role", "presentation");
+        list.appendChild(n);
+      }
+      shown.forEach(function (it, i) {
+        var li = document.createElement("li");
+        li.className = "opt"; li.id = input.id + "-opt-" + i;
+        li.setAttribute("role", "option");
+        li.setAttribute("aria-selected", selected === it ? "true" : "false");
+        var t = document.createElement("span"); t.textContent = cfg.text(it);
+        var d = document.createElement("span"); d.className = "d"; d.textContent = cfg.sub(it) || "";
+        li.appendChild(t); li.appendChild(d);
+        li.addEventListener("mousedown", function (e) { e.preventDefault(); choose(it); });
+        list.appendChild(li);
+      });
+      if (matches.length > shown.length) {
+        var more = document.createElement("li");
+        more.className = "none"; more.setAttribute("role", "presentation");
+        more.textContent = "May " + (matches.length - shown.length) + " pa. Mag-type para paliitin ang listahan.";
+        list.appendChild(more);
+      }
+      active = -1;
+    }
+    function openList() {
+      render(selected ? "" : input.value);
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+    }
+    function closeList() {
+      list.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+    }
+    function highlight(i) {
+      var opts = list.querySelectorAll(".opt");
+      if (!opts.length) return;
+      active = (i + opts.length) % opts.length;
+      opts.forEach(function (o, k) { o.classList.toggle("active", k === active); });
+      input.setAttribute("aria-activedescendant", opts[active].id);
+      opts[active].scrollIntoView({ block: "nearest" });
+    }
+    function choose(it) {
+      selected = it;
+      input.value = cfg.text(it);
+      input.removeAttribute("aria-invalid");
+      closeList();
+      cfg.onPick(it);
+    }
+
+    input.addEventListener("focus", function () { if (selected) input.select(); openList(); });
+    input.addEventListener("click", function () { if (list.hidden) openList(); });
+    input.addEventListener("input", function () {
+      if (selected) { selected = null; cfg.onClear(); }   // typing again means choosing again
+      openList();
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) openList(); highlight(active + 1); }
+      else if (e.key === "ArrowUp") { e.preventDefault(); if (list.hidden) openList(); highlight(active - 1); }
+      else if (e.key === "Enter") {
+        if (!list.hidden && active >= 0 && shown[active]) { e.preventDefault(); choose(shown[active]); }
+        else if (!list.hidden) { e.preventDefault(); }
+      }
+      else if (e.key === "Escape") { closeList(); }
+    });
+    // Typed text that was not picked from the list is not accepted.
+    input.addEventListener("blur", function () {
+      closeList();
+      if (!selected) input.value = "";
+    });
+
+    return {
+      selected: function () { return selected; },
+      reset: function () { selected = null; input.value = ""; input.removeAttribute("aria-invalid"); closeList(); }
+    };
+  }
+
+  /* =============== routing =============== */
+
+  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance") };
+  var attLoaded = false;
+
+  function route() {
+    var h = (location.hash || "").replace("#", "");
+    var name = h === "registration" ? "register" : h === "attendance" ? "attendance" : "home";
+    Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
+    window.scrollTo(0, 0);
+    if (name === "attendance" && !attLoaded) loadAttendanceData();
+  }
+  window.addEventListener("hashchange", route);
+
+  /* =============== REGISTRATION =============== */
+
+  var form = $("form"), nameEl = $("fullName"), districtEl = $("district");
+  var warning = $("warning"), approved = $("approved"), submitBtn = $("submitBtn"), statusEl = $("status");
+  var sending = false;
+
+  var regSchool = makeCombo({
+    input: $("schoolInput"), list: $("schoolList"),
+    items: function () { return schools; },
+    text: function (s) { return s.school; },
+    sub: function (s) { return s.district; },
+    onPick: function (s) {
+      districtEl.value = s.district;
+      warning.hidden = false;
+      $("schoolErr").textContent = "";
+      updateSubmit();
+    },
+    onClear: function () {
+      districtEl.value = "";
+      warning.hidden = true;
+      approved.checked = false;
+      $("approveErr").textContent = "";
+      updateSubmit();
+    }
+  });
+
+  function updateSubmit() { submitBtn.disabled = sending || !(regSchool.selected() && approved.checked); }
   approved.addEventListener("change", function () {
     if (approved.checked) $("approveErr").textContent = "";
     updateSubmit();
   });
+  nameEl.addEventListener("input", function () {
+    if (nameOk(nameEl.value)) { $("nameErr").textContent = ""; nameEl.removeAttribute("aria-invalid"); }
+  });
   form.querySelectorAll('input[name="sex"]').forEach(function (r) {
     r.addEventListener("change", function () { $("sexErr").textContent = ""; });
   });
-  nameEl.addEventListener("input", function () {
-    if (nameOk()) { $("nameErr").textContent = ""; nameEl.removeAttribute("aria-invalid"); }
-  });
 
-  /* ---------- submit ---------- */
   function setStatus(msg, bad) {
     statusEl.textContent = msg || "";
     statusEl.className = "status" + (bad ? " bad" : "");
@@ -372,9 +591,10 @@
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     if (sending) return;
-
+    var selected = regSchool.selected();
     var problem = false;
-    if (!nameOk()) {
+
+    if (!nameOk(nameEl.value)) {
       $("nameErr").textContent = "Ilagay ang buong pangalan (first at last name man lang).";
       nameEl.setAttribute("aria-invalid", "true");
       nameEl.focus(); problem = true;
@@ -387,8 +607,8 @@
     }
     if (!selected) {
       $("schoolErr").textContent = "Pumili ng school mula sa listahan.";
-      input.setAttribute("aria-invalid", "true");
-      if (!problem) input.focus();
+      $("schoolInput").setAttribute("aria-invalid", "true");
+      if (!problem) $("schoolInput").focus();
       problem = true;
     }
     if (selected && !approved.checked) {
@@ -397,13 +617,8 @@
     }
     if (problem) return;
 
-    if (SCRIPT_URL.indexOf("PASTE_WEB_APP_URL") === 0) {
-      setStatus("Hindi pa nakakabit ang Google Sheet. Ilagay muna ang Web app URL sa index.html.", true);
-      return;
-    }
-
     var payload = {
-      fullName: nameEl.value.trim().replace(/\s+/g, " "),
+      fullName: cleanName(nameEl.value),
       sex: sexEl.value,
       school: selected.school,
       district: selected.district,
@@ -414,13 +629,7 @@
     submitBtn.textContent = "Sine-save...";
     setStatus("");
 
-    // text/plain avoids a CORS preflight, which Apps Script does not answer.
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
-    })
-    .then(function (r) { return r.json(); })
+    postJSON(payload)
     .then(function (res) {
       if (!res || !res.ok) throw new Error((res && res.error) || "Hindi na-save.");
       $("doneName").textContent = payload.fullName;
@@ -428,7 +637,6 @@
       $("doneSchool").textContent = payload.school;
       $("doneDistrict").textContent = payload.district;
       form.hidden = true; $("done").hidden = false;
-      $("done").querySelector("h2").setAttribute("tabindex", "-1");
       $("done").querySelector("h2").focus();
     })
     .catch(function () {
@@ -443,12 +651,234 @@
 
   $("again").addEventListener("click", function () {
     form.reset();
-    clearChoice();
-    input.value = "";
+    regSchool.reset();
+    districtEl.value = "";
+    warning.hidden = true;
+    approved.checked = false;
+    updateSubmit();
     setStatus("");
     $("done").hidden = true; form.hidden = false;
     nameEl.focus();
   });
+
+  /* =============== ATTENDANCE =============== */
+
+  var attForm = $("attForm"), meetSel = $("meetSel"), meetTitle = $("meetTitle");
+  var attSubmit = $("attSubmit"), attStatus = $("attStatus");
+  var meetings = [], tutors = [], manual = false, attSending = false;
+
+  var tutorCombo = makeCombo({
+    input: $("tutorInput"), list: $("tutorList"),
+    items: function () { return tutors; },
+    text: function (t) { return t.n; },
+    sub: function (t) { return t.s + " (" + t.d + ")"; },
+    emptyMsg: "Walang nahanap. Kung wala ka pa sa listahan, pindutin ang link sa ibaba.",
+    onPick: function (t) {
+      $("tiSchool").textContent = t.s;
+      $("tiDistrict").textContent = t.d;
+      $("tutorInfo").hidden = false;
+      $("tutorErr").textContent = "";
+    },
+    onClear: function () { $("tutorInfo").hidden = true; }
+  });
+
+  var attSchoolCombo = makeCombo({
+    input: $("attSchoolInput"), list: $("attSchoolList"),
+    items: function () { return schools; },
+    text: function (s) { return s.school; },
+    sub: function (s) { return s.district; },
+    onPick: function (s) { $("attDistrict").value = s.district; $("attSchoolErr").textContent = ""; },
+    onClear: function () { $("attDistrict").value = ""; }
+  });
+
+  function showOnly(which) {
+    $("attLoading").hidden = which !== "loading";
+    $("attLoadErr").hidden = which !== "error";
+    $("attNone").hidden = which !== "none";
+    attForm.hidden = which !== "form";
+    $("attDone").hidden = which !== "done";
+  }
+
+  function loadAttendanceData() {
+    showOnly("loading");
+    Promise.all([getAction("meetings"), getAction("tutors")])
+    .then(function (r) {
+      meetings = r[0].meetings || [];
+      tutors = r[1].tutors || [];
+      attLoaded = true;
+      if (!meetings.length) { showOnly("none"); return; }
+      meetSel.innerHTML = "";
+      var ph = document.createElement("option");
+      ph.value = ""; ph.textContent = "Piliin ang petsa";
+      meetSel.appendChild(ph);
+      meetings.forEach(function (m) {
+        var o = document.createElement("option");
+        o.value = m.date; o.textContent = fmtDate(m.date);
+        meetSel.appendChild(o);
+      });
+      if (meetings.length === 1) { meetSel.value = meetings[0].date; showMeetingTitle(); }
+      showOnly("form");
+    })
+    .catch(function () { showOnly("error"); });
+  }
+  $("attRetry").addEventListener("click", loadAttendanceData);
+
+  function currentMeeting() {
+    var v = meetSel.value, found = null;
+    meetings.forEach(function (m) { if (m.date === v) found = m; });
+    return found;
+  }
+  function showMeetingTitle() {
+    var m = currentMeeting();
+    if (m) { meetTitle.textContent = m.title; meetTitle.hidden = false; $("meetErr").textContent = ""; meetSel.removeAttribute("aria-invalid"); }
+    else { meetTitle.hidden = true; }
+  }
+  meetSel.addEventListener("change", showMeetingTitle);
+
+  function setManual(on) {
+    manual = on;
+    $("listedBlock").hidden = on;
+    $("manualBlock").hidden = !on;
+    attStatus.textContent = "";
+    (on ? $("attName") : $("tutorInput")).focus();
+  }
+  $("toManual").addEventListener("click", function () { setManual(true); });
+  $("toListed").addEventListener("click", function () { setManual(false); });
+
+  attForm.querySelectorAll('input[name="asex"]').forEach(function (r) {
+    r.addEventListener("change", function () { $("attSexErr").textContent = ""; });
+  });
+  var TEACH_LABELS = { re: "Reading sa Elementary", rh: "Reading sa High School", me: "Math sa Elementary", mh: "Math sa High School" };
+  function readTeaching() {
+    var t = { re: false, rh: false, me: false, mh: false }, any = false;
+    attForm.querySelectorAll('input[name="teach"]').forEach(function (c) {
+      if (c.checked) { t[c.value] = true; any = true; }
+    });
+    return any ? t : null;
+  }
+  function teachingText(t) {
+    return Object.keys(TEACH_LABELS).filter(function (k) { return t[k]; }).map(function (k) { return TEACH_LABELS[k]; }).join(", ");
+  }
+  attForm.querySelectorAll('input[name="teach"]').forEach(function (c) {
+    c.addEventListener("change", function () { if (readTeaching()) $("teachErr").textContent = ""; });
+  });
+  $("attName").addEventListener("input", function () {
+    if (nameOk($("attName").value)) { $("attNameErr").textContent = ""; $("attName").removeAttribute("aria-invalid"); }
+  });
+
+  function setAttStatus(msg, bad) {
+    attStatus.textContent = msg || "";
+    attStatus.className = "status" + (bad ? " bad" : "");
+  }
+
+  attForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (attSending) return;
+    var problem = false, meeting = currentMeeting(), payload, shownName, shownSchool, shownDistrict;
+
+    if (!meeting) {
+      $("meetErr").textContent = "Piliin ang petsa ng meeting.";
+      meetSel.setAttribute("aria-invalid", "true");
+      meetSel.focus(); problem = true;
+    }
+
+    if (!manual) {
+      var t = tutorCombo.selected();
+      if (!t) {
+        $("tutorErr").textContent = "Piliin ang pangalan mo mula sa listahan.";
+        $("tutorInput").setAttribute("aria-invalid", "true");
+        if (!problem) $("tutorInput").focus();
+        problem = true;
+      }
+      var teachL = readTeaching();
+      if (!teachL) {
+        $("teachErr").textContent = "Pumili ng kahit isa kung ano ang tuturuan mo.";
+        if (!problem) attForm.querySelector('input[name="teach"]').focus();
+        problem = true;
+      }
+      if (problem) return;
+      payload = { action: "attendance", meetingDate: meeting.date, registered: true, fullName: t.n, school: t.s, teaching: teachL };
+      shownName = t.n; shownSchool = t.s; shownDistrict = t.d;
+    } else {
+      var nameEl2 = $("attName"), sexEl = attForm.querySelector('input[name="asex"]:checked'), sch = attSchoolCombo.selected();
+      if (!nameOk(nameEl2.value)) {
+        $("attNameErr").textContent = "Ilagay ang buong pangalan (first at last name man lang).";
+        nameEl2.setAttribute("aria-invalid", "true");
+        if (!problem) nameEl2.focus();
+        problem = true;
+      }
+      if (!sexEl) {
+        $("attSexErr").textContent = "Piliin kung Male o Female.";
+        if (!problem) attForm.querySelector('input[name="asex"]').focus();
+        problem = true;
+      }
+      if (!sch) {
+        $("attSchoolErr").textContent = "Pumili ng school mula sa listahan.";
+        $("attSchoolInput").setAttribute("aria-invalid", "true");
+        if (!problem) $("attSchoolInput").focus();
+        problem = true;
+      }
+      var teachM = readTeaching();
+      if (!teachM) {
+        $("teachErr").textContent = "Pumili ng kahit isa kung ano ang tuturuan mo.";
+        if (!problem) attForm.querySelector('input[name="teach"]').focus();
+        problem = true;
+      }
+      if (problem) return;
+      payload = {
+        action: "attendance", meetingDate: meeting.date, registered: false,
+        fullName: cleanName(nameEl2.value), sex: sexEl.value, school: sch.school, district: sch.district,
+        teaching: teachM
+      };
+      shownName = payload.fullName; shownSchool = sch.school; shownDistrict = sch.district;
+    }
+
+    attSending = true; attSubmit.disabled = true; attSubmit.textContent = "Sine-save...";
+    setAttStatus("");
+
+    postJSON(payload)
+    .then(function (res) {
+      if (!res || !res.ok) throw new Error((res && res.error) || "failed");
+      $("adMeeting").textContent = fmtDate(meeting.date) + " - " + meeting.title;
+      $("adName").textContent = shownName;
+      $("adSchool").textContent = shownSchool;
+      $("adDistrict").textContent = shownDistrict;
+      var dup = res.status === "duplicate";
+      $("adTeach").textContent = teachingText(payload.teaching);
+      $("adTeachRow").hidden = dup;
+      var title = $("attDoneTitle");
+      title.textContent = dup ? "Naitala na ang attendance mo kanina" : "Naitala na ang attendance mo";
+      title.className = dup ? "dup" : "";
+      var note = $("attDoneNote");
+      if (dup) { note.textContent = "Hindi na kailangang mag-submit ulit. Isang beses lang naitatala ang bawat tao sa bawat meeting."; note.hidden = false; }
+      else if (manual) { note.textContent = "Paalala: mag-register din sa Registration page kung hindi ka pa nakarehistro."; note.hidden = false; }
+      else { note.hidden = true; }
+      showOnly("done");
+      title.focus();
+    })
+    .catch(function () {
+      setAttStatus("Hindi na-save ang attendance. Tingnan ang internet at subukan ulit. Kung hindi pa rin, ipaalam sa CID.", true);
+    })
+    .then(function () {
+      attSending = false; attSubmit.disabled = false; attSubmit.textContent = "Submit attendance";
+    });
+  });
+
+  $("attAgain").addEventListener("click", function () {
+    tutorCombo.reset(); attSchoolCombo.reset();
+    $("tutorInfo").hidden = true;
+    $("attName").value = ""; $("attDistrict").value = "";
+    attForm.querySelectorAll('input[name="asex"]').forEach(function (r) { r.checked = false; });
+    attForm.querySelectorAll('input[name="teach"]').forEach(function (c) { c.checked = false; });
+    ["tutorErr", "attNameErr", "attSexErr", "attSchoolErr", "meetErr", "teachErr"].forEach(function (id) { $(id).textContent = ""; });
+    setAttStatus("");
+    setManual(false);
+    showOnly("form");
+    // Isa pang tao, parehong meeting: nananatili ang napiling petsa.
+    $("tutorInput").focus();
+  });
+
+  route();
 })();
 </script>
 </body>
