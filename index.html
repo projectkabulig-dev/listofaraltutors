@@ -161,6 +161,8 @@
 
   .teach-group { margin: 0 0 12px; }
   .teach-group .sub { font-weight: 700; margin: 0 0 6px; }
+  .teach-note { background: #eef2f6; border-left: 4px solid var(--brand); border-radius: 8px; padding: 9px 12px; margin: 10px 0 0; font-size: 0.95rem; }
+  .teach-note b { color: var(--navy); }
   .done h2 { color: var(--ok); }
   .done h2.dup { color: var(--brand); }
   .done dl { margin: 16px 0 20px; }
@@ -408,21 +410,30 @@
       <div class="field" style="margin-top:20px">
         <fieldset class="choices" style="display:block" aria-describedby="teachErr">
           <legend>Ano ang tuturuan mo?
-            <span class="hint">Piliin lahat ng tumutugma. Kahit isa ay kailangan.</span>
+            <span class="hint">Piliin muna ang antas, tapos ang asignatura. Isang antas lang bawat tutor.</span>
           </legend>
           <div class="teach-group">
-            <p class="sub">Reading</p>
+            <p class="sub">Antas</p>
             <div class="choices">
-              <label class="choice"><input type="checkbox" name="teach" value="re"> Elementary</label>
-              <label class="choice"><input type="checkbox" name="teach" value="rh"> High School</label>
+              <label class="choice"><input type="radio" name="level" value="e"> Elementary</label>
+              <label class="choice"><input type="radio" name="level" value="h"> High School</label>
             </div>
           </div>
-          <div class="teach-group">
-            <p class="sub">Math</p>
+          <div class="teach-group" id="teachE" hidden>
+            <p class="sub">Elementary: ano ang tuturuan?</p>
             <div class="choices">
-              <label class="choice"><input type="checkbox" name="teach" value="me"> Elementary</label>
-              <label class="choice"><input type="checkbox" name="teach" value="mh"> High School</label>
+              <label class="choice"><input type="checkbox" name="teachE" value="r"> Reading</label>
+              <label class="choice"><input type="checkbox" name="teachE" value="m"> Math</label>
             </div>
+            <p class="teach-note"><b>Tandaan:</b> sa Elementary, puwedeng Reading, Math, o pareho.</p>
+          </div>
+          <div class="teach-group" id="teachH" hidden>
+            <p class="sub">High School: ano ang tuturuan?</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="teachH" value="r"> Reading</label>
+              <label class="choice"><input type="radio" name="teachH" value="m"> Math</label>
+            </div>
+            <p class="teach-note"><b>Tandaan:</b> sa High School, isa lang ang puwede: Reading o Math. Hindi puwede ang pareho.</p>
           </div>
         </fieldset>
         <div class="error" id="teachErr" role="alert"></div>
@@ -839,18 +850,41 @@
     r.addEventListener("change", function () { $("attSexErr").textContent = ""; });
   });
   var TEACH_LABELS = { re: "Reading sa Elementary", rh: "Reading sa High School", me: "Math sa Elementary", mh: "Math sa High School" };
+  // Isang antas lang. Elementary: Reading, Math, o pareho. High School: isa lang (Reading o Math).
   function readTeaching() {
-    var t = { re: false, rh: false, me: false, mh: false }, any = false;
-    attForm.querySelectorAll('input[name="teach"]').forEach(function (c) {
-      if (c.checked) { t[c.value] = true; any = true; }
-    });
-    return any ? t : null;
+    var lv = attForm.querySelector('input[name="level"]:checked');
+    if (!lv) return { error: "Pumili ng antas: Elementary o High School." };
+    var t = { re: false, rh: false, me: false, mh: false };
+    if (lv.value === "e") {
+      var any = false;
+      attForm.querySelectorAll('input[name="teachE"]:checked').forEach(function (c) {
+        t[c.value === "r" ? "re" : "me"] = true; any = true;
+      });
+      if (!any) return { error: "Sa Elementary, pumili ng Reading, Math, o pareho." };
+    } else {
+      var hs = attForm.querySelector('input[name="teachH"]:checked');
+      if (!hs) return { error: "Sa High School, pumili ng Reading o Math." };
+      t[hs.value === "r" ? "rh" : "mh"] = true;
+    }
+    return { teaching: t };
   }
   function teachingText(t) {
     return Object.keys(TEACH_LABELS).filter(function (k) { return t[k]; }).map(function (k) { return TEACH_LABELS[k]; }).join(", ");
   }
-  attForm.querySelectorAll('input[name="teach"]').forEach(function (c) {
-    c.addEventListener("change", function () { if (readTeaching()) $("teachErr").textContent = ""; });
+  function syncTeachSections() {
+    var lv = attForm.querySelector('input[name="level"]:checked');
+    var isE = !!lv && lv.value === "e", isH = !!lv && lv.value === "h";
+    $("teachE").hidden = !isE;
+    $("teachH").hidden = !isH;
+    // alisin ang pinili sa kabilang antas para walang maiwang lumang pili
+    if (!isE) attForm.querySelectorAll('input[name="teachE"]').forEach(function (c) { c.checked = false; });
+    if (!isH) attForm.querySelectorAll('input[name="teachH"]').forEach(function (c) { c.checked = false; });
+  }
+  attForm.querySelectorAll('input[name="level"], input[name="teachE"], input[name="teachH"]').forEach(function (c) {
+    c.addEventListener("change", function () {
+      syncTeachSections();
+      if (!readTeaching().error) $("teachErr").textContent = "";
+    });
   });
   $("attName").addEventListener("input", function () {
     if (nameOk($("attName").value)) { $("attNameErr").textContent = ""; $("attName").removeAttribute("aria-invalid"); }
@@ -881,13 +915,13 @@
         problem = true;
       }
       var teachL = readTeaching();
-      if (!teachL) {
-        $("teachErr").textContent = "Pumili ng kahit isa kung ano ang tuturuan mo.";
-        if (!problem) attForm.querySelector('input[name="teach"]').focus();
+      if (teachL.error) {
+        $("teachErr").textContent = teachL.error;
+        if (!problem) attForm.querySelector('input[name="level"]').focus();
         problem = true;
       }
       if (problem) return;
-      payload = { action: "attendance", meetingDate: meeting.date, registered: true, fullName: t.n, school: t.s, teaching: teachL };
+      payload = { action: "attendance", meetingDate: meeting.date, registered: true, fullName: t.n, school: t.s, teaching: teachL.teaching };
       shownName = t.n; shownSchool = t.s; shownDistrict = t.d;
     } else {
       var nameEl2 = $("attName"), sexEl = attForm.querySelector('input[name="asex"]:checked'), sch = attSchoolCombo.selected();
@@ -909,16 +943,16 @@
         problem = true;
       }
       var teachM = readTeaching();
-      if (!teachM) {
-        $("teachErr").textContent = "Pumili ng kahit isa kung ano ang tuturuan mo.";
-        if (!problem) attForm.querySelector('input[name="teach"]').focus();
+      if (teachM.error) {
+        $("teachErr").textContent = teachM.error;
+        if (!problem) attForm.querySelector('input[name="level"]').focus();
         problem = true;
       }
       if (problem) return;
       payload = {
         action: "attendance", meetingDate: meeting.date, registered: false,
         fullName: cleanName(nameEl2.value), sex: sexEl.value, school: sch.school, district: sch.district,
-        teaching: teachM
+        teaching: teachM.teaching
       };
       shownName = payload.fullName; shownSchool = sch.school; shownDistrict = sch.district;
     }
@@ -959,7 +993,8 @@
     $("tutorInfo").hidden = true;
     $("attName").value = ""; $("attDistrict").value = "";
     attForm.querySelectorAll('input[name="asex"]').forEach(function (r) { r.checked = false; });
-    attForm.querySelectorAll('input[name="teach"]').forEach(function (c) { c.checked = false; });
+    attForm.querySelectorAll('input[name="level"], input[name="teachE"], input[name="teachH"]').forEach(function (c) { c.checked = false; });
+    syncTeachSections();
     ["tutorErr", "attNameErr", "attSexErr", "attSchoolErr", "meetErr", "teachErr"].forEach(function (id) { $(id).textContent = ""; });
     setAttStatus("");
     setManual(false);
