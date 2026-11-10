@@ -281,6 +281,11 @@
         <div class="error" id="approveErr" role="alert"></div>
       </div>
 
+      <div class="warning" id="dupBox" hidden role="alert">
+        <strong>Nakarehistro na ang pangalang ito</strong>
+        <p id="dupText"></p>
+      </div>
+
       <button type="submit" class="primary" id="submitBtn" disabled>Submit registration</button>
       <div class="status" id="status" role="status" aria-live="polite"></div>
     </form>
@@ -653,6 +658,7 @@
   });
   nameEl.addEventListener("input", function () {
     if (nameOk(nameEl.value)) { $("nameErr").textContent = ""; nameEl.removeAttribute("aria-invalid"); }
+    $("dupBox").hidden = true;
   });
   form.querySelectorAll('input[name="sex"]').forEach(function (r) {
     r.addEventListener("change", function () { $("sexErr").textContent = ""; });
@@ -703,9 +709,18 @@
     sending = true; updateSubmit();
     submitBtn.textContent = "Sine-save...";
     setStatus("");
+    $("dupBox").hidden = true;
 
     postJSON(payload)
     .then(function (res) {
+      if (res && res.duplicate) {
+        $("dupText").textContent = "Ang " + payload.fullName + " ay nakalista na sa " + res.school +
+          (res.district ? " (" + res.district + ")" : "") + ". Hindi na kailangang mag-register ulit. " +
+          "Kung may mali sa nakalista, o ibang tao ito na may parehong pangalan, ipaalam sa CID.";
+        $("dupBox").hidden = false;
+        $("dupBox").scrollIntoView({ block: "nearest" });
+        return;
+      }
       if (!res || !res.ok) throw new Error((res && res.error) || "Hindi na-save.");
       $("doneName").textContent = payload.fullName;
       $("doneSex").textContent = payload.sex;
