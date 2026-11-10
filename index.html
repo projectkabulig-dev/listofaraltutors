@@ -67,6 +67,18 @@
   input[aria-invalid="true"] { border-color: var(--err); }
   .error { color: var(--err); font-size: 0.9rem; margin-top: 4px; min-height: 0; }
 
+  /* sex choice */
+  .choices { display: flex; gap: 12px; flex-wrap: wrap; border: 0; margin: 0; padding: 0; }
+  .choices legend { font-weight: 700; margin-bottom: 6px; padding: 0; }
+  .choice {
+    flex: 1 1 140px; display: flex; align-items: center; gap: 10px;
+    padding: 12px; margin: 0; font-weight: 400;
+    border: 1.5px solid var(--line); border-radius: 8px; cursor: pointer; background: #fff;
+  }
+  .choice input { width: 20px; height: 20px; margin: 0; accent-color: var(--brand); }
+  .choice:has(input:checked) { border-color: var(--brand); background: #e3eef7; font-weight: 700; }
+  .choice:has(input:focus-visible) { outline: 3px solid #f2b431; outline-offset: 2px; }
+
   /* searchable school picker */
   .combo { position: relative; }
   .combo input { padding-right: 40px; }
@@ -159,6 +171,15 @@
       </div>
 
       <div class="field">
+        <fieldset class="choices" aria-describedby="sexErr">
+          <legend>Sex</legend>
+          <label class="choice"><input type="radio" name="sex" value="Male"> Male (Lalaki)</label>
+          <label class="choice"><input type="radio" name="sex" value="Female"> Female (Babae)</label>
+        </fieldset>
+        <div class="error" id="sexErr" role="alert"></div>
+      </div>
+
+      <div class="field">
         <label for="schoolInput" id="schoolLabel">School assignment
           <span class="hint">Mag-type ng bahagi ng pangalan para mahanap, tapos pumili sa listahan.</span>
         </label>
@@ -198,6 +219,7 @@
       <h2>Natanggap na ang registration mo</h2>
       <dl>
         <dt>Full name</dt><dd id="doneName"></dd>
+        <dt>Sex</dt><dd id="doneSex"></dd>
         <dt>School assignment</dt><dd id="doneSchool"></dd>
         <dt>District</dt><dd id="doneDistrict"></dd>
       </dl>
@@ -334,6 +356,9 @@
     if (approved.checked) $("approveErr").textContent = "";
     updateSubmit();
   });
+  form.querySelectorAll('input[name="sex"]').forEach(function (r) {
+    r.addEventListener("change", function () { $("sexErr").textContent = ""; });
+  });
   nameEl.addEventListener("input", function () {
     if (nameOk()) { $("nameErr").textContent = ""; nameEl.removeAttribute("aria-invalid"); }
   });
@@ -354,6 +379,12 @@
       nameEl.setAttribute("aria-invalid", "true");
       nameEl.focus(); problem = true;
     }
+    var sexEl = form.querySelector('input[name="sex"]:checked');
+    if (!sexEl) {
+      $("sexErr").textContent = "Piliin kung Male o Female.";
+      if (!problem) form.querySelector('input[name="sex"]').focus();
+      problem = true;
+    }
     if (!selected) {
       $("schoolErr").textContent = "Pumili ng school mula sa listahan.";
       input.setAttribute("aria-invalid", "true");
@@ -373,6 +404,7 @@
 
     var payload = {
       fullName: nameEl.value.trim().replace(/\s+/g, " "),
+      sex: sexEl.value,
       school: selected.school,
       district: selected.district,
       approvalConfirmed: true
@@ -392,6 +424,7 @@
     .then(function (res) {
       if (!res || !res.ok) throw new Error((res && res.error) || "Hindi na-save.");
       $("doneName").textContent = payload.fullName;
+      $("doneSex").textContent = payload.sex;
       $("doneSchool").textContent = payload.school;
       $("doneDistrict").textContent = payload.district;
       form.hidden = true; $("done").hidden = false;
