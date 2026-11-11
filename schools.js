@@ -29,6 +29,7 @@ const SCHOOLS = [
   { school: "Gui-ob ES", district: "Alcantara" },
   { school: "San Isidro ES", district: "Alcantara" },
   { school: "San Roque ES", district: "Alcantara" },
+  { school: "Tugdan ES", district: "Alcantara" },
   { school: "Alcantara NHS", district: "Alcantara" },
   { school: "Tugdan NHS", district: "Alcantara" },
   { school: "Melodias Imperial Sr. NHS", district: "Alcantara" },
