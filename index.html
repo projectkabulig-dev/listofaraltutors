@@ -86,11 +86,34 @@
   .tile.att .go { color: var(--navy); }
   .tile .go svg { width: 22px; height: 22px; flex: none; transition: transform 0.18s ease; }
   .tile:hover .go svg { transform: translateX(4px); }
+  .tile-note { display: flex; gap: 10px; align-items: flex-start; background: #eef2f6; border-radius: 10px; padding: 10px 12px; font-size: 0.92rem; color: var(--ink); }
+  .tile-note svg { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--brand); }
+  .tile.pay .ico { background: #f6dfe4; color: #8a1f38; }
+  .tile.pay .go { color: #8a1f38; }
+  .tile.wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 20px; row-gap: 4px; }
+  .tile.wide .ico { grid-row: 1 / span 2; margin: 0; }
+  .tile.wide strong { grid-column: 2; }
+  .tile.wide .desc { grid-column: 2; max-width: 62ch; }
+  .tile.wide .go { grid-column: 3; grid-row: 1 / span 2; margin: 0; padding: 0; gap: 8px; justify-content: flex-end; white-space: nowrap; }
+  @media (max-width: 720px) { .tile.wide { display: flex; } .tile.wide .go { margin-top: auto; padding-top: 12px; justify-content: space-between; } }
   .chip.plain::before { display: none; }
   .chip.plain { background: #eceff1; color: var(--muted); font-weight: 400; }
   .chip { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.9rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
   .chip::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
   .chip.on { background: #dff3e6; color: #17653a; }
+  /* payment view */
+  .name-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 4px; }
+  .name-row button { font: inherit; border: 1.5px solid var(--line); background: #fff; color: var(--muted); border-radius: 8px; padding: 0 14px; cursor: pointer; }
+  .name-row button:hover:not(:disabled) { border-color: var(--err); color: var(--err); }
+  .name-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .name-hint { font-size: 0.85rem; color: var(--muted); min-height: 1.2em; margin: 0 0 8px; }
+  .name-hint.ok { color: #17653a; }
+  .name-hint.warn { color: var(--warn-ink); }
+  .sumline { background: var(--tint); border-radius: 8px; padding: 10px 12px; font-weight: 700; margin: 4px 0 16px; }
+  .money { position: relative; }
+  .money span { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-weight: 700; }
+  .money input { padding-left: 30px; }
+  .done .names { margin: 0 0 10px; padding-left: 18px; font-weight: 700; }
   /* contracts view */
   .districts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 4px; }
   @media (max-width: 380px) { .districts { grid-template-columns: minmax(0, 1fr); } }
@@ -118,16 +141,17 @@
   .field { margin-bottom: 20px; }
   label, .label { display: block; font-weight: 700; margin-bottom: 6px; }
   .hint { display: block; font-weight: 400; color: var(--muted); font-size: 0.9rem; }
-  input[type="text"], select {
+  input[type="text"], input[type="date"], textarea, select {
     width: 100%; font: inherit; padding: 12px; color: var(--ink);
     border: 1.5px solid var(--line); border-radius: 8px; background: #fff;
   }
   input[readonly] { background: #eef2f6; }
-  input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible,
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible,
   .opt:focus-visible, input[type="checkbox"]:focus-visible {
     outline: 3px solid #f2b431; outline-offset: 2px;
   }
-  input[aria-invalid="true"], select[aria-invalid="true"] { border-color: var(--err); }
+  input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--err); }
+  textarea { min-height: 84px; resize: vertical; }
   .error { color: var(--err); font-size: 0.9rem; margin-top: 4px; }
 
   /* searchable picker */
@@ -225,6 +249,7 @@
       <li id="stepContracts"><b>Gusto mong malaman kung may contract ka na?</b> Buksan ang Mga may contract na at piliin ang district mo.</li>
       <li><b>May orientation o meeting?</b> Piliin ang Attendance in the meeting at i-record ang pagdalo mo.</li>
       <li><b>Magbubukas ng Landbank account para sa remuneration?</b> Punan ang Pangalan para sa Landbank account. Hindi mo na ito kailangan kung may account ka na.</li>
+      <li id="stepPayment"><b>Magbabayad ng notaryo ng contract?</b> Buksan ang Bayad sa notaryo at itala ang bayad mo.</li>
     </ol>
   </div>
 </header>
@@ -241,6 +266,10 @@
         </span>
         <strong>Registration</strong>
         <span class="desc">Para sa external ARAL tutor na magrerehistro ng pangalan at school assignment.</span>
+        <span class="tile-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          <span>Bago mag-register, kausapin muna ang School Head ng paaralang itatalaga sa iyo. Kailangang aprubado na ng paaralan ang assignment mo.</span>
+        </span>
         <span class="go">Magrehistro
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </span>
@@ -277,11 +306,137 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </span>
       </a>
+      <a class="tile pay wide" id="tilePayment" href="#payment">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>
+        </span>
+        <strong>Bayad sa notaryo</strong>
+        <span class="desc">Itala ang bayad mo para sa notaryo ng contract. Puwedeng isang bayad para sa maraming tutor ng iisang school.</span>
+        <span class="go">Itala ang bayad
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
     </div>
-    <p class="landing-note">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-      <span>Bago mag-register, kausapin muna ang School Head ng paaralang itatalaga sa iyo. Kailangang aprubado na ng paaralan ang assignment mo.</span>
-    </p>
+  </section>
+
+  <!-- ================= PAYMENT ================= -->
+  <section class="card" id="view-payment" hidden>
+    <a class="back" href="#">&larr; Bumalik sa simula</a>
+
+    <form id="payForm" novalidate>
+      <h2 tabindex="-1">Bayad sa notaryo</h2>
+      <p class="intro">Itala ang bayad mo para sa notaryo ng contract. Puwedeng isang bayad para sa isa o maraming tutor mula sa iisang school.</p>
+      <div class="infobox" id="payNote" hidden style="margin:0 0 18px"></div>
+
+      <div class="field">
+        <label for="payPayer">Pangalan ng nagbayad
+          <span class="hint">Ang taong nagpadala ng bayad. First name, Middle name, Last name</span>
+        </label>
+        <input type="text" id="payPayer" autocomplete="name" aria-describedby="payPayerErr">
+        <div class="error" id="payPayerErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="payInput" id="paySchoolLabel">School
+          <span class="hint">Ang school ng mga tutor na sakop ng bayad. Mag-type ng bahagi ng pangalan, tapos pumili sa listahan.</span>
+        </label>
+        <div class="combo">
+          <input type="text" id="payInput" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="payList"
+                 aria-describedby="paySchoolErr" autocomplete="off" placeholder="Hanapin ang school">
+          <span class="chev" aria-hidden="true">&#9660;</span>
+          <ul class="listbox" id="payList" role="listbox" aria-labelledby="paySchoolLabel" hidden></ul>
+        </div>
+        <div class="error" id="paySchoolErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="payDistrict">District
+          <span class="hint">Awtomatikong lalabas kapag napili na ang school.</span>
+        </label>
+        <input type="text" id="payDistrict" readonly tabindex="-1" placeholder="Hihintayin ang pagpili ng school">
+      </div>
+
+      <div class="field">
+        <span class="label" id="payNamesLabel">Mga tutor na sakop ng bayad
+          <span class="hint">Isulat ang buong pangalan ng bawat tutor. Isama ang sarili mo kung kasama ka.</span>
+        </span>
+        <div id="payNames" role="group" aria-labelledby="payNamesLabel"></div>
+        <button type="button" class="secondary" id="payAddName">Magdagdag ng pangalan</button>
+        <div class="error" id="payNamesErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <fieldset class="choices" aria-describedby="payMethodErr">
+          <legend>Paraan ng bayad</legend>
+          <label class="choice"><input type="radio" name="paymethod" value="Landbank"> Landbank</label>
+          <label class="choice"><input type="radio" name="paymethod" value="GCash"> GCash</label>
+        </fieldset>
+        <div class="error" id="payMethodErr" role="alert"></div>
+        <div class="infobox" id="payAccount" hidden></div>
+      </div>
+
+      <div class="field">
+        <label for="payAmount">Halaga na binayad
+          <span class="hint">Ang kabuuang halagang ipinadala mo sa bayad na ito.</span>
+        </label>
+        <div class="money"><span aria-hidden="true">&#8369;</span>
+          <input type="text" id="payAmount" inputmode="decimal" autocomplete="off" placeholder="0.00" aria-describedby="payAmountErr">
+        </div>
+        <div class="error" id="payAmountErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="payRef">Reference number
+          <span class="hint">Makikita sa resibo o sa mensahe ng Landbank o GCash.</span>
+        </label>
+        <input type="text" id="payRef" autocomplete="off" maxlength="40" aria-describedby="payRefErr">
+        <div class="error" id="payRefErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="payDate">Petsa ng bayad</label>
+        <input type="date" id="payDate" aria-describedby="payDateErr">
+        <div class="error" id="payDateErr" role="alert"></div>
+      </div>
+
+      <div class="field">
+        <label for="payNoteText">Note
+          <span class="hint">Opsyonal. Halimbawa, kung bahagi lang ito ng kabuuang bayad.</span>
+        </label>
+        <textarea id="payNoteText" maxlength="300"></textarea>
+      </div>
+
+      <div class="sumline" id="paySum" aria-live="polite">Sakop ng bayad: 0 tutor</div>
+
+      <div class="warning" id="payDup" hidden role="alert">
+        <strong>Nakatala na ang reference number na ito</strong>
+        <p id="payDupText"></p>
+      </div>
+
+      <button type="submit" class="primary" id="paySubmit">Submit bayad</button>
+      <div class="status" id="payStatus" role="status" aria-live="polite"></div>
+    </form>
+
+    <section class="done" id="payDone" hidden aria-live="polite">
+      <h2 tabindex="-1">Naitala na ang bayad mo</h2>
+      <div class="warning" id="payAlready" hidden style="margin-top:12px">
+        <strong>Paalala</strong>
+        <p id="payAlreadyText"></p>
+      </div>
+      <dl>
+        <dt>Nagbayad</dt><dd id="pdPayer"></dd>
+        <dt>School</dt><dd id="pdSchool"></dd>
+        <dt>Mga tutor na sakop</dt><dd><ul class="names" id="pdNames"></ul></dd>
+        <dt>Paraan ng bayad</dt><dd id="pdMethod"></dd>
+        <dt>Halaga</dt><dd id="pdAmount"></dd>
+        <dt>Reference number</dt><dd id="pdRef"></dd>
+        <dt>Petsa ng bayad</dt><dd id="pdDate"></dd>
+      </dl>
+      <div class="actions">
+        <button type="button" class="secondary" id="payAgain">Magtala ng isa pang bayad</button>
+        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+      </div>
+    </section>
   </section>
 
   <!-- ================= CONTRACTS ================= -->
@@ -554,6 +709,7 @@
 
 <script src="schools.js"></script>
 <script src="contracts.js"></script>
+<script src="payment-config.js"></script>
 <script>
 (function () {
   "use strict";
@@ -782,9 +938,185 @@
     }
   })();
 
+  /* =============== PAYMENT (bayad sa notaryo) =============== */
+
+  var PAY_CFG = (typeof PAYMENT_INFO !== "undefined" && PAYMENT_INFO) ? PAYMENT_INFO : {};
+  var PAY_MAX = 30, payReady = false, paySending = false, payCombo = null, contractKeys = null;
+
+  function todayManila() { return new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10); }
+  function peso(n) { var s = Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); return "\u20B1" + s; }
+  function inContracts(name) {
+    if (!HAS_CONTRACTS) return null;
+    if (!contractKeys) { contractKeys = {}; CONTRACTS.forEach(function (c) { contractKeys[plain(c.n)] = true; }); }
+    return !!contractKeys[plain(name)];
+  }
+
+  function nameRows() { return $("payNames").querySelectorAll(".name-row"); }
+  function refreshRows() {
+    var rows = nameRows(), filled = 0;
+    rows.forEach(function (r, i) {
+      var inp = r.querySelector("input"); inp.setAttribute("aria-label", "Pangalan ng tutor " + (i + 1));
+      r.querySelector("button").disabled = rows.length === 1;
+      r.querySelector("button").setAttribute("aria-label", "Alisin ang pangalan " + (i + 1));
+      if (cleanName(inp.value)) filled++;
+    });
+    $("payAddName").disabled = rows.length >= PAY_MAX;
+    $("paySum").textContent = "Sakop ng bayad: " + filled + " tutor";
+  }
+  function addNameRow(value) {
+    var box = document.createElement("div");
+    var row = document.createElement("div"); row.className = "name-row";
+    var inp = document.createElement("input"); inp.type = "text"; inp.autocomplete = "off"; inp.value = value || "";
+    var rm = document.createElement("button"); rm.type = "button"; rm.textContent = "Alisin";
+    var hint = document.createElement("p"); hint.className = "name-hint";
+    function hintNow() {
+      var v = cleanName(inp.value);
+      if (!v) { hint.textContent = ""; hint.className = "name-hint"; return; }
+      var found = inContracts(v);
+      if (found === null) { hint.textContent = ""; hint.className = "name-hint"; }
+      else if (found) { hint.textContent = "Nasa listahan ng may contract."; hint.className = "name-hint ok"; }
+      else { hint.textContent = "Hindi nakita sa listahan ng may contract. Tiyaking tama ang baybay."; hint.className = "name-hint warn"; }
+    }
+    inp.addEventListener("input", function () { hintNow(); refreshRows(); $("payNamesErr").textContent = ""; inp.removeAttribute("aria-invalid"); });
+    rm.addEventListener("click", function () { if (nameRows().length > 1) { box.remove(); refreshRows(); } });
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") e.preventDefault(); });
+    row.appendChild(inp); row.appendChild(rm); box.appendChild(row); box.appendChild(hint);
+    $("payNames").appendChild(box);
+    refreshRows(); hintNow();
+    return inp;
+  }
+
+  function showAccount() {
+    var m = document.querySelector('input[name="paymethod"]:checked'), box = $("payAccount");
+    box.innerHTML = "";
+    var acc = m && PAY_CFG.accounts && PAY_CFG.accounts[m.value];
+    if (!acc || (!acc.accountName && !acc.accountNumber)) { box.hidden = true; return; }
+    function line(label, value) {
+      if (!value) return;
+      var s = document.createElement("small"); s.textContent = label;
+      var b = document.createElement("b"); b.textContent = value;
+      box.appendChild(s); box.appendChild(b);
+    }
+    var t = document.createElement("small"); t.textContent = "Ipadala ang bayad sa " + m.value + " na ito:"; box.appendChild(t);
+    line("Account name", acc.accountName); line("Account number", acc.accountNumber); line("Uri ng account", acc.accountType);
+    box.hidden = false;
+  }
+
+  function initPayment() {
+    if (!payReady) {
+      payReady = true;
+      payCombo = makeCombo({
+        input: $("payInput"), list: $("payList"),
+        items: function () { return schools; },
+        text: function (s) { return s.school; },
+        sub: function (s) { return s.district; },
+        onPick: function (s) { $("payDistrict").value = s.district; $("paySchoolErr").textContent = ""; },
+        onClear: function () { $("payDistrict").value = ""; }
+      });
+      addNameRow("");
+      $("payAddName").addEventListener("click", function () { addNameRow("").focus(); });
+      document.querySelectorAll('input[name="paymethod"]').forEach(function (r) {
+        r.addEventListener("change", function () { $("payMethodErr").textContent = ""; showAccount(); });
+      });
+      if (PAY_CFG.note) { $("payNote").textContent = PAY_CFG.note; $("payNote").hidden = false; }
+      ["payPayer", "payAmount", "payRef", "payDate"].forEach(function (id) {
+        $(id).addEventListener("input", function () { $(id).removeAttribute("aria-invalid"); $(id + "Err").textContent = ""; $("payDup").hidden = true; });
+      });
+      $("payDate").addEventListener("change", function () { $("payDateErr").textContent = ""; $("payDate").removeAttribute("aria-invalid"); });
+      $("payForm").addEventListener("submit", submitPayment);
+      $("payAgain").addEventListener("click", resetPayment);
+    }
+    $("payDate").max = todayManila();
+  }
+
+  function resetPayment() {
+    $("payForm").reset();
+    payCombo.reset(); $("payDistrict").value = "";
+    $("payNames").innerHTML = ""; addNameRow("");
+    showAccount();
+    ["payPayerErr", "paySchoolErr", "payNamesErr", "payMethodErr", "payAmountErr", "payRefErr", "payDateErr"].forEach(function (id) { $(id).textContent = ""; });
+    $("payDup").hidden = true; $("payStatus").textContent = "";
+    $("payDone").hidden = true; $("payForm").hidden = false;
+    $("payPayer").focus();
+  }
+
+  function submitPayment(e) {
+    e.preventDefault();
+    if (paySending) return;
+    var firstBad = null, bad = function (id, errId, msg) { $(errId).textContent = msg; if (id) $(id).setAttribute("aria-invalid", "true"); if (!firstBad) firstBad = $(id) || null; };
+    $("payDup").hidden = true;
+
+    var payer = cleanName($("payPayer").value);
+    if (!nameOk(payer)) bad("payPayer", "payPayerErr", "Ilagay ang buong pangalan ng nagbayad (first at last name man lang).");
+
+    var school = payCombo.selected();
+    if (!school) bad("payInput", "paySchoolErr", "Pumili ng school mula sa listahan.");
+
+    var names = [], seen = {}, nameProblem = "";
+    nameRows().forEach(function (r) {
+      var inp = r.querySelector("input"), v = cleanName(inp.value);
+      if (!v) return;
+      if (!nameOk(v)) { nameProblem = nameProblem || ("Ilagay ang buong pangalan ni " + v + " (first at last name man lang)."); inp.setAttribute("aria-invalid", "true"); if (!firstBad) firstBad = inp; return; }
+      var k = plain(v);
+      if (seen[k]) { nameProblem = nameProblem || ("Dalawang beses ang pangalang " + v + "."); inp.setAttribute("aria-invalid", "true"); if (!firstBad) firstBad = inp; return; }
+      seen[k] = true; names.push(v);
+    });
+    if (!nameProblem && names.length === 0) { nameProblem = "Maglagay ng kahit isang pangalan ng tutor."; if (!firstBad) firstBad = nameRows()[0].querySelector("input"); }
+    if (nameProblem) $("payNamesErr").textContent = nameProblem;
+
+    var method = document.querySelector('input[name="paymethod"]:checked');
+    if (!method) { $("payMethodErr").textContent = "Piliin kung Landbank o GCash."; if (!firstBad) firstBad = document.querySelector('input[name="paymethod"]'); }
+
+    var amtText = String($("payAmount").value || "").replace(/[\u20B1,\s]/g, ""), amount = NaN;
+    if (/^\d+(\.\d{1,2})?$/.test(amtText)) amount = parseFloat(amtText);
+    if (!(amount > 0) || amount > 1000000) bad("payAmount", "payAmountErr", "Ilagay ang halaga, halimbawa 150 o 150.50.");
+
+    var ref = cleanName($("payRef").value);
+    if (ref.replace(/[^A-Za-z0-9]/g, "").length < 4) bad("payRef", "payRefErr", "Ilagay ang reference number (kahit 4 na letra o numero).");
+
+    var date = $("payDate").value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) bad("payDate", "payDateErr", "Piliin ang petsa ng bayad.");
+    else if (date > todayManila()) bad("payDate", "payDateErr", "Hindi puwedeng petsa sa hinaharap.");
+
+    if (firstBad) { firstBad.focus(); return; }
+
+    var payload = { action: "payment", payer: payer, school: school.school, district: school.district, names: names,
+      method: method.value, amount: amount, reference: ref, paymentDate: date, note: String($("payNoteText").value || "").trim() };
+
+    paySending = true; $("paySubmit").disabled = true; $("paySubmit").textContent = "Sine-save...";
+    $("payStatus").textContent = ""; $("payStatus").className = "status";
+
+    postJSON(payload)
+    .then(function (res) {
+      if (res && res.duplicate) {
+        $("payDupText").textContent = "Nakatala na ang reference number na ito sa " + payload.method + ". Kung natapos mo na ito kanina, hindi mo na kailangang mag-submit ulit. Kung ibang bayad ito, tiyaking tama ang reference number.";
+        $("payDup").hidden = false; $("payDup").scrollIntoView({ block: "nearest" });
+        return;
+      }
+      if (!res || !res.ok) throw new Error((res && res.error) || "failed");
+      $("pdPayer").textContent = payload.payer;
+      $("pdSchool").textContent = payload.school + " (" + payload.district + ")";
+      var ul = $("pdNames"); ul.innerHTML = "";
+      payload.names.forEach(function (n) { var li = document.createElement("li"); li.textContent = n; ul.appendChild(li); });
+      $("pdMethod").textContent = payload.method; $("pdAmount").textContent = peso(payload.amount);
+      $("pdRef").textContent = payload.reference; $("pdDate").textContent = fmtLong(payload.paymentDate);
+      var already = (res.alreadyPaid || []);
+      if (already.length) {
+        $("payAlreadyText").textContent = "May nakatala nang bayad para sa: " + already.join(", ") + ". Naitala pa rin ang bayad na ito. Ipapaalam ng CID kung may kailangang ayusin.";
+        $("payAlready").hidden = false;
+      } else { $("payAlready").hidden = true; }
+      $("payForm").hidden = true; $("payDone").hidden = false; $("payDone").querySelector("h2").focus();
+    })
+    .catch(function () {
+      $("payStatus").className = "status bad";
+      $("payStatus").textContent = "Hindi na-save ang bayad. Tingnan ang internet at subukan ulit. Kung hindi pa rin, ipaalam sa CID.";
+    })
+    .then(function () { paySending = false; $("paySubmit").disabled = false; $("paySubmit").textContent = "Submit bayad"; });
+  }
+
   /* =============== routing =============== */
 
-  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts") };
+  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment") };
   var attLoaded = false, chipAt = 0;
 
   // Sa landing page: ipakita kung may bukas na meeting para sa attendance.
@@ -806,12 +1138,14 @@
   function route() {
     var h = (location.hash || "").replace("#", "");
     var name = h === "registration" ? "register" : h === "attendance" ? "attendance"
+             : h === "payment" ? "payment"
              : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "home";
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
     $("top").classList.toggle("compact", name !== "home");
     window.scrollTo(0, 0);
     if (name === "home") loadHomeChip();
     if (name === "contracts") showContracts(h.indexOf("contracts-") === 0 ? h.slice(10) : "");
+    if (name === "payment") initPayment();
     if (name === "attendance" && !attLoaded) loadAttendanceData();
   }
   window.addEventListener("hashchange", route);
