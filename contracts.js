@@ -1,6 +1,8 @@
 // =====================================================================
 //  CONTRACTS.JS  -  Listahan ng mga tutor na may contract na (SDO Romblon)
 //  Source: LIST OF ARAL TUTORS WITH CONTRACTS RECEIVED AS OF NOVEMBER 12, 2026
+//  NAKA-SAVE NA KOPYA LANG ITO. Ang Contracts tab sa Google Sheet na ang pinagmumulan ng listahan;
+//  gagamitin lang ang file na ito kapag hindi makuha ang listahan sa Sheet. Hindi na kailangang i-update ito sa bawat pagbabago.
 //  Format: { n: "Pangalan", s: "School", d: "District" }
 //  Kapag walang laman ang s (""), hindi pa na-verify ang school ng tutor.
 //  Para magdagdag: gumawa ng bagong linya. Ang d ay dapat eksaktong kapareho ng pangalan ng district.
