@@ -90,6 +90,8 @@
   .tile-note svg { width: 20px; height: 20px; flex: none; margin-top: 1px; color: var(--brand); }
   .tile.pay .ico { background: #f6dfe4; color: #8a1f38; }
   .tile.pay .go { color: #8a1f38; }
+  .tile.vid .ico { background: #e6e2f6; color: #4a3a9a; }
+  .tile.vid .go { color: #4a3a9a; }
   .tile.wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 20px; row-gap: 4px; }
   .tile.wide .ico { grid-row: 1 / span 2; margin: 0; }
   .tile.wide strong { grid-column: 2; }
@@ -250,6 +252,7 @@
       <li><b>May orientation o meeting?</b> Piliin ang Attendance in the meeting at i-record ang pagdalo mo.</li>
       <li><b>Magbubukas ng Landbank account para sa remuneration?</b> Punan ang Pangalan para sa Landbank account. Hindi mo na ito kailangan kung may account ka na.</li>
       <li id="stepPayment"><b>Magbabayad ng notaryo ng contract?</b> Buksan ang Bayad sa notaryo at itala ang bayad mo.</li>
+      <li id="stepVideos"><b>Kailangan ng gabay sa paggamit ng ARAL Gain Tracker?</b> Buksan ang Video guide. May 10 maikling video na may captions.</li>
     </ol>
   </div>
 </header>
@@ -318,6 +321,16 @@
         <span class="desc">Itala ang bayad mo para sa notaryo ng contract. Puwedeng isang bayad para sa maraming tutor ng iisang school.</span>
         <span class="go">Itala ang bayad
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+      <a class="tile vid wide" id="tileVideos" href="https://projectkabulig-dev.github.io/aral-tutor-videos1/" target="_blank" rel="noopener noreferrer">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 9l5 3-5 3z"/></svg>
+        </span>
+        <strong>Video guide sa ARAL Gain Tracker</strong>
+        <span class="desc">10 maikling video, isang paksa bawat isa, may English voice at captions. Mga 17 minuto lahat. Magbubukas ito sa bagong tab.</span>
+        <span class="go">Panoorin ang mga video
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </span>
       </a>
     </div>
