@@ -79,6 +79,13 @@
   .tile.ext .go { color: #7a5300; }
   .tile.con .ico { background: #dcefe3; color: #17653a; }
   .tile.con .go { color: #17653a; }
+  .tile .ico svg { width: 26px; height: 26px; }
+  .tile strong { font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--navy); }
+  .tile .desc { color: var(--muted); max-width: 40ch; }
+  .tile .go { margin-top: auto; padding-top: 12px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: var(--brand); }
+  .tile.att .go { color: var(--navy); }
+  .tile .go svg { width: 22px; height: 22px; flex: none; transition: transform 0.18s ease; }
+  .tile:hover .go svg { transform: translateX(4px); }
   .chip.plain::before { display: none; }
   .chip.plain { background: #eceff1; color: var(--muted); font-weight: 400; }
   .chip { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.9rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
