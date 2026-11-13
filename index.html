@@ -45,7 +45,13 @@
   header.compact .wrap { max-width: 640px; }
   header.compact .org { margin-bottom: 2px; font-size: 0.9rem; }
   header.compact h1 { font-size: 1.5rem; letter-spacing: -0.01em; }
-  header.compact .lede { display: none; }
+  header.compact .lede, header.compact .steps { display: none; }
+  header .steps { list-style: none; margin: 26px 0 0; padding: 14px 16px; max-width: 640px; display: grid; gap: 10px;
+    background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; counter-reset: st; }
+  header .steps li { position: relative; padding-left: 38px; color: #e3eef1; font-size: 0.98rem; line-height: 1.45; counter-increment: st; }
+  header .steps li::before { content: counter(st); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 50%;
+    display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 0.85rem; color: var(--navy); background: #a9d6da; }
+  header .steps b { color: #fff; }
   main { max-width: 880px; margin: 0 auto; padding: 20px 16px 48px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px 20px; max-width: 640px; margin: 0 auto; }
   h2 { margin: 0 0 6px; font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.25; letter-spacing: -0.01em; }
@@ -69,6 +75,16 @@
   .tile:hover { transform: translateY(-3px); border-color: var(--brand); box-shadow: 0 1px 2px rgba(11, 42, 67, 0.06), 0 16px 34px rgba(11, 42, 67, 0.16); }
   .tile .ico { width: 52px; height: 52px; border-radius: 14px; display: grid; place-items: center; background: var(--tint); color: var(--brand); margin-bottom: 6px; }
   .tile.att .ico { background: #dde6ef; color: var(--navy); }
+  .tile.ext .ico { background: #fbeccb; color: #7a5300; }
+  .tile.wide { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; column-gap: 20px; row-gap: 4px; }
+  .tile.wide .ico { grid-row: 1 / span 2; margin: 0; }
+  .tile.wide strong { grid-column: 2; }
+  .tile.wide .desc { grid-column: 2; max-width: 60ch; }
+  .tile.wide .go { grid-column: 3; grid-row: 1 / span 2; margin: 0; padding: 0; gap: 8px; justify-content: flex-end; white-space: nowrap; color: #7a5300; }
+  @media (max-width: 720px) {
+    .tile.wide { display: flex; }
+    .tile.wide .go { margin-top: auto; padding-top: 12px; justify-content: space-between; }
+  }
   .tile .ico svg { width: 26px; height: 26px; }
   .tile strong { font-family: var(--display); font-weight: 800; font-size: 1.4rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--navy); }
   .tile .desc { color: var(--muted); max-width: 40ch; }
@@ -189,6 +205,11 @@
     <p class="org">Schools Division Office of Romblon</p>
     <h1>External ARAL Tutors</h1>
     <p class="lede">Mag-register bilang tutor at i-record ang attendance mo sa mga orientation at meeting ng CID.</p>
+    <ol class="steps" aria-label="Paano gamitin">
+      <li><b>Wala ka pa sa listahan?</b> Pumunta sa Registration at piliin ang school na naka-assign sa iyo.</li>
+      <li><b>May orientation o meeting?</b> Piliin ang Attendance in the meeting at i-record ang pagdalo mo.</li>
+      <li><b>Magbubukas ng Landbank account para sa remuneration?</b> Punan ang Pangalan para sa Landbank account. Hindi mo na ito kailangan kung may account ka na.</li>
+    </ol>
   </div>
 </header>
 
@@ -217,6 +238,16 @@
         <span class="chip" id="liveChip" hidden></span>
         <span class="go">Mag-record ng attendance
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+      <a class="tile ext wide" href="https://tinyurl.com/atmindorsement" target="_blank" rel="noopener noreferrer">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
+        </span>
+        <strong>Pangalan para sa Landbank account</strong>
+        <span class="desc">Para sa external ARAL tutor na magbubukas ng account para sa remuneration. Magbubukas ito sa bagong tab.</span>
+        <span class="go">Buksan ang form
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </span>
       </a>
     </div>
