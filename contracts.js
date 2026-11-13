@@ -309,6 +309,8 @@ const CONTRACTS = [
   { n: "Marivic Presaldo", s: "", d: "San Fernando" },
   { n: "Joyce Margerry R. Amonte", s: "", d: "San Fernando" },
   { n: "Jhaliaca Katrina Acosta", s: "", d: "San Fernando" },
+  { n: "Hannie Laine Bandala Dorado", s: "Agmanic ES", d: "San Jose-Santa Fe" },
+  { n: "Micho Magbanua Unabia", s: "Agmanic ES", d: "San Jose-Santa Fe" },
   { n: "Mary Grace Baldera Bangalisan", s: "Agripino Armedilla NHS", d: "San Jose-Santa Fe" },
   { n: "Dina Visca Cahilig", s: "Agripino Armedilla NHS", d: "San Jose-Santa Fe" },
   { n: "Maria Sandra De Jesus Faa", s: "Agripino Armedilla NHS", d: "San Jose-Santa Fe" },
