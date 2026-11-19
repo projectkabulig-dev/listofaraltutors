@@ -91,6 +91,10 @@
   .st-list span.t { color: var(--muted); font-size: 0.92rem; }
   .st-warn .primary.msg { display: inline-block; width: auto; margin-top: 4px; padding: 10px 16px; text-decoration: none; background: var(--navy); }
   .st-warn p { margin: 6px 0; }
+  .st-sub { margin: 14px 0 4px; font-weight: 800; color: var(--navy); font-size: 0.9rem; letter-spacing: .02em; border-top: 1px dashed var(--line, #d7dde8); padding-top: 10px; }
+  .st-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+  .st-actions .primary { display: inline-block; width: auto; margin: 0; padding: 10px 16px; text-decoration: none; }
+  .st-actions .primary.msg { background: var(--navy); }
   .st-name .flag { display: block; margin-top: 4px; color: var(--warn-ink); font-weight: 700; font-size: 0.88rem; }
   .st-warn { background: var(--warn-bg); border-left: 5px solid var(--warn-line); border-radius: 8px; padding: 8px 12px; margin: 0 0 10px; color: var(--warn-ink); font-size: 0.92rem; }
   .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
@@ -2184,7 +2188,41 @@
     return '<li><span class="st-ico ' + kind + '" aria-hidden="true">' + ico + '</span><div><b>' + esc(label) + "</b>" +
       (note ? '<span class="t">' + esc(note) + "</span>" : "") + "</div></li>";
   }
-  function stFlagged(r) { return !!(r.multi || (r.schools && r.schools.length > 1) || (r.similar && r.similar.length) || r.bankCheck); }
+  function stFlagged(r) {
+    var tk = r.trk;
+    return !!(r.multi || (r.schools && r.schools.length > 1) || (r.similar && r.similar.length) || r.bankCheck ||
+      (tk && ((tk.state === "found" && tk.multi) || (tk.state === "none" && tk.similar && tk.similar.length))));
+  }
+  var TRK_STATUS = { "Active": "Aktibo (may naitala nitong nakaraang mga araw)", "Quiet": "Matagal nang walang naitala (higit 5 araw)",
+    "Not started": "Naka-register at may tutees, pero wala pang test o daily log", "No learners yet": "Naka-register pero wala pang tutees na naka-encode" };
+  function trkRows(r) {
+    var tk = r.trk, h = "";
+    if (!tk) return "";
+    if (tk.state === "error") return '<p class="st-sub">Tracker</p><ul class="st-list">' + stRow("wait", "Hindi makuha ang Tracker ngayon", "Subukan ulit mamaya") + "</ul>";
+    if (tk.state === "none") return '<p class="st-sub">Tracker (ARAL Gain Tracker)</p><ul class="st-list">' +
+      stRow("no", "Nakarehistro sa Tracker", "Hindi pa nakita sa Tracker sa pangalang ito. Kung nag-register ka na roon, dapat pareho ang spelling ng pangalan mo.") + "</ul>";
+    var L = tk.learners, math = (tk.np + tk.nq) > 0, read = (tk.rp + tk.rq) > 0;
+    var level = tk.elem && tk.sec ? "Elementary at Secondary" : tk.elem ? "Elementary" : tk.sec ? "Secondary" : "";
+    var subj = math && read ? "Math at Reading" : math ? "Math" : read ? "Reading" : "";
+    function testRow(label, mDone, rDone) {
+      var parts = [], complete = true;
+      if (math) { parts.push("Math " + mDone + " sa " + L); if (mDone < L) complete = false; }
+      if (read) { parts.push("Reading " + rDone + " sa " + L); if (rDone < L) complete = false; }
+      var any = (math && mDone > 0) || (read && rDone > 0);
+      if (!math && !read) return stRow("no", label, "Wala pang naka-encode");
+      return stRow(!any ? "no" : (complete ? "ok" : "wait"), label, any ? parts.join(" · ") : "Wala pang naka-encode");
+    }
+    h += '<p class="st-sub">Tracker (ARAL Gain Tracker)</p><ul class="st-list">';
+    h += stRow("ok", "Nakarehistro sa Tracker", TRK_STATUS[tk.status] || "");
+    h += stRow(L > 0 ? "ok" : "no", "May tutees na naka-encode", L > 0 ? L + " learners" + (level ? " (" + [tk.elem ? "Elementary " + tk.elem : "", tk.sec ? "Secondary " + tk.sec : ""].filter(Boolean).join(", ") + ")" : "") : "Wala pa");
+    h += stRow(level && subj ? "ok" : "no", "Level at subject", level && subj ? level + " · " + subj : (L > 0 ? "Lalabas pagkatapos ng unang pretest" : "Wala pa"));
+    h += testRow("Pretest", tk.np, tk.rp);
+    h += testRow("Posttest", tk.nq, tk.rq);
+    h += stRow(tk.days > 0 ? "ok" : "no", "Daily activities", tk.days > 0 ? tk.days + " araw, " + tk.sess + " session, huli: " + tk.last : "Wala pang naitala");
+    h += "</ul>";
+    if (r.atmTutees != null && L > 0 && r.atmTutees !== L) h += '<p class="hint">Sa bank account form: ' + r.atmTutees + ' tutees. Sa Tracker: ' + L + ' learners ang naka-encode pa lang.</p>';
+    return h;
+  }
   function stList(r, meetings) {
     var h = '<ul class="st-list">';
     h += stRow(r.reg ? "ok" : "no", "Nakarehistro bilang tutor", r.reg ? "" : "Wala pa");
@@ -2195,11 +2233,14 @@
       meetings < 1 ? "Wala pang meeting sa listahan" : (r.att > 0 ? r.att + " sa " + meetings + " meeting" : "Wala pang naitala (0 sa " + meetings + ")"));
     h += stRow(r.atm ? "ok" : "no", "Naisumite ang bank account at tutees", r.atm ? "" : "Hindi pa");
     h += "</ul>";
+    h += trkRows(r);
     if (stFlagged(r)) {
       h += '<div class="st-warn"><b>Pakikumpirma kay Sir Dyon</b>';
       if (r.multi || (r.schools && r.schools.length > 1)) h += "<p>May higit sa isang school na nakatala sa pangalang ito: " + esc((r.schools || []).join("; ")) + ". Tingnan kung alin ang sa iyo.</p>";
       if (r.similar && r.similar.length) h += "<p>May katulad na pangalan na magkaiba ang spelling: " + esc(r.similar.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". Baka doble o maling spelling.</p>";
       if (r.bankCheck) h += "<p>May kailangang kumpirmahin sa bank account na naisumite mo.</p>";
+      if (r.trk && r.trk.state === "found" && r.trk.multi) h += "<p>May higit sa isang tutor sa Tracker na may ganitong pangalan. Ipinapakita ang may pinakamaraming tutees.</p>";
+      if (r.trk && r.trk.state === "none" && r.trk.similar && r.trk.similar.length) h += "<p>Sa Tracker, may katulad na pangalan: " + esc(r.trk.similar.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". Baka magkaiba ang spelling mo roon.</p>";
       h += msgBtn() + "</div>";
     }
     return h;
@@ -2227,8 +2268,14 @@
         if (!res || !res.ok) throw new Error("bad");
         var list = res.results || [];
         if (!list.length) {
-          box.innerHTML = ""; note.hidden = false; msg.className = "name-hint warn";
-          msg.textContent = "Walang nakitang pangalan. Subukan ang ibang spelling o ang apelyido lang. Kung wala ka pa sa listahan, pumunta sa Registration.";
+          note.hidden = true; msg.className = "name-hint warn"; msg.textContent = "Walang nakitang pangalan.";
+          var sg = res.suggest || [];
+          box.innerHTML = '<div class="st-warn"><b>Wala sa listahan ang \u201c' + esc(q) + '\u201d</b>' +
+            (sg.length ? "<p>Baka ito ang hinahanap mo: " + esc(sg.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". I-type ang pangalang iyon para makita ang status.</p>" : "") +
+            "<p>1. Subukan ang apelyido lang o ibang spelling.</p>" +
+            "<p>2. Kung hindi ka pa nakarehistro, mag-register muna.</p>" +
+            "<p>3. Kung nakarehistro ka na at hindi pa rin lumalabas, i-message si Sir Dyon.</p>" +
+            '<div class="st-actions"><a class="primary" href="#registration">Magrehistro</a>' + msgBtn() + "</div></div>";
           return;
         }
         msg.className = "name-hint ok";
