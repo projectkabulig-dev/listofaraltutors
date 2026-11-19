@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>External ARAL Tutors | SDO Romblon</title>
+<title>External ARAL Tutors Dashboard | SDO Romblon</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Plus+Jakarta+Sans:wght@600;800&display=swap" rel="stylesheet">
@@ -62,7 +62,38 @@
 
   /* landing */
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  #view-home { position: relative; margin-top: -84px; }
+  #view-home { position: relative; margin-top: 0; }
+  #view-landing { position: relative; margin-top: -84px; }
+  .go-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+  .go-row .primary { width: auto; flex: 1 1 220px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; padding: 14px 18px; }
+  .go-row .primary svg { width: 20px; height: 20px; }
+  a.primary { font: inherit; font-weight: 700; border-radius: 8px; background: var(--brand); color: #fff; }
+  a.primary:hover { background: var(--brand-dark); }
+  .st-card { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; margin: 0 0 12px; background: #fff; }
+  .st-card { padding: 0; overflow: hidden; }
+  .st-name { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px; text-align: left; font: inherit; background: #fff; border: 0; padding: 14px; cursor: pointer; color: var(--ink); }
+  .st-name:hover, .st-name[aria-expanded="true"] { background: var(--tint); }
+  .st-name b { display: block; font-family: var(--display); font-size: 1.1rem; color: var(--navy); }
+  .st-name .sub { display: block; color: var(--muted); font-size: 0.9rem; }
+  .st-name .chev { color: var(--brand); transition: transform 0.15s; }
+  .st-name[aria-expanded="true"] .chev { transform: rotate(180deg); }
+  .st-panel { padding: 4px 14px 14px; border-top: 1px solid var(--line); }
+  .st-panel .st-list { margin-top: 10px; }
+  .st-card h3 { margin: 0; font-family: var(--display); font-size: 1.15rem; color: var(--navy); }
+  .st-card .sub { margin: 2px 0 10px; color: var(--muted); font-size: 0.92rem; }
+  .st-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .st-list li { display: flex; gap: 10px; align-items: flex-start; }
+  .st-ico { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 0.85rem; font-weight: 800; }
+  .st-ico.ok { background: #dff3e6; color: #17653a; }
+  .st-ico.no { background: #fde8e6; color: var(--err); }
+  .st-ico.wait { background: var(--warn-bg); color: var(--warn-ink); }
+  .st-list b { display: block; }
+  .st-list span.t { color: var(--muted); font-size: 0.92rem; }
+  .st-warn { background: var(--warn-bg); border-left: 5px solid var(--warn-line); border-radius: 8px; padding: 8px 12px; margin: 0 0 10px; color: var(--warn-ink); font-size: 0.92rem; }
+  .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
+  .menu-top h2 { margin: 0; }
+  .menu-top a { color: var(--brand); font-weight: 700; text-decoration: none; }
+  .menu-top a:hover { text-decoration: underline; }
   .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   @media (max-width: 720px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
   .tile {
@@ -217,6 +248,7 @@
     font: inherit; font-weight: 700; padding: 12px 16px; border: 1.5px solid var(--brand);
     border-radius: 8px; background: #fff; color: var(--brand); cursor: pointer;
   }
+  a.linkbtn { color: var(--brand); font-weight: 700; padding: 8px 4px; }
   button.linkbtn {
     font: inherit; background: none; border: 0; padding: 4px 0; color: var(--brand);
     text-decoration: underline; cursor: pointer; text-align: left;
@@ -238,7 +270,7 @@
   footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 0 16px 32px; }
 
   /* house icon sa lahat ng "Bumalik sa simula" */
-  .back[href="#"]::before { content: ""; display: inline-block; width: 1.05em; height: 1.05em; margin-right: 6px; vertical-align: -0.15em; background: currentColor;
+  .back[href="#menu"]::before { content: ""; display: inline-block; width: 1.05em; height: 1.05em; margin-right: 6px; vertical-align: -0.15em; background: currentColor;
     -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat; }
   /* ATM */
@@ -282,9 +314,9 @@
   </svg>
   <div class="wrap">
     <p class="org">Schools Division Office of Romblon</p>
-    <h1>External ARAL Tutors</h1>
-    <p class="lede">Mag-register bilang tutor at i-record ang attendance mo sa mga orientation at meeting ng CID.</p>
-    <ol class="steps" aria-label="Paano gamitin">
+    <h1>External ARAL Tutors Dashboard</h1>
+    <p class="lede">Dito mo makikita ang mga puwede mong gawin bilang external ARAL tutor at kung nasaan na ang mga requirement mo.</p>
+    <ol class="steps" aria-label="Mga puwedeng gawin sa dashboard">
       <li><b>Wala ka pa sa listahan?</b> Pumunta sa Registration at piliin ang school na naka-assign sa iyo.</li>
       <li id="stepContracts"><b>Gusto mong malaman kung may contract ka na?</b> Buksan ang Mga may contract na at piliin ang district mo.</li>
       <li><b>May orientation o meeting?</b> Piliin ang Attendance in the meeting at i-record ang pagdalo mo.</li>
@@ -300,8 +332,37 @@
 <main>
 
   <!-- ================= LANDING ================= -->
-  <section id="view-home">
-    <h2 class="sr-only">Pumili ng gagawin</h2>
+  <section class="card" id="view-landing">
+    <h2>Maligayang pagdating</h2>
+    <p class="intro">Ang mga nakalista sa itaas ay ang mga puwede mong gawin sa dashboard na ito. Pindutin ang Susunod para tingnan ang status mo, o dumiretso na sa mga pagpipilian.</p>
+    <div class="go-row">
+      <a class="primary" href="#lookup" id="landNext">Susunod
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+      <a class="linkbtn" href="#menu" id="landSkip">Laktawan, dumiretso sa mga pagpipilian</a>
+    </div>
+  </section>
+
+  <!-- ================= HANAPIN ANG PANGALAN ================= -->
+  <section class="card" id="view-lookup" hidden>
+    <a class="back" href="#menu">Bumalik sa Home</a>
+    <h2 tabindex="-1">Tingnan ang status mo</h2>
+    <p class="intro">I-type ang pangalan mo (hindi bababa sa 3 letra), tapos pindutin ang pangalan mo sa listahan para makita ang status.</p>
+    <div class="field">
+      <label for="lkName">Pangalan</label>
+      <input type="text" id="lkName" autocomplete="off" placeholder="Halimbawa: Dela Cruz o Juan Dela Cruz" aria-describedby="lkMsg">
+      <p class="name-hint" id="lkMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div id="lkResults"></div>
+    <p class="hint" id="lkNote" hidden style="margin:0 0 14px">Ayon ito sa mga naitala sa dashboard. Kung may mali o kulang, ipaalam sa CID. Kung iba ang spelling ng pangalan mo sa mga naunang listahan, maaaring hindi ito lumitaw.</p>
+    <div class="go-row">
+      <a class="primary" href="#menu" id="lkNext">Susunod
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
+    </div>
+  </section>
+
+  <!-- ================= MGA PAGPIPILIAN ================= -->
+  <section id="view-home" hidden>
+    <div class="menu-top"><h2>Pumili ng gagawin</h2><a href="#lookup">Tingnan ang status ko</a> <a href="#">Simula</a></div>
     <div class="tiles">
       <a class="tile reg" href="#registration">
         <span class="ico" aria-hidden="true">
@@ -418,7 +479,7 @@
 
   <!-- ================= PAYMENT ================= -->
   <section class="card" id="view-payment" hidden>
-    <a class="back" href="#">Bumalik sa simula</a>
+    <a class="back" href="#menu">Bumalik sa Home</a>
 
     <form id="payForm" novalidate>
       <h2 tabindex="-1">Bayad sa notaryo</h2>
@@ -531,14 +592,14 @@
       </dl>
       <div class="actions">
         <button type="button" class="secondary" id="payAgain">Magtala ng isa pang bayad</button>
-        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+        <a class="back" href="#menu" style="margin:0;align-self:center">Bumalik sa Home</a>
       </div>
     </section>
   </section>
 
   <!-- ================= CONTRACTS ================= -->
   <section class="card" id="view-atm" hidden>
-    <a class="back" href="#">Bumalik sa simula</a>
+    <a class="back" href="#menu">Bumalik sa Home</a>
     <h2 tabindex="-1" id="atmTitle">Bank account para sa remuneration at tutees</h2>
     <ol class="atm-steps" id="atmSteps" aria-label="Mga hakbang">
       <li id="atmS1" class="on">1. Ikaw</li><li id="atmS2">2. Tutees</li><li id="atmS3">3. Suriin</li><li id="atmS4">4. Tapos</li>
@@ -638,13 +699,13 @@
       <label class="check" style="margin:0 0 12px"><input type="checkbox" id="atmShowFull"> Ipakita ang buong account number sa kopya</label>
       <div class="actions">
         <button type="button" class="primary" id="atmDownload" style="width:auto;flex:1">I-download ang PNG</button>
-        <a class="secondary" href="#" id="atmHome" style="text-decoration:none;text-align:center;padding:12px 16px;border:1.5px solid var(--brand);border-radius:8px;font-weight:700;color:var(--brand)">Bumalik sa simula</a>
+        <a class="secondary" href="#menu" id="atmHome" style="text-decoration:none;text-align:center;padding:12px 16px;border:1.5px solid var(--brand);border-radius:8px;font-weight:700;color:var(--brand)">Bumalik sa Home</a>
       </div>
     </div>
   </section>
 
   <section class="card" id="view-contracts" hidden>
-    <a class="back" href="#" id="ctBackHome">Bumalik sa simula</a>
+    <a class="back" href="#menu" id="ctBackHome">Bumalik sa Home</a>
     <h2 tabindex="-1" id="ctTitle">Mga may contract na</h2>
     <div class="warning" id="ctCopyNote" hidden style="margin:10px 0 14px">
       <strong>Hindi makuha ang pinakabagong listahan</strong>
@@ -678,7 +739,7 @@
 
   <!-- ================= REGISTRATION ================= -->
   <section class="card" id="view-register" hidden>
-    <a class="back" href="#">Bumalik sa simula</a>
+    <a class="back" href="#menu">Bumalik sa Home</a>
 
     <form id="form" novalidate>
       <h2 tabindex="-1">Registration</h2>
@@ -755,14 +816,14 @@
       </dl>
       <div class="actions">
         <button type="button" class="secondary" id="again">Mag-register ng isa pang tutor</button>
-        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+        <a class="back" href="#menu" style="margin:0;align-self:center">Bumalik sa Home</a>
       </div>
     </section>
   </section>
 
   <!-- ================= ATTENDANCE ================= -->
   <section class="card" id="view-attendance" hidden>
-    <a class="back" href="#">Bumalik sa simula</a>
+    <a class="back" href="#menu">Bumalik sa Home</a>
     <h2 tabindex="-1" id="attTitle">Attendance in the meeting</h2>
 
     <div class="loading" id="attLoading">Kinukuha ang listahan...</div>
@@ -908,7 +969,7 @@
       </dl>
       <div class="actions">
         <button type="button" class="secondary" id="attAgain">Mag-record para sa ibang tao</button>
-        <a class="back" href="#" style="margin:0;align-self:center">Bumalik sa simula</a>
+        <a class="back" href="#menu" style="margin:0;align-self:center">Bumalik sa Home</a>
       </div>
     </section>
   </section>
@@ -1377,7 +1438,7 @@
 
   /* =============== routing =============== */
 
-  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm") };
+  var views = { landing: $("view-landing"), lookup: $("view-lookup"), home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm") };
   var attLoaded = false, chipAt = 0, lastRoute = "";
 
   // Sa landing page: ipakita kung may bukas na meeting para sa attendance.
@@ -1400,9 +1461,10 @@
     var h = (location.hash || "").replace("#", "");
     var name = h === "registration" ? "register" : h === "attendance" ? "attendance"
              : h === "payment" ? "payment" : h === "atm" ? "atm"
-             : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "home";
+             : h === "lookup" ? "lookup" : h === "menu" ? "home"
+             : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "landing";
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
-    $("top").classList.toggle("compact", name !== "home");
+    $("top").classList.toggle("compact", name !== "landing");
     window.scrollTo(0, 0);
     if (name === "home") { loadHomeChip(); loadContracts(false); }
     if (name === "contracts") {
@@ -1410,6 +1472,7 @@
       if (lastRoute !== "contracts") loadContracts(true);      // sariwang listahan tuwing bubuksan
     }
     lastRoute = name;
+    if (name === "lookup") initLookup();
     if (name === "payment") initPayment();
     if (name === "atm") initAtm();
     if (name === "attendance" && !attLoaded) loadAttendanceData();
@@ -2089,6 +2152,75 @@
     $("atmRowsWrap").hidden = true; $("atmRows").innerHTML = "";
     atmShow(1);
   });
+
+  /* =============== STATUS NG TUTOR (hanapin ang pangalan) =============== */
+
+  var lkTimer = null, lkSeq = 0;
+  function initLookup() { $("lkName").focus(); }
+  function stRow(kind, label, note) {
+    var ico = kind === "ok" ? "&#10003;" : kind === "wait" ? "&#10003;" : "&#10005;";
+    return '<li><span class="st-ico ' + kind + '" aria-hidden="true">' + ico + '</span><div><b>' + esc(label) + "</b>" +
+      (note ? '<span class="t">' + esc(note) + "</span>" : "") + "</div></li>";
+  }
+  function stList(r, meetings) {
+    var h = "";
+    if (r.multi) h += '<div class="st-warn">May higit sa isang school o tutor na may ganitong pangalan. Tingnan kung ikaw ito. Ang CID ang magkukumpirma.</div>';
+    h += '<ul class="st-list">';
+    h += stRow(r.reg ? "ok" : "no", "Nakarehistro bilang tutor", r.reg ? "" : "Wala pa");
+    h += stRow(r.con ? "ok" : "no", "May contract", r.con ? "" : "Wala pa sa listahan");
+    h += stRow(r.paid === "confirmed" ? "ok" : (r.paid === "pending" ? "wait" : "no"), "Nakabayad sa notaryo",
+      r.paid === "confirmed" ? "" : (r.paid === "pending" ? "Naitala na, hinihintay ang kumpirmasyon ng CID" : "Wala pang naitala"));
+    h += stRow(r.att > 0 ? "ok" : "no", "Dumalo sa meeting",
+      meetings < 1 ? "Wala pang meeting sa listahan" : (r.att > 0 ? r.att + " sa " + meetings + " meeting" : "Wala pang naitala (0 sa " + meetings + ")"));
+    h += stRow(r.atm ? "ok" : "no", "Naisumite ang bank account at tutees", r.atm ? "" : "Hindi pa");
+    return h + "</ul>";
+  }
+  function stItem(r, meetings, idx) {
+    var id = "stp" + idx;
+    return '<div class="st-card"><button type="button" class="st-name" aria-expanded="false" aria-controls="' + id + '" data-i="' + idx + '">' +
+      '<span><b>' + esc(r.n) + '</b><span class="sub">' + esc([r.s, r.d].filter(Boolean).join(", ") || "Wala pang school sa listahan") + '</span></span>' +
+      '<span class="chev" aria-hidden="true">&#9662;</span></button><div class="st-panel" id="' + id + '" hidden>' + stList(r, meetings) + "</div></div>";
+  }
+  function lkSearch() {
+    var q = $("lkName").value.replace(/\s+/g, " ").trim(), msg = $("lkMsg"), box = $("lkResults"), note = $("lkNote");
+    var seq = ++lkSeq;
+    if (plain(q).replace(/ /g, "").length < 3) {
+      box.innerHTML = ""; note.hidden = true; msg.className = "name-hint";
+      msg.textContent = q ? "Mag-type pa ng kahit 3 letra." : "";
+      return;
+    }
+    msg.className = "name-hint"; msg.textContent = "Hinahanap...";
+    fetch(SCRIPT_URL + "?action=status&q=" + encodeURIComponent(q) + "&t=" + Date.now())
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (seq !== lkSeq) return;   // may mas bagong hinahanap na
+        if (!res || !res.ok) throw new Error("bad");
+        var list = res.results || [];
+        if (!list.length) {
+          box.innerHTML = ""; note.hidden = false; msg.className = "name-hint warn";
+          msg.textContent = "Walang nakitang pangalan. Subukan ang ibang spelling o ang apelyido lang. Kung wala ka pa sa listahan, pumunta sa Registration.";
+          return;
+        }
+        msg.className = "name-hint ok";
+        msg.textContent = list.length === 1 ? "May nakita. Pindutin ang pangalan para makita ang status." : "May " + list.length + (res.more ? "+" : "") + " nakita. Pindutin ang pangalan mo para makita ang status.";
+        box.innerHTML = list.map(function (r, i) { return stItem(r, res.meetings || 0, i); }).join("") +
+          (res.more ? '<p class="hint">Marami pang tugma. Isulat ang mas kumpletong pangalan para paliitin ang resulta.</p>' : "");
+        note.hidden = false;
+      })
+      .catch(function () {
+        if (seq !== lkSeq) return;
+        box.innerHTML = ""; note.hidden = true; msg.className = "name-hint warn";
+        msg.textContent = "Hindi makuha ang status ngayon. Tingnan ang internet at subukan ulit.";
+      });
+  }
+  $("lkResults").addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest(".st-name") : null;
+    if (!btn) return;
+    var panel = $(btn.getAttribute("aria-controls")), open = panel.hidden;
+    $("lkResults").querySelectorAll(".st-name").forEach(function (b) { b.setAttribute("aria-expanded", "false"); $(b.getAttribute("aria-controls")).hidden = true; });
+    if (open) { panel.hidden = false; btn.setAttribute("aria-expanded", "true"); }
+  });
+  $("lkName").addEventListener("input", function () { clearTimeout(lkTimer); lkTimer = setTimeout(lkSearch, 450); });
 
   loadContracts(true);
   route();
