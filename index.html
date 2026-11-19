@@ -91,6 +91,11 @@
   .st-list span.t { color: var(--muted); font-size: 0.92rem; }
   .st-warn .primary.msg { display: inline-block; width: auto; margin-top: 4px; padding: 10px 16px; text-decoration: none; background: var(--navy); }
   .st-warn p { margin: 6px 0; }
+  .srcs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .src { font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 999px; border: 1px solid transparent; }
+  .src.dash { background: #e1f1f3; color: #0b5560; border-color: #b9dde2; }
+  .src.trk { background: #e8f0fe; color: #1a4aa0; border-color: #c4d6f8; }
+  .src.warn { background: #fff4d6; color: #7a5200; border-color: #f0d58a; }
   .st-sub { margin: 14px 0 4px; font-weight: 800; color: var(--navy); font-size: 0.9rem; letter-spacing: .02em; border-top: 1px dashed var(--line, #d7dde8); padding-top: 10px; }
   .st-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
   .st-actions .primary { display: inline-block; width: auto; margin: 0; padding: 10px 16px; text-decoration: none; }
@@ -2245,10 +2250,19 @@
     }
     return h;
   }
+  function srcChips(r) {
+    if (!r.src) return "";
+    var c = "";
+    if (r.src.dash) c += '<span class="src dash">Nasa Dashboard</span>';
+    if (r.src.trk) c += '<span class="src trk">Nasa Tracker</span>';
+    if (!c) return "";
+    return '<span class="srcs">' + c + (r.src.trk && !r.src.dash ? '<span class="src warn">Tracker lang</span>' : "") + "</span>";
+  }
   function stItem(r, meetings, idx) {
     var id = "stp" + idx;
     return '<div class="st-card"><button type="button" class="st-name" aria-expanded="false" aria-controls="' + id + '" data-i="' + idx + '">' +
       '<span><b>' + esc(r.n) + '</b><span class="sub">' + esc([r.s, r.d].filter(Boolean).join(", ") || "Wala pang school sa listahan") + '</span>' +
+      srcChips(r) +
       (stFlagged(r) ? '<span class="flag">&#9888; May dapat kumpirmahin</span>' : "") + '</span>' +
       '<span class="chev" aria-hidden="true">&#9662;</span></button><div class="st-panel" id="' + id + '" hidden>' + stList(r, meetings) + "</div></div>";
   }
