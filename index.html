@@ -89,6 +89,9 @@
   .st-ico.wait { background: var(--warn-bg); color: var(--warn-ink); }
   .st-list b { display: block; }
   .st-list span.t { color: var(--muted); font-size: 0.92rem; }
+  .st-warn .primary.msg { display: inline-block; width: auto; margin-top: 4px; padding: 10px 16px; text-decoration: none; background: var(--navy); }
+  .st-warn p { margin: 6px 0; }
+  .st-name .flag { display: block; margin-top: 4px; color: var(--warn-ink); font-weight: 700; font-size: 0.88rem; }
   .st-warn { background: var(--warn-bg); border-left: 5px solid var(--warn-line); border-radius: 8px; padding: 8px 12px; margin: 0 0 10px; color: var(--warn-ink); font-size: 0.92rem; }
   .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
   .menu-top h2 { margin: 0; }
@@ -353,7 +356,7 @@
       <p class="name-hint" id="lkMsg" role="status" aria-live="polite"></p>
     </div>
     <div id="lkResults"></div>
-    <p class="hint" id="lkNote" hidden style="margin:0 0 14px">Ayon ito sa mga naitala sa dashboard. Kung may mali o kulang, ipaalam sa CID. Kung iba ang spelling ng pangalan mo sa mga naunang listahan, maaaring hindi ito lumitaw.</p>
+    <p class="hint" id="lkNote" hidden style="margin:0 0 14px">Ayon ito sa mga naitala sa dashboard. Kung may mali o kulang, ipaalam sa CID. Kung iba ang spelling ng pangalan mo sa mga naunang listahan, maaaring hindi ito lumitaw. May tanong o mali? <a class="linkbtn" href="https://m.me/rogelio.candido.7" target="_blank" rel="noopener noreferrer">I-message si Sir Dyon</a></p>
     <div class="go-row">
       <a class="primary" href="#menu" id="lkNext">Susunod
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
@@ -434,7 +437,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </span>
       </a>
-      <a class="tile trk" id="tileTracker" href="https://projectkabulig-dev.github.io/externaltutors/" target="_blank" rel="noopener noreferrer">
+      <a class="tile trk" id="tileTracker" href="https://projectkabulig-dev.github.io/trackingofexternaltutors/" target="_blank" rel="noopener noreferrer">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
         </span>
@@ -1884,7 +1887,7 @@
 
   /* =============== ATM ACCOUNT AT TUTEES =============== */
 
-  var ATM_BANKS = ["Landbank","DBP","BDO","BPI","Metrobank","PNB","Security Bank","UnionBank","China Bank","RCBC","Iba pa"];
+  var ATM_BANKS = ["Landbank","DBP","BDO","BPI","Metrobank","PNB","Security Bank","UnionBank","China Bank","RCBC","Maribank","Iba pa"];
   var atmTutors = null, atmTutorsLoading = false, atmSending = false, atmData = null, atmResult = null, atmCardTouched = false;
   var atmRows = [];
 
@@ -2000,6 +2003,11 @@
     }
     return { rows: out };
   }
+  function atmBankWarn(bank, digits) {
+    var n = String(digits || "").length;
+    return (bank === "Landbank" && n !== 10) || (bank === "BDO" && n !== 10 && n !== 12);
+  }
+  var atmAckKey = "";
   function atmBankName() { var b = $("atmBank").value; return b === "Iba pa" ? cleanName($("atmBankOther").value) : b; }
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function atmMask(d) { return d.length <= 4 ? d : "*".repeat(d.length - 4) + d.slice(-4); }
@@ -2042,6 +2050,13 @@
     if (ae) fail("atmAcctErr", ae, "atmAcct");
     else if (atmDigits($("atmAcct").value) !== atmDigits($("atmAcct2").value)) fail("atmAcct2Err", "Hindi magkapareho ang dalawang account number.", "atmAcct2");
     if (bad) { $(bad).focus(); return; }
+    var dg = atmDigits($("atmAcct").value), bk = $("atmBank").value;
+    if (atmBankWarn(bk, dg) && atmAckKey !== bk + "|" + dg) {
+      atmAckKey = bk + "|" + dg;
+      $("atmAcctErr").textContent = "Hindi karaniwan ang " + dg.length + " digits para sa " + bk + ". Ang 16 digits ay karaniwang numero ng card, hindi ng account. Tingnan ang account number sa passbook o itanong sa bank. Kung sigurado ka, pindutin ulit ang Susunod.";
+      $("atmAcct").focus();
+      return;
+    }
     atmShow(2);
   });
   document.querySelectorAll('input[name="atmLevel"]').forEach(function (r) {
@@ -2066,7 +2081,9 @@
     if (!atmLevel()) { $("atmLevelErr").textContent = "Piliin ang Elementary o Secondary."; return; }
     var r = atmReadRows();
     if (r.error) { $("atmRowsErr").textContent = r.error; return; }
-    $("atmReview").innerHTML = atmReviewHtml(atmCollect(), false);
+    var dd = atmCollect();
+    $("atmReview").innerHTML = atmReviewHtml(dd, false) +
+      (atmBankWarn(dd.bank, dd.account) ? '<div class="st-warn"><b>Pakisuri ang account number.</b><p>Hindi karaniwan ang ' + dd.account.length + " digits para sa " + esc(dd.bank) + ". Baka numero ito ng card. Maaari pa ring i-submit, pero ico-check ito ng CID.</p></div>" : "");
     $("atmStatus").textContent = ""; $("atmStatus").className = "status";
     $("atmSure").checked = false; $("atmSubmit").disabled = true;
     atmShow(3);
@@ -2099,7 +2116,8 @@
   function atmShowDone() {
     var ok = atmResult.status === "Verified";
     $("atmDoneNote").textContent = "Ref: " + atmResult.ref + " | " + atmResult.submittedAt + (ok ? "" : ". Wala ka pa sa listahan ng tutors, kaya mamarkahan ito para ma-check ng CID.") +
-      (atmResult.sharedAccount ? " Paalala: ginamit na ang account number na ito ng ibang tutor. Ico-check ito ng CID." : "");
+      (atmResult.sharedAccount ? " Paalala: ginamit na ang account number na ito ng ibang tutor. Ico-check ito ng CID." : "") +
+      (atmResult.bankLenWarn ? " Paalala: hindi karaniwan ang bilang ng digit ng account number para sa bank na ito. Ico-check ito ng CID." : "");
     $("atmDoneSummary").innerHTML = atmReviewHtml(atmData, true);
     $("atmShowFull").checked = false;
     atmDrawPng();
@@ -2155,6 +2173,10 @@
 
   /* =============== STATUS NG TUTOR (hanapin ang pangalan) =============== */
 
+  var MESSENGER = "https://m.me/rogelio.candido.7";
+  function msgBtn(label) {
+    return '<a class="primary msg" href="' + MESSENGER + '" target="_blank" rel="noopener noreferrer">' + esc(label || "I-message si Sir Dyon") + "</a>";
+  }
   var lkTimer = null, lkSeq = 0;
   function initLookup() { $("lkName").focus(); }
   function stRow(kind, label, note) {
@@ -2162,10 +2184,9 @@
     return '<li><span class="st-ico ' + kind + '" aria-hidden="true">' + ico + '</span><div><b>' + esc(label) + "</b>" +
       (note ? '<span class="t">' + esc(note) + "</span>" : "") + "</div></li>";
   }
+  function stFlagged(r) { return !!(r.multi || (r.schools && r.schools.length > 1) || (r.similar && r.similar.length) || r.bankCheck); }
   function stList(r, meetings) {
-    var h = "";
-    if (r.multi) h += '<div class="st-warn">May higit sa isang school o tutor na may ganitong pangalan. Tingnan kung ikaw ito. Ang CID ang magkukumpirma.</div>';
-    h += '<ul class="st-list">';
+    var h = '<ul class="st-list">';
     h += stRow(r.reg ? "ok" : "no", "Nakarehistro bilang tutor", r.reg ? "" : "Wala pa");
     h += stRow(r.con ? "ok" : "no", "May contract", r.con ? "" : "Wala pa sa listahan");
     h += stRow(r.paid === "confirmed" ? "ok" : (r.paid === "pending" ? "wait" : "no"), "Nakabayad sa notaryo",
@@ -2173,12 +2194,21 @@
     h += stRow(r.att > 0 ? "ok" : "no", "Dumalo sa meeting",
       meetings < 1 ? "Wala pang meeting sa listahan" : (r.att > 0 ? r.att + " sa " + meetings + " meeting" : "Wala pang naitala (0 sa " + meetings + ")"));
     h += stRow(r.atm ? "ok" : "no", "Naisumite ang bank account at tutees", r.atm ? "" : "Hindi pa");
-    return h + "</ul>";
+    h += "</ul>";
+    if (stFlagged(r)) {
+      h += '<div class="st-warn"><b>Pakikumpirma kay Sir Dyon</b>';
+      if (r.multi || (r.schools && r.schools.length > 1)) h += "<p>May higit sa isang school na nakatala sa pangalang ito: " + esc((r.schools || []).join("; ")) + ". Tingnan kung alin ang sa iyo.</p>";
+      if (r.similar && r.similar.length) h += "<p>May katulad na pangalan na magkaiba ang spelling: " + esc(r.similar.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". Baka doble o maling spelling.</p>";
+      if (r.bankCheck) h += "<p>May kailangang kumpirmahin sa bank account na naisumite mo.</p>";
+      h += msgBtn() + "</div>";
+    }
+    return h;
   }
   function stItem(r, meetings, idx) {
     var id = "stp" + idx;
     return '<div class="st-card"><button type="button" class="st-name" aria-expanded="false" aria-controls="' + id + '" data-i="' + idx + '">' +
-      '<span><b>' + esc(r.n) + '</b><span class="sub">' + esc([r.s, r.d].filter(Boolean).join(", ") || "Wala pang school sa listahan") + '</span></span>' +
+      '<span><b>' + esc(r.n) + '</b><span class="sub">' + esc([r.s, r.d].filter(Boolean).join(", ") || "Wala pang school sa listahan") + '</span>' +
+      (stFlagged(r) ? '<span class="flag">&#9888; May dapat kumpirmahin</span>' : "") + '</span>' +
       '<span class="chev" aria-hidden="true">&#9662;</span></button><div class="st-panel" id="' + id + '" hidden>' + stList(r, meetings) + "</div></div>";
   }
   function lkSearch() {
