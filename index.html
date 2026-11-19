@@ -236,6 +236,35 @@
   .done dd { margin: 0 0 10px; font-weight: 700; }
   .done .actions { display: flex; gap: 10px; flex-wrap: wrap; }
   footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 0 16px 32px; }
+
+  /* house icon sa lahat ng "Bumalik sa simula" */
+  .back[href="#"]::before { content: ""; display: inline-block; width: 1.05em; height: 1.05em; margin-right: 6px; vertical-align: -0.15em; background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10'/%3E%3C/svg%3E") center/contain no-repeat; }
+  /* ATM */
+  .tile.atm .ico { background: #fbe3e8; color: #9b1f3a; }
+  .tile.atm .go { color: #9b1f3a; }
+  .atm-steps { display: flex; gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; }
+  .atm-steps li { flex: 1; text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--muted); border-top: 4px solid var(--line); padding-top: 6px; }
+  .atm-steps li.on { color: var(--brand); border-top-color: var(--brand); }
+  .atm-steps li.done { color: var(--ok); border-top-color: var(--ok); }
+  .atm-rows { display: grid; gap: 10px; margin: 0 0 10px; }
+  .atm-row { border: 1.5px solid var(--line); border-radius: 10px; padding: 12px; background: #fafcfc; display: grid; gap: 10px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .atm-row label { font-size: 0.85rem; margin-bottom: 3px; }
+  .atm-row select, .atm-row input { padding: 10px; }
+  .atm-row .tot { display: flex; align-items: center; justify-content: space-between; grid-column: 1 / -1; font-weight: 700; color: var(--navy); }
+  .atm-row .tot button { font-size: 0.9rem; }
+  .atm-total { background: var(--tint); border-left: 6px solid var(--brand); border-radius: 8px; padding: 10px 14px; font-weight: 700; margin: 0 0 16px; }
+  .atm-badge { display: inline-block; font-size: 0.85rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .atm-badge.ok { background: #dff3e6; color: #17653a; }
+  .atm-badge.no { background: var(--warn-bg); color: var(--warn-ink); }
+  .atm-sum { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin: 6px 0 14px; }
+  .atm-sum th, .atm-sum td { border: 1px solid var(--line); padding: 6px 8px; text-align: left; }
+  .atm-sum th { background: #eef2f6; }
+  .atm-sum td.n { text-align: right; }
+  #atmPng { max-width: 100%; height: auto; border: 1px solid var(--line); border-radius: 8px; margin: 0 0 12px; }
+  .row2 { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row2 > * { flex: 1; }
 </style>
 </head>
 <body>
@@ -262,6 +291,7 @@
       <li><b>Magbubukas ng Landbank account para sa remuneration?</b> Punan ang Pangalan para sa Landbank account. Hindi mo na ito kailangan kung may account ka na.</li>
       <li id="stepPayment"><b>Magbabayad ng notaryo ng contract?</b> Buksan ang Bayad sa notaryo at itala ang bayad mo.</li>
       <li id="stepTutor"><b>Magtuturo na at susukatin ang improvement ng mga learner?</b> Panoorin muna ang mga video, tapos buksan ang ARAL Gain Tracker.</li>
+      <li id="stepAtm"><b>May bank account ka na para sa remuneration?</b> Buksan ang Bank account at tutees at ilagay ang bank details at bilang ng tutees mo. Kung wala ka pang account, huwag munang mag-fill up.</li>
       <li id="stepMath"><b>Magtuturo ng ARAL Math?</b> Panoorin ang video kung paano gamitin ang Tutor’s Guide.</li>
     </ol>
   </div>
@@ -318,9 +348,19 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
         </span>
         <strong>Pangalan para sa Landbank account</strong>
-        <span class="desc">Para sa external ARAL tutor na magbubukas ng account para sa remuneration. Magbubukas ito sa bagong tab.</span>
+        <span class="desc">Para sa external ARAL tutor na wala pang bank account at magbubukas pa lang para sa remuneration. Magbubukas ito sa bagong tab.</span>
         <span class="go">Buksan ang form
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+        </span>
+      </a>
+      <a class="tile atm" id="tileAtm" href="#atm">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4M16 15h2"/></svg>
+        </span>
+        <strong>Bank account para sa remuneration at tutees</strong>
+        <span class="desc">Para lang sa tutor na may bank account na (anumang bank). Ilagay ang bank details at ang bilang ng tutees mo. Kung wala ka pang account, huwag munang mag-fill up; gamitin muna ang Landbank form sa itaas.</span>
+        <span class="go">Punan ang form
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </span>
       </a>
       <a class="tile pay wide" id="tilePayment" href="#payment">
@@ -378,7 +418,7 @@
 
   <!-- ================= PAYMENT ================= -->
   <section class="card" id="view-payment" hidden>
-    <a class="back" href="#">&larr; Bumalik sa simula</a>
+    <a class="back" href="#">Bumalik sa simula</a>
 
     <form id="payForm" novalidate>
       <h2 tabindex="-1">Bayad sa notaryo</h2>
@@ -497,8 +537,113 @@
   </section>
 
   <!-- ================= CONTRACTS ================= -->
+  <section class="card" id="view-atm" hidden>
+    <a class="back" href="#">Bumalik sa simula</a>
+    <h2 tabindex="-1" id="atmTitle">Bank account para sa remuneration at tutees</h2>
+    <ol class="atm-steps" id="atmSteps" aria-label="Mga hakbang">
+      <li id="atmS1" class="on">1. Ikaw</li><li id="atmS2">2. Tutees</li><li id="atmS3">3. Suriin</li><li id="atmS4">4. Tapos</li>
+    </ol>
+
+    <div id="atmForm">
+      <div class="warning" style="margin:0 0 14px">
+        <strong>Huwag munang mag-fill up kung wala ka pang bank account.</strong>
+        <p>Buksan muna ang "Pangalan para sa Landbank account" sa unang pahina. Bumalik dito kapag may account ka na.</p>
+        <p><b>Para ito sa remuneration mo.</b> Dapat tama ang account number at ang pangalan mo ayon sa ATM card o passbook. Kapag mali, maaaring hindi ma-credit ang bayad.</p>
+      </div>
+      <div class="infobox" style="margin:0 0 18px">
+        <b>Paano gamitin</b>
+        <small>1. I-type ang buong pangalan mo. Makikita mo kung nasa listahan ka ng mga tutor.<br>
+        2. Ilagay ang pangalan sa ATM, bank, at account number.<br>
+        3. Piliin ang Elementary o Secondary, tapos idagdag ang grade at subject na tinuturuan mo.<br>
+        4. Ilagay ang bilang ng tutees na lalaki at babae. Awtomatiko ang total.<br>
+        5. Suriin, i-submit, at i-download ang kopya mo.</small>
+      </div>
+
+      <div id="atmPart1">
+        <div class="field">
+          <label for="atmName">Buong pangalan mo
+            <span class="hint">First name, Middle name, Last name</span></label>
+          <input type="text" id="atmName" autocomplete="name">
+          <p class="name-hint" id="atmHint" aria-live="polite"></p>
+          <div class="suggest" id="atmSuggest"></div>
+          <div class="error" id="atmNameErr" role="alert"></div>
+        </div>
+        <div class="field">
+          <label for="atmCard">Pangalan sa ATM card
+            <span class="hint">Ayon sa nakasulat sa card. Kung pareho ng pangalan mo, iwan lang itong nakalagay.</span></label>
+          <input type="text" id="atmCard" autocomplete="off">
+          <div class="error" id="atmCardErr" role="alert"></div>
+        </div>
+        <div class="field">
+          <label for="atmBank">Bank</label>
+          <select id="atmBank"><option value="">Piliin ang bank</option></select>
+          <input type="text" id="atmBankOther" placeholder="Isulat ang pangalan ng bank" hidden style="margin-top:8px">
+          <div class="error" id="atmBankErr" role="alert"></div>
+        </div>
+        <div class="field">
+          <label for="atmAcct">Account number
+            <span class="hint">Numero lang. Puwede ang space o gitling. Siguraduhing tama ito.</span></label>
+          <input type="text" id="atmAcct" inputmode="numeric" autocomplete="off">
+          <div class="error" id="atmAcctErr" role="alert"></div>
+        </div>
+        <div class="field">
+          <label for="atmAcct2">I-type ulit ang account number</label>
+          <input type="text" id="atmAcct2" inputmode="numeric" autocomplete="off">
+          <div class="error" id="atmAcct2Err" role="alert"></div>
+        </div>
+        <button type="button" class="primary" id="atmNext1">Susunod</button>
+      </div>
+
+      <div id="atmPart2" hidden>
+        <fieldset class="choices field" id="atmLevelBox">
+          <legend>Level na tinuturuan</legend>
+          <label class="choice"><input type="radio" name="atmLevel" value="Elementary"> Elementary (Grades 1 to 6)</label>
+          <label class="choice"><input type="radio" name="atmLevel" value="Secondary"> Secondary (Grades 7 to 10)</label>
+          <div class="error" id="atmLevelErr" role="alert" style="flex-basis:100%"></div>
+        </fieldset>
+        <div id="atmRowsWrap" hidden>
+          <p class="label" style="margin-bottom:4px">Grade, subject, at tutees</p>
+          <p class="hint" style="margin:0 0 8px" id="atmSecNote"></p>
+          <div class="atm-rows" id="atmRows"></div>
+          <button type="button" class="secondary" id="atmAddRow" style="margin-bottom:12px">+ Magdagdag ng grade at subject</button>
+          <div class="atm-total" id="atmGrand" aria-live="polite">Kabuuang tutees: 0</div>
+          <div class="error" id="atmRowsErr" role="alert"></div>
+        </div>
+        <div class="row2">
+          <button type="button" class="secondary" id="atmBack2">Bumalik</button>
+          <button type="button" class="primary" id="atmNext2">Suriin ang sagot</button>
+        </div>
+      </div>
+
+      <div id="atmPart3" hidden>
+        <p class="intro">Suriin kung tama. Kapag na-submit na, hindi mo na ito mababago sa page na ito.</p>
+        <div class="warning" style="margin:0 0 14px"><strong>Para sa remuneration ito.</strong> Tingnan nang mabuti ang account number at ang pangalan.</div>
+        <div id="atmReview"></div>
+        <label class="check" style="margin:0 0 14px"><input type="checkbox" id="atmSure"> Sinuri ko na tama ang account number at ang pangalan ko.</label>
+        <div class="row2">
+          <button type="button" class="secondary" id="atmBack3">Baguhin</button>
+          <button type="button" class="primary" id="atmSubmit" disabled>Submit</button>
+        </div>
+        <div class="status" id="atmStatus" role="status"></div>
+      </div>
+    </div>
+
+    <div id="atmDone" class="done" hidden>
+      <h2 tabindex="-1" id="atmDoneTitle">Naisumite na</h2>
+      <p id="atmDoneNote" class="intro"></p>
+      <div id="atmDoneSummary"></div>
+      <p class="hint" style="margin:0 0 6px">Ito ang kopya mo. Kung hindi gumana ang download, pindutin nang matagal ang larawan at i-save.</p>
+      <img id="atmPng" alt="Kopya ng isinagot mo">
+      <label class="check" style="margin:0 0 12px"><input type="checkbox" id="atmShowFull"> Ipakita ang buong account number sa kopya</label>
+      <div class="actions">
+        <button type="button" class="primary" id="atmDownload" style="width:auto;flex:1">I-download ang PNG</button>
+        <a class="secondary" href="#" id="atmHome" style="text-decoration:none;text-align:center;padding:12px 16px;border:1.5px solid var(--brand);border-radius:8px;font-weight:700;color:var(--brand)">Bumalik sa simula</a>
+      </div>
+    </div>
+  </section>
+
   <section class="card" id="view-contracts" hidden>
-    <a class="back" href="#" id="ctBackHome">&larr; Bumalik sa simula</a>
+    <a class="back" href="#" id="ctBackHome">Bumalik sa simula</a>
     <h2 tabindex="-1" id="ctTitle">Mga may contract na</h2>
     <div class="warning" id="ctCopyNote" hidden style="margin:10px 0 14px">
       <strong>Hindi makuha ang pinakabagong listahan</strong>
@@ -532,7 +677,7 @@
 
   <!-- ================= REGISTRATION ================= -->
   <section class="card" id="view-register" hidden>
-    <a class="back" href="#">&larr; Bumalik sa simula</a>
+    <a class="back" href="#">Bumalik sa simula</a>
 
     <form id="form" novalidate>
       <h2 tabindex="-1">Registration</h2>
@@ -616,7 +761,7 @@
 
   <!-- ================= ATTENDANCE ================= -->
   <section class="card" id="view-attendance" hidden>
-    <a class="back" href="#">&larr; Bumalik sa simula</a>
+    <a class="back" href="#">Bumalik sa simula</a>
     <h2 tabindex="-1" id="attTitle">Attendance in the meeting</h2>
 
     <div class="loading" id="attLoading">Kinukuha ang listahan...</div>
@@ -1231,7 +1376,7 @@
 
   /* =============== routing =============== */
 
-  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment") };
+  var views = { home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm") };
   var attLoaded = false, chipAt = 0, lastRoute = "";
 
   // Sa landing page: ipakita kung may bukas na meeting para sa attendance.
@@ -1253,7 +1398,7 @@
   function route() {
     var h = (location.hash || "").replace("#", "");
     var name = h === "registration" ? "register" : h === "attendance" ? "attendance"
-             : h === "payment" ? "payment"
+             : h === "payment" ? "payment" : h === "atm" ? "atm"
              : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "home";
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
     $("top").classList.toggle("compact", name !== "home");
@@ -1265,6 +1410,7 @@
     }
     lastRoute = name;
     if (name === "payment") initPayment();
+    if (name === "atm") initAtm();
     if (name === "attendance" && !attLoaded) loadAttendanceData();
   }
   window.addEventListener("hashchange", route);
@@ -1670,6 +1816,277 @@
     showOnly("form");
     // Isa pang tao, parehong meeting: nananatili ang napiling petsa.
     $("tutorInput").focus();
+  });
+
+  /* =============== ATM ACCOUNT AT TUTEES =============== */
+
+  var ATM_BANKS = ["Landbank","DBP","BDO","BPI","Metrobank","PNB","Security Bank","UnionBank","China Bank","RCBC","Iba pa"];
+  var atmTutors = null, atmTutorsLoading = false, atmSending = false, atmData = null, atmResult = null, atmCardTouched = false;
+  var atmRows = [];
+
+  function atmShow(step) {   // 1..4
+    $("atmPart1").hidden = step !== 1; $("atmPart2").hidden = step !== 2; $("atmPart3").hidden = step !== 3;
+    $("atmForm").hidden = step === 4; $("atmDone").hidden = step !== 4;
+    [1,2,3,4].forEach(function (i) { var li = $("atmS" + i); li.className = i === step ? "on" : (i < step ? "done" : ""); });
+    window.scrollTo(0, 0);
+  }
+  function atmLoadTutors() {
+    if (atmTutors || atmTutorsLoading) return;
+    atmTutorsLoading = true;
+    getAction("tutors").then(function (r) { atmTutors = r.tutors || []; atmTutorsLoading = false; atmCheckName(); })
+      .catch(function () { atmTutorsLoading = false; atmTutors = null; atmCheckName(); });
+  }
+  function atmMatch(name) {
+    if (!atmTutors) return null;
+    var q = plain(name), hit = null;
+    atmTutors.forEach(function (t) { if (!hit && plain(t.n) === q) hit = t; });
+    return hit;
+  }
+  function atmSimilar(name) {
+    var words = plain(name).split(" ").filter(function (w) { return w.length > 1; });
+    if (!atmTutors || words.length < 2) return [];
+    var out = [];
+    atmTutors.forEach(function (t) {
+      var p = plain(t.n), n = 0;
+      words.forEach(function (w) { if (p.indexOf(w) >= 0) n++; });
+      if (n >= 2 && out.length < 4) out.push(t);
+    });
+    return out;
+  }
+  function atmCheckName() {
+    var v = cleanName($("atmName").value), hint = $("atmHint"), sg = $("atmSuggest");
+    sg.innerHTML = "";
+    if (!v) { hint.className = "name-hint"; hint.textContent = ""; return; }
+    if (!nameOk(v)) { hint.className = "name-hint"; hint.textContent = "Isulat ang buong pangalan (hindi bababa sa dalawang salita)."; return; }
+    if (!atmTutors) { hint.className = "name-hint"; hint.textContent = atmTutorsLoading ? "Tinitingnan ang listahan ng mga tutor..." : "Hindi makuha ang listahan ngayon. Puwede pa ring mag-submit; ico-check ito ng CID."; return; }
+    var m = atmMatch(v);
+    if (m) { hint.className = "name-hint ok"; hint.textContent = "Verified: nasa listahan ng mga tutor (" + m.s + ", " + m.d + ")."; return; }
+    hint.className = "name-hint warn";
+    hint.textContent = "Wala sa listahan ng tutors. Puwede ka pa ring mag-submit, pero mamarkahan ito para ma-check ng CID.";
+    atmSimilar(v).forEach(function (t) {
+      var b = document.createElement("button"); b.type = "button"; b.textContent = t.n;
+      b.addEventListener("click", function () { $("atmName").value = t.n; atmSyncCard(); atmCheckName(); });
+      sg.appendChild(b);
+    });
+    if (sg.children.length) { var lead = document.createElement("span"); lead.className = "hint"; lead.style.flexBasis = "100%"; lead.textContent = "Ito ba ang ibig mong sabihin?"; sg.insertBefore(lead, sg.firstChild); }
+  }
+  function atmSyncCard() { if (!atmCardTouched) $("atmCard").value = cleanName($("atmName").value); }
+
+  function atmDigits(v) { return String(v || "").replace(/[\s-]/g, ""); }
+  function atmAcctError(v) {
+    var d = atmDigits(v);
+    if (!d) return "Ilagay ang account number.";
+    if (!/^\d+$/.test(d)) return "Numero lang ang puwede (puwede ang space o gitling).";
+    if (d.length < 6 || d.length > 20) return "Masyadong maikli o mahaba ang account number. Tingnan ulit ang ATM card o passbook.";
+    if (/^(\d)\1+$/.test(d)) return "Hindi ito mukhang tamang account number.";
+    return "";
+  }
+  function atmLevel() { var r = document.querySelector('input[name="atmLevel"]:checked'); return r ? r.value : ""; }
+  function atmGrades() { return atmLevel() === "Secondary" ? [7,8,9,10] : [1,2,3,4,5,6]; }
+  function atmInt(v) { v = String(v).trim(); return /^\d+$/.test(v) ? parseInt(v, 10) : (v === "" ? 0 : NaN); }
+
+  function atmRenderRows() {
+    var box = $("atmRows"); box.innerHTML = "";
+    atmRows.forEach(function (r, i) {
+      var div = document.createElement("div"); div.className = "atm-row";
+      var gOpts = '<option value="">Piliin</option>' + atmGrades().map(function (g) { return '<option value="' + g + '"' + (String(r.grade) === String(g) ? " selected" : "") + ">Grade " + g + "</option>"; }).join("");
+      div.innerHTML =
+        '<div><label for="atmG' + i + '">Grade</label><select id="atmG' + i + '">' + gOpts + '</select></div>' +
+        '<div><label for="atmSub' + i + '">Subject</label><select id="atmSub' + i + '"><option value="">Piliin</option>' +
+          ["Math","Reading"].map(function (x) { return '<option' + (r.subject === x ? " selected" : "") + ">" + x + "</option>"; }).join("") + '</select></div>' +
+        '<div><label for="atmM' + i + '">Tutees: Male</label><input type="text" inputmode="numeric" id="atmM' + i + '" value="' + esc(r.male) + '"></div>' +
+        '<div><label for="atmF' + i + '">Tutees: Female</label><input type="text" inputmode="numeric" id="atmF' + i + '" value="' + esc(r.female) + '"></div>' +
+        '<div class="tot"><span>Total: <span id="atmT' + i + '">0</span></span>' +
+        (atmRows.length > 1 ? '<button type="button" class="linkbtn" data-rm="' + i + '">Alisin ang row</button>' : "") + "</div>";
+      box.appendChild(div);
+      div.querySelector("#atmG" + i).addEventListener("change", function (e) { r.grade = e.target.value; });
+      div.querySelector("#atmSub" + i).addEventListener("change", function (e) { r.subject = e.target.value; });
+      div.querySelector("#atmM" + i).addEventListener("input", function (e) { r.male = e.target.value; atmTotals(); });
+      div.querySelector("#atmF" + i).addEventListener("input", function (e) { r.female = e.target.value; atmTotals(); });
+      var rm = div.querySelector("[data-rm]");
+      if (rm) rm.addEventListener("click", function () { atmRows.splice(i, 1); atmRenderRows(); });
+    });
+    atmTotals();
+    $("atmAddRow").disabled = atmRows.length >= 12;
+  }
+  function atmTotals() {
+    var grand = 0;
+    atmRows.forEach(function (r, i) {
+      var m = atmInt(r.male), f = atmInt(r.female), t = (isNaN(m) ? 0 : m) + (isNaN(f) ? 0 : f);
+      var el = $("atmT" + i); if (el) el.textContent = t;
+      grand += t;
+    });
+    $("atmGrand").textContent = "Kabuuang tutees: " + grand;
+  }
+  function atmReadRows() {   // -> {rows} o {error}
+    if (!atmRows.length) return { error: "Magdagdag ng kahit isang grade at subject." };
+    var out = [], seen = {}, subjects = {};
+    for (var i = 0; i < atmRows.length; i++) {
+      var r = atmRows[i], n = i + 1;
+      if (!r.grade) return { error: "Row " + n + ": piliin ang grade." };
+      if (!r.subject) return { error: "Row " + n + ": piliin ang subject (Math o Reading)." };
+      var m = atmInt(r.male), f = atmInt(r.female);
+      if (isNaN(m) || isNaN(f)) return { error: "Row " + n + ": numero lang ang ilagay sa tutees (walang decimal o letra)." };
+      if (m > 500 || f > 500) return { error: "Row " + n + ": masyadong malaki ang bilang ng tutees. Pakitingnan ulit." };
+      if (m + f < 1) return { error: "Row " + n + ": walang tutees. Maglagay ng bilang o alisin ang row." };
+      var key = r.grade + "|" + r.subject;
+      if (seen[key]) return { error: "Grade " + r.grade + " " + r.subject + " ay dalawang beses na nakalagay. Pagsamahin ang bilang sa isang row." };
+      seen[key] = 1; subjects[r.subject] = 1;
+      out.push({ grade: parseInt(r.grade, 10), subject: r.subject, male: m, female: f });
+    }
+    return { rows: out };
+  }
+  function atmBankName() { var b = $("atmBank").value; return b === "Iba pa" ? cleanName($("atmBankOther").value) : b; }
+  function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function atmMask(d) { return d.length <= 4 ? d : "*".repeat(d.length - 4) + d.slice(-4); }
+  function atmTable(rows) {
+    var h = '<table class="atm-sum"><tr><th>Grade</th><th>Subject</th><th>Male</th><th>Female</th><th>Total</th></tr>', M = 0, F = 0;
+    rows.forEach(function (r) { M += r.male; F += r.female; h += "<tr><td>Grade " + r.grade + "</td><td>" + r.subject + '</td><td class="n">' + r.male + '</td><td class="n">' + r.female + '</td><td class="n">' + (r.male + r.female) + "</td></tr>"; });
+    return h + '<tr><th colspan="2">Kabuuan</th><th class="n">' + M + '</th><th class="n">' + F + '</th><th class="n">' + (M + F) + "</th></tr></table>";
+  }
+  function atmCollect() {
+    return { fullName: cleanName($("atmName").value), cardName: cleanName($("atmCard").value) || cleanName($("atmName").value),
+      bank: $("atmBank").value, bankOther: $("atmBank").value === "Iba pa" ? cleanName($("atmBankOther").value) : "",
+      account: atmDigits($("atmAcct").value), level: atmLevel(), rows: atmReadRows().rows };
+  }
+  function atmReviewHtml(d, masked) {
+    var verified = atmMatch(d.fullName);
+    return '<dl class="done" style="margin:0 0 6px"><dt>Pangalan</dt><dd>' + esc(d.fullName) + ' <span class="atm-badge ' + (verified ? "ok" : "no") + '">' + (verified ? "Verified" : "Wala sa listahan ng tutors") + "</span></dd>" +
+      "<dt>Pangalan sa ATM card</dt><dd>" + esc(d.cardName) + "</dd><dt>Bank</dt><dd>" + esc(d.bank === "Iba pa" ? d.bankOther : d.bank) + "</dd>" +
+      "<dt>Account number</dt><dd>" + esc(masked ? atmMask(d.account) : d.account) + "</dd><dt>Level</dt><dd>" + d.level + "</dd></dl>" + atmTable(d.rows);
+  }
+
+  function initAtm() {
+    var sel = $("atmBank");
+    if (sel.options.length <= 1) ATM_BANKS.forEach(function (b) { var o = document.createElement("option"); o.value = b; o.textContent = b; sel.appendChild(o); });
+    atmLoadTutors();
+    if (atmResult) atmShow(4);
+  }
+  $("atmName").addEventListener("input", function () { atmSyncCard(); atmCheckName(); });
+  $("atmCard").addEventListener("input", function () { atmCardTouched = true; });
+  $("atmBank").addEventListener("change", function () { $("atmBankOther").hidden = this.value !== "Iba pa"; if (this.value === "Iba pa") $("atmBankOther").focus(); });
+
+  $("atmNext1").addEventListener("click", function () {
+    ["atmNameErr","atmCardErr","atmBankErr","atmAcctErr","atmAcct2Err"].forEach(function (id) { $(id).textContent = ""; });
+    var bad = null;
+    function fail(id, msg, focusId) { $(id).textContent = msg; if (!bad) bad = focusId; }
+    if (!nameOk($("atmName").value)) fail("atmNameErr", "Isulat ang buong pangalan: First name, Middle name, Last name.", "atmName");
+    if (!nameOk($("atmCard").value)) fail("atmCardErr", "Ilagay ang pangalan na nakasulat sa ATM card.", "atmCard");
+    if (!$("atmBank").value) fail("atmBankErr", "Piliin ang bank.", "atmBank");
+    else if ($("atmBank").value === "Iba pa" && cleanName($("atmBankOther").value).length < 2) fail("atmBankErr", "Isulat ang pangalan ng bank.", "atmBankOther");
+    var ae = atmAcctError($("atmAcct").value);
+    if (ae) fail("atmAcctErr", ae, "atmAcct");
+    else if (atmDigits($("atmAcct").value) !== atmDigits($("atmAcct2").value)) fail("atmAcct2Err", "Hindi magkapareho ang dalawang account number.", "atmAcct2");
+    if (bad) { $(bad).focus(); return; }
+    atmShow(2);
+  });
+  document.querySelectorAll('input[name="atmLevel"]').forEach(function (r) {
+    r.addEventListener("change", function () {
+      $("atmLevelErr").textContent = "";
+      $("atmRowsWrap").hidden = false;
+      $("atmSecNote").textContent = atmLevel() === "Secondary" ? "Secondary: Grades 7 hanggang 10. Puwede ang Math at Reading, at higit sa isang grade." : "Elementary: Grades 1 hanggang 6. Puwede ang Math at Reading, at higit sa isang grade.";
+      var ok = atmGrades().map(String);
+      atmRows = atmRows.filter(function (x) { return !x.grade || ok.indexOf(String(x.grade)) >= 0; });
+      if (!atmRows.length) atmRows.push({ grade: "", subject: "", male: "", female: "" });
+      atmRenderRows();
+    });
+  });
+  $("atmAddRow").addEventListener("click", function () {
+    var last = atmRows[atmRows.length - 1];
+    atmRows.push({ grade: "", subject: "", male: "", female: "" });
+    atmRenderRows();
+  });
+  $("atmBack2").addEventListener("click", function () { atmShow(1); });
+  $("atmNext2").addEventListener("click", function () {
+    $("atmLevelErr").textContent = ""; $("atmRowsErr").textContent = "";
+    if (!atmLevel()) { $("atmLevelErr").textContent = "Piliin ang Elementary o Secondary."; return; }
+    var r = atmReadRows();
+    if (r.error) { $("atmRowsErr").textContent = r.error; return; }
+    $("atmReview").innerHTML = atmReviewHtml(atmCollect(), false);
+    $("atmStatus").textContent = ""; $("atmStatus").className = "status";
+    $("atmSure").checked = false; $("atmSubmit").disabled = true;
+    atmShow(3);
+  });
+  $("atmBack3").addEventListener("click", function () { atmShow(2); });
+
+  $("atmSure").addEventListener("change", function () { $("atmSubmit").disabled = atmSending || !this.checked; });
+  $("atmSubmit").addEventListener("click", function () {
+    if (atmSending || !$("atmSure").checked) return;
+    var d = atmCollect();
+    atmSending = true; $("atmSubmit").disabled = true; $("atmSubmit").textContent = "Sine-save...";
+    $("atmStatus").className = "status"; $("atmStatus").textContent = "";
+    postJSON({ action: "atm", fullName: d.fullName, cardName: d.cardName, bank: d.bank, bankOther: d.bankOther, account: d.account, level: d.level, rows: d.rows })
+    .then(function (res) {
+      if (res && res.ok) { atmData = d; atmResult = res; atmShowDone(); return; }
+      if (res && res.duplicate) {
+        $("atmStatus").className = "status bad";
+        $("atmStatus").textContent = "May naisumite nang ATM details para sa pangalang ito. Isang beses lang ang bawat tutor. Kung may babaguhin, ipaalam sa CID.";
+        return;
+      }
+      throw new Error((res && res.error) || "failed");
+    })
+    .catch(function () {
+      $("atmStatus").className = "status bad";
+      $("atmStatus").textContent = "Hindi na-save. Tingnan ang internet at subukan ulit. Kung hindi pa rin, ipaalam sa CID.";
+    })
+    .then(function () { atmSending = false; $("atmSubmit").disabled = !$("atmSure").checked; $("atmSubmit").textContent = "Submit"; });
+  });
+
+  function atmShowDone() {
+    var ok = atmResult.status === "Verified";
+    $("atmDoneNote").textContent = "Ref: " + atmResult.ref + " | " + atmResult.submittedAt + (ok ? "" : ". Wala ka pa sa listahan ng tutors, kaya mamarkahan ito para ma-check ng CID.") +
+      (atmResult.sharedAccount ? " Paalala: ginamit na ang account number na ito ng ibang tutor. Ico-check ito ng CID." : "");
+    $("atmDoneSummary").innerHTML = atmReviewHtml(atmData, true);
+    $("atmShowFull").checked = false;
+    atmDrawPng();
+    atmShow(4);
+    $("atmDoneTitle").focus();
+  }
+  function atmDrawPng() {
+    var d = atmData, full = $("atmShowFull").checked, W = 900, rows = d.rows.length, H = 560 + rows * 44;
+    var c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d"), F = "Arial, Helvetica, sans-serif";
+    x.fillStyle = "#fff"; x.fillRect(0, 0, W, H);
+    x.fillStyle = "#0b2a43"; x.fillRect(0, 0, W, 92);
+    x.fillStyle = "#fff"; x.font = "bold 30px " + F; x.fillText("External ARAL Tutors: ATM account at tutees", 30, 42);
+    x.font = "18px " + F; x.fillStyle = "#a9d6da"; x.fillText("Schools Division Office of Romblon", 30, 70);
+    var y = 135;
+    function line(k, v) { x.fillStyle = "#5b6b7a"; x.font = "16px " + F; x.fillText(k, 30, y); x.fillStyle = "#1c2733"; x.font = "bold 22px " + F; x.fillText(v, 30, y + 26); y += 62; }
+    line("Pangalan", d.fullName);
+    line("Pangalan sa ATM card", d.cardName);
+    line("Bank at account number", (d.bank === "Iba pa" ? d.bankOther : d.bank) + "  |  " + (full ? d.account : atmMask(d.account)));
+    line("Level", d.level + "   (" + (atmMatch(d.fullName) ? "Verified" : "Wala sa listahan ng tutors") + ")");
+    var cols = [30, 200, 400, 530, 660, 770];
+    x.fillStyle = "#eef2f6"; x.fillRect(30, y - 20, W - 60, 36);
+    x.fillStyle = "#0b2a43"; x.font = "bold 17px " + F;
+    ["Grade", "Subject", "Male", "Female", "Total"].forEach(function (h, i) { x.fillText(h, cols[i] + 8, y + 4); });
+    y += 40; var M = 0, Fm = 0; x.font = "18px " + F; x.fillStyle = "#1c2733";
+    d.rows.forEach(function (r) {
+      M += r.male; Fm += r.female;
+      [("Grade " + r.grade), r.subject, String(r.male), String(r.female), String(r.male + r.female)].forEach(function (t, i) { x.fillText(t, cols[i] + 8, y); });
+      x.strokeStyle = "#d3dde0"; x.beginPath(); x.moveTo(30, y + 14); x.lineTo(W - 30, y + 14); x.stroke(); y += 44;
+    });
+    x.font = "bold 19px " + F; x.fillStyle = "#0b2a43";
+    ["Kabuuan", "", String(M), String(Fm), String(M + Fm)].forEach(function (t, i) { x.fillText(t, cols[i] + 8, y); });
+    y += 50; x.font = "15px " + F; x.fillStyle = "#5b6b7a";
+    x.fillText("Para sa remuneration. Ref: " + atmResult.ref + "   |   " + atmResult.submittedAt, 30, y);
+    var cut = Math.min(H, y + 24);
+    var out = document.createElement("canvas"); out.width = W; out.height = cut; out.getContext("2d").drawImage(c, 0, 0);
+    $("atmPng").src = out.toDataURL("image/png");
+  }
+  $("atmShowFull").addEventListener("change", atmDrawPng);
+  $("atmDownload").addEventListener("click", function () {
+    var a = document.createElement("a"); a.href = $("atmPng").src;
+    a.download = "ATM-" + atmResult.ref + ".png"; document.body.appendChild(a); a.click(); a.remove();
+  });
+  $("atmHome").addEventListener("click", function () {
+    // Bagong form ang bubukas sa susunod na pasok.
+    atmResult = null; atmData = null; atmRows = []; atmCardTouched = false;
+    ["atmName","atmCard","atmAcct","atmAcct2","atmBankOther"].forEach(function (id) { $(id).value = ""; });
+    $("atmBank").value = ""; $("atmBankOther").hidden = true; $("atmHint").textContent = ""; $("atmSuggest").innerHTML = "";
+    document.querySelectorAll('input[name="atmLevel"]').forEach(function (r) { r.checked = false; });
+    $("atmRowsWrap").hidden = true; $("atmRows").innerHTML = "";
+    atmShow(1);
   });
 
   loadContracts(true);
