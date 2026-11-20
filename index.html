@@ -102,6 +102,35 @@
   .st-actions .primary.msg { background: var(--navy); }
   .st-name .flag { display: block; margin-top: 4px; color: var(--warn-ink); font-weight: 700; font-size: 0.88rem; }
   .st-warn { background: var(--warn-bg); border-left: 5px solid var(--warn-line); border-radius: 8px; padding: 8px 12px; margin: 0 0 10px; color: var(--warn-ink); font-size: 0.92rem; }
+
+  /* pagtatama ng pangalan + admin */
+  .rq-open { margin-top: 12px; }
+  .rq-open button, .ad-btn { font: inherit; font-weight: 700; border-radius: 8px; border: 1.5px solid var(--brand); background: #fff; color: var(--brand); padding: 9px 14px; cursor: pointer; }
+  .rq-open button:hover, .ad-btn:hover { background: var(--tint); }
+  .rq-form { margin-top: 10px; padding: 12px; border: 1.5px dashed var(--line); border-radius: 10px; background: #fafcfd; }
+  .rq-form label { display: block; font-weight: 700; margin: 10px 0 4px; }
+  .rq-form select, .rq-form input, .rq-form textarea, .ad-card input, .ad-card textarea, #adPin { width: 100%; font: inherit; padding: 10px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; box-sizing: border-box; }
+  .rq-form .primary { width: auto; margin-top: 12px; padding: 10px 18px; }
+  .rq-msg { margin: 8px 0 0; font-weight: 600; }
+  .rq-msg.ok { color: #17653a; } .rq-msg.bad { color: var(--err); }
+  .ad-tabs { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .ad-tabs button { font: inherit; font-weight: 700; padding: 9px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; color: var(--navy); }
+  .ad-tabs button[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .ad-card { border: 1.5px solid var(--line); border-radius: 12px; padding: 14px; margin: 0 0 12px; background: #fff; }
+  .ad-card h3 { margin: 0 0 4px; font-family: var(--display); font-size: 1.05rem; color: var(--navy); }
+  .ad-meta { color: var(--muted); font-size: 0.88rem; margin: 0 0 8px; }
+  .ad-pill { display: inline-block; font-size: 0.74rem; font-weight: 800; padding: 2px 9px; border-radius: 999px; margin-right: 6px; background: #e1f1f3; color: #0b5560; }
+  .ad-pill.bad { background: #fff4d6; color: #7a5200; } .ad-pill.done { background: #dff3e6; color: #17653a; } .ad-pill.no { background: #fde8e6; color: var(--err); }
+  .ad-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 8px 0; }
+  @media (max-width: 720px) { .ad-grid { grid-template-columns: minmax(0, 1fr); } }
+  .ad-grid label { font-weight: 700; font-size: 0.88rem; display: block; margin-bottom: 3px; }
+  .ad-ico { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .ad-ico button { font: inherit; font-weight: 700; padding: 9px 14px; border-radius: 8px; border: 1.5px solid var(--line); background: #fff; cursor: pointer; min-height: 44px; }
+  .ad-ico .go { background: #17653a; color: #fff; border-color: #17653a; } .ad-ico .stop { background: #fff; color: var(--err); border-color: var(--err); }
+  .ad-ico button:disabled { opacity: .5; cursor: wait; }
+  .ad-plan { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--tint); font-size: 0.92rem; }
+  .ad-plan ul { margin: 6px 0 0 18px; padding: 0; } .ad-plan .err { color: var(--err); font-weight: 700; }
+  .ad-lock { font-size: 0.85rem; opacity: .75; }
   .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
   .menu-top h2 { margin: 0; }
   .menu-top a { color: var(--brand); font-weight: 700; text-decoration: none; }
@@ -365,16 +394,33 @@
       <p class="name-hint" id="lkMsg" role="status" aria-live="polite"></p>
     </div>
     <div id="lkResults"></div>
-    <p class="hint" id="lkNote" hidden style="margin:0 0 14px">Ayon ito sa mga naitala sa dashboard. Kung may mali o kulang, ipaalam sa CID. Kung iba ang spelling ng pangalan mo sa mga naunang listahan, maaaring hindi ito lumitaw. May tanong o mali? <a class="linkbtn" href="https://m.me/rogelio.candido.7" target="_blank" rel="noopener noreferrer">I-message si Sir Dyon</a></p>
+    <p class="hint" id="lkNote" hidden style="margin:0 0 14px">Ayon ito sa mga naitala sa dashboard. Kung may mali o kulang, ipaalam sa CID. Kung iba ang spelling ng pangalan mo sa mga naunang listahan, maaaring hindi ito lumitaw. May tanong o mali? <a class="linkbtn" href="https://m.me/AIEducTools" target="_blank" rel="noopener noreferrer">I-message si Sir Dyon</a></p>
     <div class="go-row">
       <a class="primary" href="#menu" id="lkNext">Susunod
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></a>
     </div>
   </section>
 
+  <!-- ================= ADMIN (PIN ni Sir Dyon) ================= -->
+  <section class="card" id="view-admin" hidden>
+    <a class="back" href="#menu">Bumalik sa Home</a>
+    <h2 tabindex="-1">Admin: pagtatama ng pangalan</h2>
+    <div id="adGate">
+      <p class="intro"><b>Paano gamitin:</b> 1) Ilagay ang PIN. 2) Buksan ang hiling at suriin ang pangalan. 3) Pindutin ang <b>Tingnan ang mangyayari</b> para makita muna ang epekto. 4) Pindutin ang <b>Ipatupad</b> para mailipat o mapalitan sa lahat ng tab. 5) Lahat ng naalis o napalitan ay nasa tab na <b>History</b>, at puwedeng <b>Ibalik</b>.</p>
+      <div class="field"><label for="adPin">PIN</label><input type="password" id="adPin" inputmode="numeric" autocomplete="off" placeholder="Ilagay ang PIN"></div>
+      <button type="button" class="primary" id="adGo">Buksan</button>
+      <p class="rq-msg" id="adMsg" role="status" aria-live="polite"></p>
+    </div>
+    <div id="adMain" hidden>
+      <div class="ad-tabs"><button type="button" id="adTabReq" aria-pressed="true">Mga hiling</button><button type="button" id="adTabHist" aria-pressed="false">History</button><button type="button" id="adRefresh">&#8635; I-refresh</button><button type="button" id="adOut">Isara</button></div>
+      <p class="rq-msg" id="adMsg2" role="status" aria-live="polite"></p>
+      <div id="adList"></div>
+    </div>
+  </section>
+
   <!-- ================= MGA PAGPIPILIAN ================= -->
   <section id="view-home" hidden>
-    <div class="menu-top"><h2>Pumili ng gagawin</h2><a href="#lookup">Tingnan ang status ko</a> <a href="#">Simula</a></div>
+    <div class="menu-top"><h2>Pumili ng gagawin</h2><a href="#lookup">Tingnan ang status ko</a> <a href="#">Simula</a> <a href="#admin" class="ad-lock" title="Para kay Sir Dyon lang" aria-label="Admin, para kay Sir Dyon lang">&#128274;</a></div>
     <div class="tiles">
       <a class="tile reg" href="#registration">
         <span class="ico" aria-hidden="true">
@@ -1450,7 +1496,7 @@
 
   /* =============== routing =============== */
 
-  var views = { landing: $("view-landing"), lookup: $("view-lookup"), home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm") };
+  var views = { landing: $("view-landing"), lookup: $("view-lookup"), home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm"), admin: $("view-admin") };
   var attLoaded = false, chipAt = 0, lastRoute = "";
 
   // Sa landing page: ipakita kung may bukas na meeting para sa attendance.
@@ -1473,7 +1519,7 @@
     var h = (location.hash || "").replace("#", "");
     var name = h === "registration" ? "register" : h === "attendance" ? "attendance"
              : h === "payment" ? "payment" : h === "atm" ? "atm"
-             : h === "lookup" ? "lookup" : h === "menu" ? "home"
+             : h === "lookup" ? "lookup" : h === "menu" ? "home" : h === "admin" ? "admin"
              : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "landing";
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
     $("top").classList.toggle("compact", name !== "landing");
@@ -1485,6 +1531,7 @@
     }
     lastRoute = name;
     if (name === "lookup") initLookup();
+    if (name === "admin") adInit();
     if (name === "payment") initPayment();
     if (name === "atm") initAtm();
     if (name === "attendance" && !attLoaded) loadAttendanceData();
@@ -2182,7 +2229,7 @@
 
   /* =============== STATUS NG TUTOR (hanapin ang pangalan) =============== */
 
-  var MESSENGER = "https://m.me/rogelio.candido.7";
+  var MESSENGER = "https://m.me/AIEducTools";
   function msgBtn(label) {
     return '<a class="primary msg" href="' + MESSENGER + '" target="_blank" rel="noopener noreferrer">' + esc(label || "I-message si Sir Dyon") + "</a>";
   }
@@ -2248,6 +2295,7 @@
       if (r.trk && r.trk.state === "none" && r.trk.similar && r.trk.similar.length) h += "<p>Sa Tracker, may katulad na pangalan: " + esc(r.trk.similar.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". Baka magkaiba ang spelling mo roon.</p>";
       h += msgBtn() + "</div>";
     }
+    h += '<div class="rq-open"><button type="button" class="rq-btn">May mali o doble sa pangalan ko? Magrequest ng pagtatama</button></div>';
     return h;
   }
   function srcChips(r) {
@@ -2294,6 +2342,7 @@
         }
         msg.className = "name-hint ok";
         msg.textContent = list.length === 1 ? "May nakita. Pindutin ang pangalan para makita ang status." : "May " + list.length + (res.more ? "+" : "") + " nakita. Pindutin ang pangalan mo para makita ang status.";
+        lastResults = list;
         box.innerHTML = list.map(function (r, i) { return stItem(r, res.meetings || 0, i); }).join("") +
           (res.more ? '<p class="hint">Marami pang tugma. Isulat ang mas kumpletong pangalan para paliitin ang resulta.</p>' : "");
         note.hidden = false;
@@ -2312,6 +2361,186 @@
     if (open) { panel.hidden = false; btn.setAttribute("aria-expanded", "true"); }
   });
   $("lkName").addEventListener("input", function () { clearTimeout(lkTimer); lkTimer = setTimeout(lkSearch, 450); });
+
+
+  /* =============== HILING NG PAGTATAMA (tutor) =============== */
+  var lastResults = [];
+  function rqForm(r) {
+    var opts = (r.similar || []).concat((r.trk && r.trk.similar) || []).map(function (x) { return x.n; });
+    var seen = {}; opts = opts.filter(function (n) { var k = plain(n); if (seen[k] || k === plain(r.n)) return false; seen[k] = 1; return true; });
+    var sel = '<option value="">Pumili o i-type sa ibaba</option>' + opts.map(function (n) { return '<option>' + esc(n) + '</option>'; }).join("");
+    return '<div class="rq-form"><p style="margin:0 0 6px"><b>Hiling para sa:</b> ' + esc(r.n) + '</p>' +
+      '<p class="hint" style="margin:0 0 6px">Hindi agad mababago. Susuriin muna ni Sir Dyon bago ipatupad.</p>' +
+      '<label>Ano ang problema?</label><select class="rq-type">' +
+      '<option value="doble">Doble ang pangalan (ilipat sa tamang pangalan)</option>' +
+      '<option value="spelling">Mali ang spelling (palitan)</option>' +
+      '<option value="alisin">Alisin ang pangalang ito</option>' +
+      '<option value="iba">Iba pa</option></select>' +
+      '<div class="rq-keepbox"><label>Alin ang tamang pangalan?</label><select class="rq-pick">' + sel + '</select>' +
+      '<input type="text" class="rq-keep" placeholder="O i-type ang tamang buong pangalan" maxlength="120" style="margin-top:6px"></div>' +
+      '<label>Tala (puwedeng iwan na blangko, kailangan sa "Iba pa")</label><textarea class="rq-note" rows="2" maxlength="300"></textarea>' +
+      '<input type="text" class="rq-hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' +
+      '<button type="button" class="primary rq-send">Ipadala ang hiling</button><p class="rq-msg" role="status" aria-live="polite"></p></div>';
+  }
+  $("lkResults").addEventListener("click", function (e) {
+    var t = e.target, card;
+    if (t.classList && t.classList.contains("rq-btn")) {
+      var panel = t.closest(".st-panel"), idx = Number(panel.id.replace("stp", "")), box = t.parentNode;
+      if (box.querySelector(".rq-form")) { box.removeChild(box.querySelector(".rq-form")); return; }
+      var d = document.createElement("div"); d.innerHTML = rqForm(lastResults[idx] || {}); box.appendChild(d.firstChild);
+      return;
+    }
+    var form = t.closest ? t.closest(".rq-form") : null;
+    if (!form) return;
+    if (t.classList.contains("rq-send")) {
+      var panel2 = form.closest(".st-panel"), r = lastResults[Number(panel2.id.replace("stp", ""))] || {};
+      var type = form.querySelector(".rq-type").value, keep = (form.querySelector(".rq-keep").value || form.querySelector(".rq-pick").value || "").trim();
+      var note = form.querySelector(".rq-note").value, msg = form.querySelector(".rq-msg");
+      msg.className = "rq-msg";
+      if ((type === "doble" || type === "spelling") && !nameOk(keep)) { msg.className = "rq-msg bad"; msg.textContent = "Isulat ang tamang buong pangalan (hindi bababa sa dalawang salita)."; return; }
+      if (type === "iba" && note.trim().length < 5) { msg.className = "rq-msg bad"; msg.textContent = "Isulat sa Tala kung ano ang kailangang ayusin."; return; }
+      t.disabled = true; msg.textContent = "Ipinapadala...";
+      postJSON({ action: "namereq", type: type, name: r.n, keep: type === "alisin" || type === "iba" ? "" : cleanName(keep), drop: type === "iba" ? "" : r.n, school: r.s || "", note: note, website: form.querySelector(".rq-hp").value })
+        .then(function (res) {
+          t.disabled = false;
+          if (res && res.ok) { msg.className = "rq-msg ok"; msg.textContent = res.status === "already" ? "Naipadala na ang hiling na ito. Hintayin ang pagsusuri ni Sir Dyon." : "Naipadala na. Susuriin ito ni Sir Dyon bago ipatupad."; t.hidden = true; }
+          else { msg.className = "rq-msg bad"; msg.textContent = res && res.error === "Name not found" ? "Hindi nakita ang pangalan sa mga listahan. I-message si Sir Dyon." : "Hindi naipadala. Subukan ulit."; }
+        }).catch(function () { t.disabled = false; msg.className = "rq-msg bad"; msg.textContent = "Walang koneksyon. Subukan ulit."; });
+    }
+  });
+  $("lkResults").addEventListener("change", function (e) {
+    var t = e.target; if (!t.classList) return;
+    var form = t.closest(".rq-form"); if (!form) return;
+    if (t.classList.contains("rq-type")) form.querySelector(".rq-keepbox").hidden = (t.value === "alisin" || t.value === "iba");
+    if (t.classList.contains("rq-pick") && t.value) form.querySelector(".rq-keep").value = t.value;
+  });
+
+  /* =============== ADMIN =============== */
+  var adPin = "", adData = null, adTab = "req", adBusy = false;
+  var AD_TYPES = { spelling: "Palitan ang spelling", doble: "Doble", alisin: "Alisin", iba: "Iba pa" };
+  function adCall(payload) {
+    payload.action = "admin"; payload.pin = adPin;
+    return postJSON(payload);
+  }
+  function adInit() {
+    if (!adPin) { $("adGate").hidden = false; $("adMain").hidden = true; setTimeout(function () { $("adPin").focus(); }, 50); }
+  }
+  function adErr(res) {
+    if (res && res.error === "Wrong PIN") return "Mali ang PIN.";
+    if (res && res.error === "Locked") return "Naka-lock muna ng " + (res.minutes || 15) + " minuto dahil sa maling PIN.";
+    if (res && res.error === "No admin PIN set") return "Wala pang ADMIN_PIN sa Script properties.";
+    return "Hindi gumana. Subukan ulit.";
+  }
+  function adOpen() {
+    var pin = $("adPin").value.trim(), m = $("adMsg"); m.className = "rq-msg";
+    if (!pin) { m.className = "rq-msg bad"; m.textContent = "Ilagay ang PIN."; return; }
+    adPin = pin; m.textContent = "Sinusuri...";
+    adCall({ op: "list" }).then(function (res) {
+      if (res && res.ok) { adData = res; $("adPin").value = ""; $("adGate").hidden = true; $("adMain").hidden = false; m.textContent = ""; adRender(); }
+      else { adPin = ""; m.className = "rq-msg bad"; m.textContent = adErr(res); }
+    }).catch(function () { adPin = ""; m.className = "rq-msg bad"; m.textContent = "Walang koneksyon."; });
+  }
+  function adRefresh(note) {
+    return adCall({ op: "list" }).then(function (res) {
+      if (res && res.ok) { adData = res; adRender(); if (note) { $("adMsg2").className = "rq-msg ok"; $("adMsg2").textContent = note; } }
+      else { $("adMsg2").className = "rq-msg bad"; $("adMsg2").textContent = adErr(res); }
+    });
+  }
+  function adReqCard(q) {
+    var pending = q.status === "Pending", cls = q.status === "Applied" ? "done" : q.status === "Rejected" ? "no" : q.status === "Reversed" ? "bad" : "";
+    var h = '<div class="ad-card" data-id="' + esc(q.id) + '"><h3>' + esc(q.name) + '</h3><p class="ad-meta"><span class="ad-pill ' + cls + '">' + esc(q.status) + '</span><span class="ad-pill">' + esc(AD_TYPES[q.type] || q.type) + '</span>' +
+      (q.similar === "Oo" ? "" : q.similar ? '<span class="ad-pill bad">' + esc(q.similar) + "</span>" : "") + esc(q.at) + (q.school ? " &middot; " + esc(q.school) : "") + "</p>";
+    if (q.note) h += '<p style="margin:0 0 6px"><b>Tala ng tutor:</b> ' + esc(q.note) + "</p>";
+    if (q.type !== "iba") {
+      h += '<div class="ad-grid"><div><label>' + (q.type === "alisin" ? "Aalisin" : "Papalitan / aalisin (mali)") + '</label><input class="ad-drop" value="' + esc(q.drop) + '"' + (pending ? "" : " disabled") + '></div>' +
+        (q.type === "alisin" ? "" : '<div><label>Tamang pangalan</label><input class="ad-keep" value="' + esc(q.keep) + '"' + (pending ? "" : " disabled") + "></div>") + "</div>";
+    }
+    h += '<label style="font-weight:700;font-size:.88rem">Tala ni Sir Dyon</label><textarea class="ad-note" rows="1"' + (pending ? "" : " disabled") + ">" + esc(q.adminNote) + "</textarea>";
+    if (pending) {
+      h += '<div class="ad-ico">' + '<button type="button" data-op="save" title="I-save ang binago">&#128190; I-save</button>' +
+        (q.type !== "iba" ? '<button type="button" data-op="preview" title="Tingnan ang mangyayari">&#128065; Tingnan ang mangyayari</button><button type="button" class="go" data-op="apply" title="Ipatupad sa lahat ng tab">&#10004; Ipatupad</button>' : "") +
+        '<button type="button" class="stop" data-op="reject" title="Tanggihan">&#10006; Tanggihan</button></div>';
+    } else if (q.status === "Applied" && q.hid) h += '<p class="ad-meta" style="margin-top:8px">Ipinatupad ' + esc(q.decided) + ". Makikita sa History ang bawat nabago.</p>";
+    return h + '<div class="ad-plan" hidden></div></div>';
+  }
+  function adHistCard(g) {
+    var can = g.active > 0, cls = g.action === "Ibinalik" ? "bad" : (can ? "done" : "");
+    var h = '<div class="ad-card" data-hid="' + esc(g.id) + '"><h3>' + esc(g.action) + (g.from ? ": " + esc(g.from) : "") + (g.to ? " &rarr; " + esc(g.to) : "") + '</h3><p class="ad-meta"><span class="ad-pill ' + cls + '">' + (g.action === "Ibinalik" ? "Tala" : can ? "Maibabalik" : "Naibalik na") + "</span>" + esc(g.at) + "</p>";
+    if (g.tabs.length) h += '<ul style="margin:0 0 6px 18px;padding:0">' + g.tabs.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    if (g.info && g.action === "Ibinalik") h += "<p>" + esc(g.info) + "</p>";
+    if (can) h += '<div class="ad-ico"><button type="button" data-op="restore">&#8617; Ibalik</button></div>';
+    return h + "</div>";
+  }
+  function adRender() {
+    var box = $("adList"), d = adData || { requests: [], history: [] };
+    $("adTabReq").setAttribute("aria-pressed", adTab === "req"); $("adTabHist").setAttribute("aria-pressed", adTab === "hist");
+    if (adTab === "req") {
+      var pend = d.requests.filter(function (q) { return q.status === "Pending"; }), rest = d.requests.filter(function (q) { return q.status !== "Pending"; });
+      box.innerHTML = '<p class="hint">' + pend.length + " hiling ang naghihintay.</p>" + (pend.length ? pend.map(adReqCard).join("") : '<p class="hint">Walang naghihintay na hiling.</p>') +
+        (rest.length ? '<p class="st-sub">Napagpasyahan na</p>' + rest.slice(0, 40).map(adReqCard).join("") : "");
+    } else {
+      box.innerHTML = d.history.length ? d.history.map(adHistCard).join("") : '<p class="hint">Wala pang nakatala sa History.</p>';
+    }
+  }
+  function adPlanHtml(plan) {
+    var h = "";
+    if (plan.errors && plan.errors.length) h += '<p class="err">Hindi puwedeng ipatupad:</p><ul>' + plan.errors.map(function (x) { return '<li class="err">' + esc(x) + "</li>"; }).join("") + "</ul>";
+    if (plan.lines && plan.lines.length) h += "<b>Mangyayari:</b><ul>" + plan.lines.map(function (l) { return "<li>" + esc(l.tab) + ": " + l.count + " hilera, " + esc(l.action) + "</li>"; }).join("") + "</ul>";
+    if (plan.warnings && plan.warnings.length) h += "<b>Tandaan:</b><ul>" + plan.warnings.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    return h || "Walang babaguhin.";
+  }
+  function adSaveFirst(card, id) {
+    var k = card.querySelector(".ad-keep"), dr = card.querySelector(".ad-drop");
+    return adCall({ op: "save", id: id, keep: k ? k.value : "", drop: dr ? dr.value : "", adminNote: card.querySelector(".ad-note").value });
+  }
+  $("adList").addEventListener("click", function (e) {
+    var btn = e.target.closest ? e.target.closest("button[data-op]") : null;
+    if (!btn || adBusy) return;
+    var card = btn.closest(".ad-card"), op = btn.getAttribute("data-op"), id = card.getAttribute("data-id"), m = $("adMsg2");
+    var plan = card.querySelector(".ad-plan");
+    function fail(res) { m.className = "rq-msg bad"; m.textContent = res && res.errors ? res.errors.join(" ") : adErr(res); }
+    adBusy = true; btn.disabled = true; m.className = "rq-msg"; m.textContent = "Sandali...";
+    var done = function () { adBusy = false; btn.disabled = false; };
+    if (op === "restore") {
+      if (!window.confirm("Ibalik ang lahat ng nabago sa hilera na ito?")) { done(); m.textContent = ""; return; }
+      adCall({ op: "restore", hid: card.getAttribute("data-hid") }).then(function (res) {
+        done();
+        if (res && res.ok) adRefresh("Naibalik: " + res.restored + (res.failed && res.failed.length ? ". Hindi nabalik: " + res.failed.join(", ") : "."));
+        else fail(res);
+      }).catch(function () { done(); fail(); });
+      return;
+    }
+    if (op === "reject") {
+      if (!window.confirm("Tanggihan ang hiling na ito? Wala itong babaguhin sa mga listahan.")) { done(); m.textContent = ""; return; }
+      adCall({ op: "reject", id: id, adminNote: card.querySelector(".ad-note").value }).then(function (res) { done(); if (res && res.ok) adRefresh("Tinanggihan."); else fail(res); }).catch(function () { done(); fail(); });
+      return;
+    }
+    adSaveFirst(card, id).then(function (sres) {
+      if (!sres || !sres.ok) { done(); fail(sres); return; }
+      if (op === "save") { done(); adRefresh("Nasave."); return; }
+      if (op === "preview") {
+        return adCall({ op: "preview", id: id }).then(function (res) { done(); m.textContent = ""; if (res && res.ok) { plan.hidden = false; plan.innerHTML = adPlanHtml(res.plan); } else fail(res); });
+      }
+      return adCall({ op: "preview", id: id }).then(function (pv) {
+        if (!pv || !pv.ok) { done(); fail(pv); return; }
+        plan.hidden = false; plan.innerHTML = adPlanHtml(pv.plan);
+        if (pv.plan.errors.length) { done(); m.className = "rq-msg bad"; m.textContent = "Hindi puwedeng ipatupad. Basahin ang nasa itaas."; return; }
+        var warn = pv.plan.warnings.length ? "\n\nTandaan:\n- " + pv.plan.warnings.join("\n- ") : "";
+        if (!window.confirm("Ipatupad sa lahat ng tab?\n" + pv.plan.lines.map(function (l) { return l.tab + ": " + l.count; }).join("\n") + warn)) { done(); m.textContent = ""; return; }
+        return adCall({ op: "apply", id: id, confirm: true }).then(function (res) {
+          done();
+          if (res && res.ok) adRefresh("Naipatupad. Nasa History ang mga nabago, at puwedeng ibalik.");
+          else fail(res);
+        });
+      });
+    }).catch(function () { done(); fail(); });
+  });
+  $("adGo").addEventListener("click", adOpen);
+  $("adPin").addEventListener("keydown", function (e) { if (e.key === "Enter") adOpen(); });
+  $("adTabReq").addEventListener("click", function () { adTab = "req"; adRender(); });
+  $("adTabHist").addEventListener("click", function () { adTab = "hist"; adRender(); });
+  $("adRefresh").addEventListener("click", function () { adRefresh("Na-refresh."); });
+  $("adOut").addEventListener("click", function () { adPin = ""; adData = null; $("adGate").hidden = false; $("adMain").hidden = true; $("adMsg").textContent = ""; });
 
   loadContracts(true);
   route();
