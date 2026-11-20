@@ -131,12 +131,38 @@
   .ad-plan { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--tint); font-size: 0.92rem; }
   .ad-plan ul { margin: 6px 0 0 18px; padding: 0; } .ad-plan .err { color: var(--err); font-weight: 700; }
   .ad-lock { font-size: 0.85rem; opacity: .75; }
+
+  .instr { background: var(--tint); border-left: 5px solid var(--brand); border-radius: 8px; padding: 12px 14px; margin: 0 0 16px; line-height: 1.55; }
+  .instr small { display: block; margin-top: 6px; color: var(--muted); }
+  #view-feedback textarea, #view-feedback select, #view-feedback input[type="number"] { width: 100%; font: inherit; padding: 10px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; box-sizing: border-box; }
+  .fb-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 6px 0 12px; }
+  @media (max-width: 560px) { .fb-checks { grid-template-columns: minmax(0, 1fr); } }
+  .fb-chk { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 10px; background: #fff; cursor: pointer; font-weight: 600; }
+  .fb-chk input { width: 20px; height: 20px; flex: none; margin: 1px 0 0; }
+  .fb-anon { margin: 0 0 8px; font-weight: 500; }
+  .ad-sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 10px 0; }
+  .ad-sum div { background: var(--tint); border-radius: 10px; padding: 10px 12px; } .ad-sum b { display: block; font-size: 1.4rem; color: var(--navy); }
+  .ad-bar { display: grid; grid-template-columns: minmax(120px, 40%) 1fr 36px; gap: 8px; align-items: center; margin: 4px 0; font-size: 0.9rem; }
+  .ad-bar i { display: block; height: 12px; border-radius: 6px; background: var(--brand); }
+  .ad-filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; } .ad-filters select { font: inherit; padding: 9px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; min-width: 0; }
   .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 0 0 14px; flex-wrap: wrap; }
   .menu-top h2 { margin: 0; }
   .menu-top a { color: var(--brand); font-weight: 700; text-decoration: none; }
   .menu-top a:hover { text-decoration: underline; }
-  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  @media (max-width: 720px) { .tiles { grid-template-columns: minmax(0, 1fr); } }
+  .tiles { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  @media (min-width: 560px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 820px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 1100px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  body.home-wide main, body.home-wide header .wrap { max-width: 1240px; }
+  .tiles .tile { padding: 16px; gap: 7px; border-radius: 14px; }
+  .tiles .tile .ico { width: 40px; height: 40px; border-radius: 11px; margin-bottom: 2px; }
+  .tiles .tile .ico svg { width: 21px; height: 21px; }
+  .tiles .tile strong { font-size: 1.1rem; }
+  .tiles .tile .desc { font-size: 0.9rem; line-height: 1.4; }
+  .tiles .tile .tile-note { font-size: 0.84rem; padding: 8px 10px; }
+  .tiles .tile .go { padding-top: 8px; font-size: 0.95rem; }
+  .tile.fbk .ico { background: #efe1f7; color: #6b2a99; }
+  .tile.fbk .go { color: #6b2a99; }
   .tile {
     display: flex; flex-direction: column; gap: 10px;
     background: #fff; color: var(--ink); text-decoration: none;
@@ -178,7 +204,10 @@
   .tile.wide strong { grid-column: 2; }
   .tile.wide .desc { grid-column: 2; max-width: 62ch; }
   .tile.wide .go { grid-column: 3; grid-row: 1 / span 2; margin: 0; padding: 0; gap: 8px; justify-content: flex-end; white-space: nowrap; }
-  @media (max-width: 720px) { .tile.wide { display: flex; } .tile.wide .go { margin-top: auto; padding-top: 12px; justify-content: space-between; } }
+  .tiles .tile.wide { grid-column: auto; display: flex; align-items: stretch; }
+  .tiles .tile.wide strong, .tiles .tile.wide .desc { grid-column: auto; grid-row: auto; text-align: left; }
+  .tiles .tile.wide .ico { margin: 0 0 2px; }
+  .tiles .tile.wide .go { margin-top: auto; padding-top: 8px; justify-content: space-between; }
   .chip.plain::before { display: none; }
   .chip.plain { background: #eceff1; color: var(--muted); font-weight: 400; }
   .chip { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 0.9rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
@@ -401,6 +430,62 @@
     </div>
   </section>
 
+  <!-- ================= FEEDBACK NG TUTOR ================= -->
+  <section class="card" id="view-feedback" hidden>
+    <a class="back" href="#menu">Bumalik sa Home</a>
+    <h2 tabindex="-1">Feedback ng tutor</h2>
+    <div class="instr">
+      <b>Paano sumagot:</b><br>
+      1. Piliin ang linggo at ilagay ang buong pangalan mo (dapat nakarehistro ka na).<br>
+      2. Sagutan ang mga tanong. Puwedeng pumili sa dropdown at magsulat ng dagdag na kuwento.<br>
+      3. Pindutin ang <b>Ipadala ang feedback</b>.<br>
+      <small>Isang beses bawat linggo, anumang araw. Kung magpapadala ulit sa parehong linggo, papalitan nito ang una mong sagot. Huwag maglagay ng account number o ibang sensitibong impormasyon.</small>
+    </div>
+    <form id="fbForm" novalidate>
+      <div id="fbBody">
+        <div class="field"><label for="fbWeek">Para sa anong linggo?</label><select id="fbWeek"></select></div>
+        <div class="field"><label for="fbName">Buong pangalan mo<span class="hint">First name, Middle name, Last name</span></label>
+          <input type="text" id="fbName" autocomplete="name"><p class="name-hint" id="fbHint" aria-live="polite"></p><div class="suggest" id="fbSuggest"></div></div>
+        <label class="fb-chk fb-anon"><input type="checkbox" id="fbAnon"> <span>Ayaw kong ipakita ang pangalan ko sa mga School Head at teachers. Makikita pa rin ng CID ang district.</span></label>
+        <p class="st-sub">Experience mo</p>
+        <div class="field"><label for="fbExp">Experience mo ngayong linggo</label>
+          <select id="fbExp"><option value="">Pumili</option><option>Maganda</option><option>Katamtaman</option><option>Mahirap</option></select></div>
+        <div class="field"><label for="fbExpNote">Ikuwento ang experience mo (puwedeng iwan na blangko)</label><textarea id="fbExpNote" rows="2" maxlength="600"></textarea></div>
+        <div class="field"><label for="fbGood">Ano ang magandang nangyari ngayong linggo?</label><textarea id="fbGood" rows="2" maxlength="600"></textarea></div>
+        <div class="field"><label for="fbLearners">Ilang learners ang kasalukuyan mong tinuturuan?</label><input type="number" id="fbLearners" min="0" max="300" inputmode="numeric"></div>
+        <p class="st-sub">Kahandaan</p>
+        <div class="field"><label for="fbReady">Gaano ka kahanda bilang tutor?</label>
+          <select id="fbReady"><option value="">Pumili</option><option>1 - Hindi pa handa</option><option>2</option><option>3 - Katamtaman</option><option>4</option><option>5 - Lubos na handa</option></select></div>
+        <div class="field"><label for="fbReadyNote">Dagdag na paliwanag (opsyonal)</label><textarea id="fbReadyNote" rows="2" maxlength="600"></textarea></div>
+        <p class="st-sub">Materyales at suporta</p>
+        <div class="field"><label for="fbWs">Sapat ba ang worksheets at activity sheets?</label>
+          <select id="fbWs"><option value="">Pumili</option><option>Sapat</option><option>Kulang</option><option>Wala pa</option></select></div>
+        <div class="field"><label for="fbWsNote">Ano ang kulang? (hal. Grade 3 Math)</label><textarea id="fbWsNote" rows="2" maxlength="600"></textarea></div>
+        <div class="field"><label for="fbSup">Suporta ng school at teachers</label>
+          <select id="fbSup"><option value="">Pumili</option><option>Malakas</option><option>Katamtaman</option><option>Mahina</option><option>Wala</option></select></div>
+        <div class="field"><label for="fbSupNote">Dagdag na tala sa suporta (opsyonal)</label><textarea id="fbSupNote" rows="2" maxlength="600"></textarea></div>
+        <div class="field"><label for="fbAtt">Pagdalo ng mga learner</label>
+          <select id="fbAtt"><option value="">Pumili</option><option>Mataas</option><option>Katamtaman</option><option>Mababa</option></select></div>
+        <p class="st-sub">Mga hamon</p>
+        <p class="hint">Piliin lahat ng nararanasan mo.</p>
+        <div class="fb-checks"><label class="fb-chk"><input type="checkbox" name="fbChal" value="Kakulangan sa oras"> <span>Kakulangan sa oras</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Kakulangan sa silid o lugar"> <span>Kakulangan sa silid o lugar</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Kulang ang interes ng learners"> <span>Kulang ang interes ng learners</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Kakulangan sa materyales"> <span>Kakulangan sa materyales</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Bayad o remuneration"> <span>Bayad o remuneration</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Pagdalo ng learners"> <span>Pagdalo ng learners</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Ugnayan sa school"> <span>Ugnayan sa school</span></label><label class="fb-chk"><input type="checkbox" name="fbChal" value="Iba pa"> <span>Iba pa</span></label></div>
+        <p class="st-sub">Ano ang kailangan mo?</p>
+        <p class="hint">Piliin lahat ng kailangan mo.</p>
+        <div class="fb-checks"><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Training"> <span>Training</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Worksheets at activity sheets"> <span>Worksheets at activity sheets</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Suporta ng school"> <span>Suporta ng school</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Mas malinaw na gabay"> <span>Mas malinaw na gabay</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Mas mabilis na bayad"> <span>Mas mabilis na bayad</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Mentoring o pagsubaybay"> <span>Mentoring o pagsubaybay</span></label><label class="fb-chk"><input type="checkbox" name="fbNeed" value="Iba pa"> <span>Iba pa</span></label></div>
+        <div class="field"><label for="fbNeedNote">Detalye ng kailangan (opsyonal)</label><textarea id="fbNeedNote" rows="2" maxlength="600"></textarea></div>
+        <div class="field"><label for="fbMsg">Karagdagang mensahe para sa CID (opsyonal)</label><textarea id="fbMsg" rows="2" maxlength="600"></textarea></div>
+        <input type="text" id="fbHp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        <div class="error" id="fbErr" role="alert"></div>
+        <button type="submit" class="primary" id="fbSubmit">Ipadala ang feedback</button>
+        <p class="rq-msg" id="fbStatus" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+    <div id="fbDone" hidden>
+      <div class="st-warn" style="background:#dff3e6;border-left-color:#17653a;color:#17493a"><b id="fbDoneTitle">Salamat!</b><p id="fbDoneMsg"></p></div>
+      <div class="go-row"><a class="primary" href="#menu">Bumalik sa Home</a><button type="button" class="ad-btn" id="fbAgain">Magpadala para sa ibang linggo</button></div>
+    </div>
+  </section>
+
   <!-- ================= ADMIN (PIN ni Sir Dyon) ================= -->
   <section class="card" id="view-admin" hidden>
     <a class="back" href="#menu">Bumalik sa Home</a>
@@ -412,7 +497,7 @@
       <p class="rq-msg" id="adMsg" role="status" aria-live="polite"></p>
     </div>
     <div id="adMain" hidden>
-      <div class="ad-tabs"><button type="button" id="adTabReq" aria-pressed="true">Mga hiling</button><button type="button" id="adTabHist" aria-pressed="false">History</button><button type="button" id="adRefresh">&#8635; I-refresh</button><button type="button" id="adOut">Isara</button></div>
+      <div class="ad-tabs"><button type="button" id="adTabReq" aria-pressed="true">Mga hiling</button><button type="button" id="adTabHist" aria-pressed="false">History</button><button type="button" id="adTabFb" aria-pressed="false">Feedback</button><button type="button" id="adRefresh">&#8635; I-refresh</button><button type="button" id="adOut">Isara</button></div>
       <p class="rq-msg" id="adMsg2" role="status" aria-live="polite"></p>
       <div id="adList"></div>
     </div>
@@ -489,6 +574,16 @@
         <strong>Bayad sa notaryo</strong>
         <span class="desc">Itala ang bayad mo para sa notaryo ng contract. Puwedeng isang bayad para sa maraming tutor ng iisang school.</span>
         <span class="go">Itala ang bayad
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+      <a class="tile fbk" id="tileFeedback" href="#feedback">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/></svg>
+        </span>
+        <strong>Feedback ng tutor</strong>
+        <span class="desc">Ibahagi ang experience mo ngayong linggo, kahandaan, materyales, suporta ng school, at kailangan mo. Isang beses bawat linggo.</span>
+        <span class="go">Magpadala ng feedback
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
         </span>
       </a>
@@ -1496,7 +1591,7 @@
 
   /* =============== routing =============== */
 
-  var views = { landing: $("view-landing"), lookup: $("view-lookup"), home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm"), admin: $("view-admin") };
+  var views = { landing: $("view-landing"), lookup: $("view-lookup"), home: $("view-home"), register: $("view-register"), attendance: $("view-attendance"), contracts: $("view-contracts"), payment: $("view-payment"), atm: $("view-atm"), admin: $("view-admin"), feedback: $("view-feedback") };
   var attLoaded = false, chipAt = 0, lastRoute = "";
 
   // Sa landing page: ipakita kung may bukas na meeting para sa attendance.
@@ -1519,10 +1614,11 @@
     var h = (location.hash || "").replace("#", "");
     var name = h === "registration" ? "register" : h === "attendance" ? "attendance"
              : h === "payment" ? "payment" : h === "atm" ? "atm"
-             : h === "lookup" ? "lookup" : h === "menu" ? "home" : h === "admin" ? "admin"
+             : h === "lookup" ? "lookup" : h === "menu" ? "home" : h === "admin" ? "admin" : h === "feedback" ? "feedback"
              : (HAS_CONTRACTS && (h === "contracts" || h.indexOf("contracts-") === 0)) ? "contracts" : "landing";
     Object.keys(views).forEach(function (k) { views[k].hidden = (k !== name); });
     $("top").classList.toggle("compact", name !== "landing");
+    document.body.classList.toggle("home-wide", name === "home");
     window.scrollTo(0, 0);
     if (name === "home") { loadHomeChip(); loadContracts(false); }
     if (name === "contracts") {
@@ -1532,6 +1628,7 @@
     lastRoute = name;
     if (name === "lookup") initLookup();
     if (name === "admin") adInit();
+    if (name === "feedback") fbInit();
     if (name === "payment") initPayment();
     if (name === "atm") initAtm();
     if (name === "attendance" && !attLoaded) loadAttendanceData();
@@ -2415,6 +2512,79 @@
     if (t.classList.contains("rq-pick") && t.value) form.querySelector(".rq-keep").value = t.value;
   });
 
+
+  /* =============== FEEDBACK NG TUTOR =============== */
+  var fbTutors = null, fbLoading = false, fbSending = false;
+  function fbMonday(offset) {
+    var m = new Date(Date.now() + 8 * 3600000 - offset * 7 * 86400000), dow = m.getUTCDay();
+    return new Date(m.getTime() - ((dow + 6) % 7) * 86400000).toISOString().slice(0, 10);
+  }
+  function fbWeekLabel(iso) {
+    var d = new Date(iso + "T00:00:00Z"), e = new Date(d.getTime() + 6 * 86400000);
+    var mo = ["Enero","Pebrero","Marso","Abril","Mayo","Hunyo","Hulyo","Agosto","Setyembre","Oktubre","Nobyembre","Disyembre"];
+    return mo[d.getUTCMonth()] + " " + d.getUTCDate() + " hanggang " + mo[e.getUTCMonth()] + " " + e.getUTCDate() + ", " + e.getUTCFullYear();
+  }
+  function fbInit() {
+    var sel = $("fbWeek");
+    if (!sel.options.length) [0, 1, 2, 3].forEach(function (i) { var o = document.createElement("option"); o.value = fbMonday(i); o.textContent = (i === 0 ? "Ngayong linggo: " : i === 1 ? "Nakaraang linggo: " : "") + fbWeekLabel(fbMonday(i)); sel.appendChild(o); });
+    if (!fbTutors && !fbLoading) {
+      fbLoading = true;
+      getAction("tutors").then(function (r) { fbTutors = r.tutors || []; fbLoading = false; fbCheck(); }).catch(function () { fbLoading = false; });
+    }
+  }
+  function fbMatch(name) { var q = plain(name), hit = null; (fbTutors || []).forEach(function (t) { if (!hit && plain(t.n) === q) hit = t; }); return hit; }
+  function fbCheck() {
+    var v = cleanName($("fbName").value), hint = $("fbHint"), sg = $("fbSuggest"); sg.innerHTML = "";
+    if (!v) { hint.className = "name-hint"; hint.textContent = ""; return; }
+    if (!nameOk(v)) { hint.className = "name-hint"; hint.textContent = "Isulat ang buong pangalan."; return; }
+    if (!fbTutors) { hint.className = "name-hint"; hint.textContent = "Tinitingnan ang listahan..."; return; }
+    var m = fbMatch(v);
+    if (m) { hint.className = "name-hint ok"; hint.textContent = "Nakarehistro: " + m.s + ", " + m.d + "."; return; }
+    hint.className = "name-hint warn"; hint.textContent = "Wala sa listahan ng mga nakarehistro. Subukan ang ibang spelling, o magrehistro muna.";
+    var words = plain(v).split(" ").filter(function (w) { return w.length > 1; }), n = 0;
+    fbTutors.forEach(function (t) {
+      var p = plain(t.n), c = 0; words.forEach(function (w) { if (p.indexOf(w) >= 0) c++; });
+      if (c >= 2 && n < 4) { n++; var b = document.createElement("button"); b.type = "button"; b.textContent = t.n; b.addEventListener("click", function () { $("fbName").value = t.n; fbCheck(); }); sg.appendChild(b); }
+    });
+  }
+  $("fbName").addEventListener("input", fbCheck);
+  function fbChecked(name) { return Array.prototype.map.call($("fbForm").querySelectorAll('input[name="' + name + '"]:checked'), function (x) { return x.value; }); }
+  $("fbForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (fbSending) return;
+    var err = $("fbErr"), st = $("fbStatus"); err.textContent = ""; st.textContent = ""; st.className = "rq-msg";
+    var name = cleanName($("fbName").value);
+    function bad(msg, id) { err.textContent = msg; if (id) $(id).focus(); }
+    if (!nameOk(name)) return bad("Isulat ang buong pangalan mo.", "fbName");
+    if (fbTutors && !fbMatch(name)) return bad("Wala ang pangalan mo sa listahan ng mga nakarehistro. Piliin ang tamang spelling o magrehistro muna.", "fbName");
+    if (!$("fbExp").value) return bad("Piliin ang experience mo ngayong linggo.", "fbExp");
+    if ($("fbLearners").value === "" || Number($("fbLearners").value) < 0 || Number($("fbLearners").value) > 300) return bad("Ilagay ang bilang ng learners (0 hanggang 300).", "fbLearners");
+    if (!$("fbReady").value) return bad("Piliin ang kahandaan mo.", "fbReady");
+    if (!$("fbWs").value) return bad("Piliin kung sapat ang worksheets at activity sheets.", "fbWs");
+    if (!$("fbSup").value) return bad("Piliin ang suporta ng school at teachers.", "fbSup");
+    if (!$("fbAtt").value) return bad("Piliin ang pagdalo ng mga learner.", "fbAtt");
+    fbSending = true; $("fbSubmit").disabled = true; st.textContent = "Ipinapadala...";
+    postJSON({ action: "feedback", week: $("fbWeek").value, name: name, anonymous: $("fbAnon").checked, experience: $("fbExp").value, experienceNote: $("fbExpNote").value, good: $("fbGood").value,
+      readiness: Number($("fbReady").value.charAt(0)), readyNote: $("fbReadyNote").value, learners: Number($("fbLearners").value), worksheets: $("fbWs").value, wsNote: $("fbWsNote").value,
+      support: $("fbSup").value, supportNote: $("fbSupNote").value, attendance: $("fbAtt").value, challenges: fbChecked("fbChal"), needs: fbChecked("fbNeed"), needNote: $("fbNeedNote").value,
+      message: $("fbMsg").value, website: $("fbHp").value })
+      .then(function (res) {
+        fbSending = false; $("fbSubmit").disabled = false;
+        if (res && res.ok) {
+          $("fbBody").hidden = true; $("fbDone").hidden = false; st.textContent = "";
+          $("fbDoneTitle").textContent = res.status === "updated" ? "Napalitan ang naunang sagot mo para sa linggong ito." : "Salamat sa feedback mo!";
+          $("fbDoneMsg").textContent = "Natanggap ito ng CID. Puwede kang magpadala ulit sa susunod na linggo.";
+          window.scrollTo(0, 0);
+        } else {
+          st.className = "rq-msg bad";
+          st.textContent = res && res.error === "Not registered" ? "Wala ang pangalan mo sa listahan ng nakarehistro. Magrehistro muna o i-check ang spelling." : "Hindi naipadala. Subukan ulit.";
+        }
+      }).catch(function () { fbSending = false; $("fbSubmit").disabled = false; st.className = "rq-msg bad"; st.textContent = "Walang koneksyon. Subukan ulit."; });
+  });
+  $("fbAgain").addEventListener("click", function () {
+    $("fbForm").reset(); $("fbBody").hidden = false; $("fbDone").hidden = true; $("fbHint").textContent = ""; $("fbSuggest").innerHTML = ""; $("fbErr").textContent = ""; window.scrollTo(0, 0);
+  });
+
   /* =============== ADMIN =============== */
   var adPin = "", adData = null, adTab = "req", adBusy = false;
   var AD_TYPES = { spelling: "Palitan ang spelling", doble: "Doble", alisin: "Alisin", iba: "Iba pa" };
@@ -2474,6 +2644,8 @@
   function adRender() {
     var box = $("adList"), d = adData || { requests: [], history: [] };
     $("adTabReq").setAttribute("aria-pressed", adTab === "req"); $("adTabHist").setAttribute("aria-pressed", adTab === "hist");
+    $("adTabFb").setAttribute("aria-pressed", adTab === "fb");
+    if (adTab === "fb") { box.innerHTML = adFbHtml(); return; }
     if (adTab === "req") {
       var pend = d.requests.filter(function (q) { return q.status === "Pending"; }), rest = d.requests.filter(function (q) { return q.status !== "Pending"; });
       box.innerHTML = '<p class="hint">' + pend.length + " hiling ang naghihintay.</p>" + (pend.length ? pend.map(adReqCard).join("") : '<p class="hint">Walang naghihintay na hiling.</p>') +
@@ -2535,6 +2707,54 @@
       });
     }).catch(function () { done(); fail(); });
   });
+
+  /* ---- admin: Feedback tab ---- */
+  var adFb = null, adFbWeek = "", adFbDist = "", adFbBusy = false;
+  function adFbLoad() {
+    $("adList").innerHTML = '<p class="hint">Kinukuha...</p>';
+    adCall({ op: "fbsummary", week: adFbWeek, district: adFbDist }).then(function (res) {
+      if (res && res.ok) { adFb = res; adRender(); } else { $("adList").innerHTML = ""; $("adMsg2").className = "rq-msg bad"; $("adMsg2").textContent = adErr(res); }
+    }).catch(function () { $("adList").innerHTML = ""; $("adMsg2").className = "rq-msg bad"; $("adMsg2").textContent = "Walang koneksyon."; });
+  }
+  function adBars(title, items, total) {
+    if (!items.length) return "";
+    var max = items[0].n || 1;
+    return '<p class="st-sub">' + esc(title) + "</p>" + items.slice(0, 8).map(function (x) {
+      return '<div class="ad-bar"><span>' + esc(x.label) + '</span><i style="width:' + Math.max(4, Math.round(x.n / max * 100)) + '%"></i><b>' + x.n + "</b></div>";
+    }).join("");
+  }
+  function adFbHtml() {
+    if (!adFb) return "";
+    var s = adFb.summary;
+    var wk = '<option value="">Lahat ng linggo</option>' + adFb.weeks.map(function (w) { return '<option value="' + esc(w) + '"' + (w === adFbWeek ? " selected" : "") + ">" + esc(w) + "</option>"; }).join("");
+    var ds = '<option value="">Lahat ng district</option>' + adFb.districts.map(function (d) { return '<option' + (d === adFbDist ? " selected" : "") + ">" + esc(d) + "</option>"; }).join("");
+    var h = '<div class="ad-filters"><select id="adFbWeek" aria-label="Linggo">' + wk + '</select><select id="adFbDist" aria-label="District">' + ds + "</select></div>" +
+      '<div class="ad-ico"><button type="button" class="go" data-fb="doc">&#128196; Gumawa ng Word report</button><button type="button" class="go" data-fb="slides">&#128202; Gumawa ng PowerPoint</button></div>' +
+      '<div class="ad-plan" id="adFbOut" hidden></div>';
+    if (!s.n) return h + '<p class="hint" style="margin-top:12px">Wala pang feedback para sa napiling linggo at district.</p>';
+    h += '<div class="ad-sum"><div><b>' + s.n + "</b>sumagot</div><div><b>" + s.pct + "%</b>ng " + s.registered + " nakarehistro</div><div><b>" + s.readyAvg + " / 5</b>karaniwang kahandaan</div><div><b>" + s.learners + "</b>learners (ayon sa tutor)</div></div>";
+    h += adBars("Experience", s.exp) + adBars("Worksheets at activity sheets", s.ws) + adBars("Suporta ng school", s.sup) + adBars("Pagdalo ng learners", s.att) + adBars("Mga hamon", s.chal) + adBars("Ano ang kailangan nila", s.need);
+    if (s.actions.length) h += '<p class="st-sub">Mga mungkahing aksyon</p><ul>' + s.actions.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    var qs = s.good.concat(s.notes);
+    if (qs.length) h += '<p class="st-sub">Mga piling sagot</p><ul>' + qs.slice(0, 10).map(function (q) { return "<li>&ldquo;" + esc(q.t) + "&rdquo; <small>(" + esc(q.d) + ")</small></li>"; }).join("") + "</ul>";
+    return h;
+  }
+  $("adList").addEventListener("change", function (e) {
+    if (e.target.id === "adFbWeek") { adFbWeek = e.target.value; adFbLoad(); }
+    if (e.target.id === "adFbDist") { adFbDist = e.target.value; adFbLoad(); }
+  });
+  $("adList").addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest("button[data-fb]") : null;
+    if (!b || adFbBusy) return;
+    var out = $("adFbOut"), kind = b.getAttribute("data-fb");
+    adFbBusy = true; b.disabled = true; out.hidden = false; out.textContent = "Ginagawa ang report... maaaring abutin ng ilang segundo.";
+    adCall({ op: "fbreport", kind: kind, week: adFbWeek, district: adFbDist }).then(function (res) {
+      adFbBusy = false; b.disabled = false;
+      if (res && res.ok) out.innerHTML = "<b>Handa na (" + res.n + " sagot).</b><br><a href=\"" + esc(res.url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Buksan at i-edit</a> &middot; <a href=\"" + esc(res.downloadUrl) + "\" target=\"_blank\" rel=\"noopener noreferrer\">I-download (" + (kind === "slides" ? ".pptx" : ".docx") + ")</a>";
+      else out.textContent = res && res.error === "No feedback" ? "Walang feedback para sa napiling linggo at district." : "Hindi nagawa. Tingnan kung naibigay na ang pahintulot sa Apps Script (Docs at Slides), at subukan ulit.";
+    }).catch(function () { adFbBusy = false; b.disabled = false; out.textContent = "Walang koneksyon."; });
+  });
+  $("adTabFb").addEventListener("click", function () { adTab = "fb"; adRender(); adFbLoad(); });
   $("adGo").addEventListener("click", adOpen);
   $("adPin").addEventListener("keydown", function (e) { if (e.key === "Enter") adOpen(); });
   $("adTabReq").addEventListener("click", function () { adTab = "req"; adRender(); });
