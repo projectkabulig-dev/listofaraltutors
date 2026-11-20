@@ -2750,7 +2750,7 @@
     adFbBusy = true; b.disabled = true; out.hidden = false; out.textContent = "Ginagawa ang report... maaaring abutin ng ilang segundo.";
     adCall({ op: "fbreport", kind: kind, week: adFbWeek, district: adFbDist }).then(function (res) {
       adFbBusy = false; b.disabled = false;
-      if (res && res.ok) out.innerHTML = "<b>Handa na (" + res.n + " sagot).</b><br><a href=\"" + esc(res.url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Buksan at i-edit</a> &middot; <a href=\"" + esc(res.downloadUrl) + "\" target=\"_blank\" rel=\"noopener noreferrer\">I-download (" + (kind === "slides" ? ".pptx" : ".docx") + ")</a>";
+      if (res && res.ok) out.innerHTML = "<b>Handa na (" + res.n + " sagot).</b><br><a href=\"" + esc(res.url) + "\" target=\"_blank\" rel=\"noopener noreferrer\">Buksan at i-edit</a> &middot; <a href=\"" + esc(res.downloadUrl) + "\" target=\"_blank\" rel=\"noopener noreferrer\">I-download (" + (kind === "slides" ? ".pptx" : ".docx") + ")</a>" + (res.folderUrl ? "<br>Nakalagay sa folder na <a href=\"" + esc(res.folderUrl) + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + esc(res.folder) + "</a> sa Drive mo." : "<br><small>Nasa Drive mo ito (walang folder pa; idagdag ang Drive permission).</small>");
       else out.textContent = res && res.error === "No feedback" ? "Walang feedback para sa napiling linggo at district." : "Hindi nagawa. Tingnan kung naibigay na ang pahintulot sa Apps Script (Docs at Slides), at subukan ulit.";
     }).catch(function () { adFbBusy = false; b.disabled = false; out.textContent = "Walang koneksyon."; });
   });
