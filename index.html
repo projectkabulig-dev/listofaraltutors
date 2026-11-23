@@ -2594,15 +2594,17 @@
     if (nm.split(" ").length === 2 && !nomid) return bad("Dalawang salita lang ang pangalan. Isama ang middle name, o lagyan ng tsek ang 'Wala akong middle name'.");
     var dist = ""; SCHOOLS.forEach(function (x) { if (plain(x.school) === plain(sc)) { dist = x.district; sc = x.school; } });
     if (sc && !dist && plain(sc) !== plain(r.s || "")) return bad("Piliin ang school mula sa listahan (mag-type at pumili).");
-    t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan...";
+    t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan... Maghintay po ng hanggang 1 minuto at huwag pindutin ulit.";
+    var sfDone = false, sfTimer = setTimeout(function () { if (sfDone) return; sfDone = true; t.disabled = false; msg.className = "rq-msg bad"; msg.textContent = "Matagal ang sagot. Baka na-save na ito: tingnan ulit ang status mo mamaya bago subukan ulit."; }, 90000);
     postJSON(Object.assign({ action: "selffix", newName: nm, noMiddle: nomid, newSchool: sc, newDistrict: dist, contract: con, contractDate: form.querySelector(".sf-cdate").value }, base))
       .then(function (res) {
+        if (sfDone) return; sfDone = true; clearTimeout(sfTimer);
         t.disabled = false;
         if (res && res.ok && res.status === "fixed") {
           msg.className = "rq-msg ok"; msg.innerHTML = "Naayos na! " + esc(res.changes.join("; ")) + "." + (res.warnings && res.warnings.length ? "<br><b>Paalala:</b> " + esc(res.warnings.join(" ")) : "") + ' <a href="#menu">Bumalik sa Home</a>'; t.hidden = true; form.querySelector(".sf-pin").value = "";
         } else if (res && res.ok) { msg.className = "rq-msg"; msg.textContent = res.msg || "Walang binago."; }
         else bad((res && res.msg) || "Hindi na-save. Subukan ulit.");
-      }).catch(function () { t.disabled = false; bad("Walang koneksyon. Subukan ulit."); });
+      }).catch(function () { if (sfDone) return; sfDone = true; clearTimeout(sfTimer); t.disabled = false; bad("Walang koneksyon. Subukan ulit."); });
   });
   $("lkResults").addEventListener("change", function (e) {
     var t = e.target; if (t.classList && t.classList.contains("sf-con")) { var b = t.closest(".sf-box").querySelector(".sf-conbox"); b.hidden = t.value !== "oo"; }
