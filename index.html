@@ -2538,7 +2538,8 @@
         (!ok && href ? ' <a class="sf-btn" style="display:inline-block;text-decoration:none;margin-top:4px" href="' + href + '"' + (href.charAt(0) === "#" ? "" : ' target="_blank" rel="noopener"') + '>' + btn + '</a>' : "") + '</div></li>';
     }
     var hasAtm = !!(r.atm || (n.atm && n.atm.length)), hasCon = !!(r.con || (n.contract && n.contract.length));
-    var h = '<p class="st-sub" style="margin:10px 0 2px"><b>Mga kailangan mong tapusin</b></p><ul class="st-list" style="list-style:none;padding:0;margin:0 0 6px">' +
+    var allDone = hasAtm && hasCon;
+    var h = '<p class="st-sub" style="margin:10px 0 2px"><b>' + (allDone ? "Kumpleto na ang mga hakbang mo &#10003;" : "Mga kailangan mong tapusin") + '</b></p><ul class="st-list" style="list-style:none;padding:0;margin:0 0 6px">' +
       item(true, "Nakarehistro bilang tutor", "") +
       item(true, "Nakarehistro sa Tracker", "Napatunayan ng iyong code at PIN.") +
       item(hasAtm, "Bank account (ATM) form", hasAtm ? "" : "Wala ka pang naisumite. Ito ang basehan ng bayad mo. Gamitin ang pangalang kukumpirmahin mo sa ibaba, na dapat kapareho ng nasa card o passbook.", "#atm", "Pumunta sa ATM form") +
