@@ -110,6 +110,11 @@
   .rq-form { margin-top: 10px; padding: 12px; border: 1.5px dashed var(--line); border-radius: 10px; background: #fafcfd; }
   .rq-form label { display: block; font-weight: 700; margin: 10px 0 4px; }
   .rq-form select, .rq-form input, .rq-form textarea, .ad-card input, .ad-card textarea, #adPin { width: 100%; font: inherit; padding: 10px; border: 1.5px solid var(--line); border-radius: 8px; background: #fff; box-sizing: border-box; }
+  .sf-btn { font: inherit; font-weight: 700; border-radius: 8px; border: 0; background: var(--brand); color: #fff; padding: 10px 16px; cursor: pointer; margin: 0 6px 6px 0; }
+  .sf-box ol { margin: 6px 0 10px 18px; padding: 0; } .sf-box li { margin: 3px 0; }
+  .sf-box .sf-inst { background: #eef6fa; border-left: 5px solid var(--brand); border-radius: 8px; padding: 8px 12px; font-size: 0.92rem; }
+  .sf-box .sf-chk { display: flex; gap: 8px; align-items: center; font-weight: 400; margin: 6px 0; } .sf-box .sf-chk input { width: auto; }
+  .sf-box .sf-two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } @media (max-width: 520px) { .sf-box .sf-two { grid-template-columns: 1fr; } }
   .rq-form .primary { width: auto; margin-top: 12px; padding: 10px 18px; }
   .rq-msg { margin: 8px 0 0; font-weight: 600; }
   .rq-msg.ok { color: #17653a; } .rq-msg.bad { color: var(--err); }
@@ -2392,7 +2397,7 @@
       if (r.trk && r.trk.state === "none" && r.trk.similar && r.trk.similar.length) h += "<p>Sa Tracker, may katulad na pangalan: " + esc(r.trk.similar.map(function (x) { return x.n + (x.s ? " (" + x.s + ")" : ""); }).join("; ")) + ". Baka magkaiba ang spelling mo roon.</p>";
       h += msgBtn() + "</div>";
     }
-    h += '<div class="rq-open"><button type="button" class="rq-btn">May mali o doble sa pangalan ko? Magrequest ng pagtatama</button></div>';
+    h += '<div class="rq-open"><button type="button" class="sf-btn">Ayusin ko mismo ang record ko (gamit ang PIN sa Tracker)</button> <button type="button" class="rq-btn">Hindi ako ito / ibang problema: magrequest sa Division</button></div>';
     return h;
   }
   function srcChips(r) {
@@ -2483,7 +2488,7 @@
     var t = e.target, card;
     if (t.classList && t.classList.contains("rq-btn")) {
       var panel = t.closest(".st-panel"), idx = Number(panel.id.replace("stp", "")), box = t.parentNode;
-      if (box.querySelector(".rq-form")) { box.removeChild(box.querySelector(".rq-form")); return; }
+      if (box.querySelector(".rq-form:not(.sf-box)")) { box.removeChild(box.querySelector(".rq-form:not(.sf-box)")); return; }
       var d = document.createElement("div"); d.innerHTML = rqForm(lastResults[idx] || {}); box.appendChild(d.firstChild);
       return;
     }
@@ -2504,6 +2509,89 @@
           else { msg.className = "rq-msg bad"; msg.textContent = res && res.error === "Name not found" ? "Hindi nakita ang pangalan sa mga listahan. I-message si Sir Dyon." : "Hindi naipadala. Subukan ulit."; }
         }).catch(function () { t.disabled = false; msg.className = "rq-msg bad"; msg.textContent = "Walang koneksyon. Subukan ulit."; });
     }
+  });
+  /* ---------- SARILING AYOS: ang tutor mismo ang nag-aayos (PIN = PIN sa Tracker). Hakbang 1: tingnan ang mga pangalan. Hakbang 2: i-save. ---------- */
+  function sfDatalist() {
+    if ($("sfSchools")) return;
+    var dl = document.createElement("datalist"); dl.id = "sfSchools";
+    SCHOOLS.forEach(function (x) { var o = document.createElement("option"); o.value = x.school; o.label = x.district; dl.appendChild(o); });
+    document.body.appendChild(dl);
+  }
+  function sfForm(r) {
+    sfDatalist();
+    return '<div class="rq-form sf-box"><p style="margin:0 0 6px"><b>Ayusin ang record ni:</b> ' + esc(r.n) + '</p>' +
+      '<div class="sf-inst"><b>Paano:</b><ol><li>Ilagay ang <b>Tracker code</b> mo (hal. SFD-012) at ang <b>4-digit PIN</b> mo sa Tracker, tapos pindutin ang <b>Tingnan ang mga pangalan ko</b>.</li>' +
+      '<li>Makikita mo kung paano nakasulat ang pangalan mo sa bank account (ATM), contract, listahan ng tutors at Tracker. <b>Ang pangalan sa ATM ang susundin</b> (ito ang basehan ng bayad).</li>' +
+      '<li>Kumpirmahin o dagdagan ang pangalan (hal. middle name), piliin ang school, tapos <b>I-save</b>. Awtomatiko itong maaayos sa lahat ng listahan, kasama ang Tracker. May tala sa dulo at maibabalik ito ng Division kung may mali.</li></ol>' +
+      'Wala ka pa bang code o PIN? Mag-register muna sa Tracker.</div>' +
+      '<div class="sf-two"><div><label>Tracker code</label><input type="text" class="sf-code" maxlength="8" autocapitalize="characters" autocomplete="off" placeholder="SFD-012"></div>' +
+      '<div><label>PIN sa Tracker</label><input type="password" class="sf-pin" maxlength="4" inputmode="numeric" autocomplete="off" placeholder="4 na numero"></div></div>' +
+      '<button type="button" class="primary sf-check">Tingnan ang mga pangalan ko</button><p class="rq-msg sf-msg" role="status" aria-live="polite"></p>' +
+      '<div class="sf-step2" hidden></div></div>';
+  }
+  function sfStep2(res, r) {
+    var n = res.names, rows = [["Bank account (ATM)", n.atm], ["Contract", n.contract], ["Listahan ng tutors", [n.tutors]], ["Tracker", [n.tracker]]];
+    var h = '<table class="sf-tbl" style="width:100%;border-collapse:collapse;margin:10px 0"><tbody>';
+    rows.forEach(function (x) {
+      var names = x[1] || [], txt = names.length ? names.map(esc).join("<br>") : "<i>Wala</i>";
+      var ok = names.length && names.every(function (m) { return plain(m) === plain(n.suggest); });
+      h += '<tr><th style="text-align:left;padding:6px;border-bottom:1px solid var(--line);width:38%">' + x[0] + '</th><td style="padding:6px;border-bottom:1px solid var(--line)">' + txt + '</td><td style="padding:6px;border-bottom:1px solid var(--line)">' + (!names.length ? "" : ok ? "&#10003;" : "&#10005;") + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    h += res.allSame ? '<p class="rq-msg ok">Magkakapareho ang pangalan sa lahat ng listahan. Wala kang kailangang ayusin sa pangalan.</p>' : '<p class="st-warn" style="margin:0 0 8px">May pagkakaiba sa pangalan. Susundin ang <b>' + esc(n.basis === "ATM" ? "pangalan sa ATM" : n.basis === "Contract" ? "pangalan sa contract (wala pang ATM)" : "pangalan sa listahan") + '</b> maliban kung iba ang ilalagay mo sa ibaba.</p>';
+    h += '<label>Tamang buong pangalan (First Middle Last)</label><input type="text" class="sf-name" maxlength="120" value="' + esc(n.suggest) + '">' +
+      '<p class="hint" style="margin:4px 0">Kung wala ang middle name mo sa ATM, puwede mo itong idagdag dito. Dapat itugma ito sa pangalan sa card o passbook mo.</p>' +
+      '<label class="sf-chk"><input type="checkbox" class="sf-nomid"> Wala akong middle name</label>' +
+      '<label>School na pinagtuturuan</label><input type="text" class="sf-school" list="sfSchools" maxlength="120" value="' + esc(res.listSchool || r.s || "") + '" placeholder="I-type o piliin ang school">' +
+      '<label>Contract</label><select class="sf-con"><option value="">Walang babaguhin</option><option value="oo">May pirmado na akong contract</option><option value="wala">Wala pa akong contract</option></select>' +
+      '<div class="sf-conbox" hidden><label>Petsa ng pirma (kung natatandaan)</label><input type="text" class="sf-cdate" maxlength="20" placeholder="hal. Nov 20, 2026"></div>' +
+      '<p class="hint" style="margin:6px 0 0">Ang sinabi mo tungkol sa contract ay itatala bilang sariling sabi at ibe-verify ng Division.</p>' +
+      '<button type="button" class="primary sf-send">I-save ang ayos</button>';
+    return h;
+  }
+  $("lkResults").addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains("sf-btn")) {
+      var panel = t.closest(".st-panel"), idx = Number(panel.id.replace("stp", "")), box = t.parentNode;
+      if (box.querySelector(".sf-box")) { box.removeChild(box.querySelector(".sf-box")); return; }
+      var d = document.createElement("div"); d.innerHTML = sfForm(lastResults[idx] || {}); box.appendChild(d.firstChild);
+      return;
+    }
+    var form = t.closest ? t.closest(".sf-box") : null;
+    if (!form || !(t.classList.contains("sf-send") || t.classList.contains("sf-check"))) return;
+    var r = lastResults[Number(form.closest(".st-panel").id.replace("stp", ""))] || {}, msg = form.querySelector(".sf-msg");
+    var code = form.querySelector(".sf-code").value.trim().toUpperCase(), pin = form.querySelector(".sf-pin").value.trim();
+    function bad(m) { msg.className = "rq-msg bad"; msg.textContent = m; }
+    if (!/^[A-Z]{3}-\d{3,4}$/.test(code)) return bad("Isulat ang tamang Tracker code, hal. SFD-012.");
+    if (!/^\d{4}$/.test(pin)) return bad("Ang PIN ay 4 na numero.");
+    var base = { code: code, pin: pin, listName: r.n, listSchool: r.s || "" };
+    if (t.classList.contains("sf-check")) {
+      t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Sinusuri ang PIN...";
+      postJSON(Object.assign({ action: "selfcheck" }, base)).then(function (res) {
+        t.disabled = false;
+        if (res && res.ok) { msg.textContent = ""; var s2 = form.querySelector(".sf-step2"); s2.innerHTML = sfStep2(res, r); s2.hidden = false; }
+        else bad((res && res.msg) || "Hindi nasuri. Subukan ulit.");
+      }).catch(function () { t.disabled = false; bad("Walang koneksyon. Subukan ulit."); });
+      return;
+    }
+    var nm = cleanName(form.querySelector(".sf-name").value), nomid = form.querySelector(".sf-nomid").checked;
+    var sc = form.querySelector(".sf-school").value.replace(/\s+/g, " ").trim(), con = form.querySelector(".sf-con").value;
+    if (!nameOk(nm)) return bad("Isulat ang buong pangalan.");
+    if (nm.split(" ").length === 2 && !nomid) return bad("Dalawang salita lang ang pangalan. Isama ang middle name, o lagyan ng tsek ang 'Wala akong middle name'.");
+    var dist = ""; SCHOOLS.forEach(function (x) { if (plain(x.school) === plain(sc)) { dist = x.district; sc = x.school; } });
+    if (sc && !dist && plain(sc) !== plain(r.s || "")) return bad("Piliin ang school mula sa listahan (mag-type at pumili).");
+    t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan...";
+    postJSON(Object.assign({ action: "selffix", newName: nm, noMiddle: nomid, newSchool: sc, newDistrict: dist, contract: con, contractDate: form.querySelector(".sf-cdate").value }, base))
+      .then(function (res) {
+        t.disabled = false;
+        if (res && res.ok && res.status === "fixed") {
+          msg.className = "rq-msg ok"; msg.innerHTML = "Naayos na! " + esc(res.changes.join("; ")) + "." + (res.warnings && res.warnings.length ? "<br><b>Paalala:</b> " + esc(res.warnings.join(" ")) : "") + ' <a href="#menu">Bumalik sa Home</a>'; t.hidden = true; form.querySelector(".sf-pin").value = "";
+        } else if (res && res.ok) { msg.className = "rq-msg"; msg.textContent = res.msg || "Walang binago."; }
+        else bad((res && res.msg) || "Hindi na-save. Subukan ulit.");
+      }).catch(function () { t.disabled = false; bad("Walang koneksyon. Subukan ulit."); });
+  });
+  $("lkResults").addEventListener("change", function (e) {
+    var t = e.target; if (t.classList && t.classList.contains("sf-con")) { var b = t.closest(".sf-box").querySelector(".sf-conbox"); b.hidden = t.value !== "oo"; }
   });
   $("lkResults").addEventListener("change", function (e) {
     var t = e.target; if (!t.classList) return;
