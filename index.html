@@ -2560,7 +2560,7 @@
       '<label>Contract</label><select class="sf-con"><option value="">Walang babaguhin</option><option value="oo">May pirmado na akong contract</option><option value="wala">Wala pa akong contract</option></select>' +
       '<div class="sf-conbox" hidden><label>Petsa ng pirma (kung natatandaan)</label><input type="text" class="sf-cdate" maxlength="20" placeholder="hal. Nov 20, 2026"></div>' +
       '<p class="hint" style="margin:6px 0 0">Ang sinabi mo tungkol sa contract ay itatala bilang sariling sabi at ibe-verify ng Division.</p>' +
-      '<button type="button" class="primary sf-send">I-save ang ayos</button>';
+      '<button type="button" class="primary sf-send">I-save ang ayos</button><p class="rq-msg sf-msg2" role="status" aria-live="polite"></p>';
     return h;
   }
   $("lkResults").addEventListener("click", function (e) {
@@ -2573,9 +2573,9 @@
     }
     var form = t.closest ? t.closest(".sf-box") : null;
     if (!form || !(t.classList.contains("sf-send") || t.classList.contains("sf-check"))) return;
-    var r = lastResults[Number(form.closest(".st-panel").id.replace("stp", ""))] || {}, msg = form.querySelector(".sf-msg");
+    var r = lastResults[Number(form.closest(".st-panel").id.replace("stp", ""))] || {}, msg = (t.classList.contains("sf-send") && form.querySelector(".sf-msg2")) || form.querySelector(".sf-msg");
     var code = form.querySelector(".sf-code").value.trim().toUpperCase(), pin = form.querySelector(".sf-pin").value.trim();
-    function bad(m) { msg.className = "rq-msg bad"; msg.textContent = m; }
+    function bad(m) { msg.className = "rq-msg bad"; msg.textContent = m; try { msg.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) {} }
     if (!/^[A-Z]{3}-\d{3,4}$/.test(code)) return bad("Isulat ang tamang Tracker code, hal. SFD-012.");
     if (!/^\d{4}$/.test(pin)) return bad("Ang PIN ay 4 na numero.");
     var base = { code: code, pin: pin, listName: r.n, listSchool: r.s || "" };
@@ -2594,14 +2594,14 @@
     if (nm.split(" ").length === 2 && !nomid) return bad("Dalawang salita lang ang pangalan. Isama ang middle name, o lagyan ng tsek ang 'Wala akong middle name'.");
     var dist = ""; SCHOOLS.forEach(function (x) { if (plain(x.school) === plain(sc)) { dist = x.district; sc = x.school; } });
     if (sc && !dist && plain(sc) !== plain(r.s || "")) return bad("Piliin ang school mula sa listahan (mag-type at pumili).");
-    t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan... Maghintay po ng hanggang 1 minuto at huwag pindutin ulit.";
+    t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan... Maghintay po ng hanggang 1 minuto at huwag pindutin ulit."; try { msg.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) {}
     var sfDone = false, sfTimer = setTimeout(function () { if (sfDone) return; sfDone = true; t.disabled = false; msg.className = "rq-msg bad"; msg.textContent = "Matagal ang sagot. Baka na-save na ito: tingnan ulit ang status mo mamaya bago subukan ulit."; }, 90000);
     postJSON(Object.assign({ action: "selffix", newName: nm, noMiddle: nomid, newSchool: sc, newDistrict: dist, contract: con, contractDate: form.querySelector(".sf-cdate").value }, base))
       .then(function (res) {
         if (sfDone) return; sfDone = true; clearTimeout(sfTimer);
         t.disabled = false;
         if (res && res.ok && res.status === "fixed") {
-          msg.className = "rq-msg ok"; msg.innerHTML = "Naayos na! " + esc(res.changes.join("; ")) + "." + (res.warnings && res.warnings.length ? "<br><b>Paalala:</b> " + esc(res.warnings.join(" ")) : "") + ' <a href="#menu">Bumalik sa Home</a>'; t.hidden = true; form.querySelector(".sf-pin").value = "";
+          try { msg.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) {} msg.className = "rq-msg ok"; msg.innerHTML = "Naayos na! " + esc(res.changes.join("; ")) + "." + (res.warnings && res.warnings.length ? "<br><b>Paalala:</b> " + esc(res.warnings.join(" ")) : "") + ' <a href="#menu">Bumalik sa Home</a>'; t.hidden = true; form.querySelector(".sf-pin").value = "";
         } else if (res && res.ok) { msg.className = "rq-msg"; msg.textContent = res.msg || "Walang binago."; }
         else bad((res && res.msg) || "Hindi na-save. Subukan ulit.");
       }).catch(function () { if (sfDone) return; sfDone = true; clearTimeout(sfTimer); t.disabled = false; bad("Walang koneksyon. Subukan ulit."); });
