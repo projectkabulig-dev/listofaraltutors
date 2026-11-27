@@ -168,6 +168,8 @@
   .tiles .tile .go { padding-top: 8px; font-size: 0.95rem; }
   .tile.fbk .ico { background: #efe1f7; color: #6b2a99; }
   .tile.fbk .go { color: #6b2a99; }
+  .tile.mat .ico { background: #d9eefb; color: #0b5d8a; }
+  .tile.mat .go { color: #0b5d8a; }
   .tile {
     display: flex; flex-direction: column; gap: 10px;
     background: #fff; color: var(--ink); text-decoration: none;
@@ -602,6 +604,16 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
         </span>
       </a>
+      <a class="tile mat" id="tileMaterials" href="https://tinyurl.com/aralmaterialsv2" target="_blank" rel="noopener noreferrer">
+        <span class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v4M10 13h4"/></svg>
+        </span>
+        <strong>Materyales sa Reading at Numeracy</strong>
+        <span class="desc">Buksan ang mga materyales, worksheets at activity sheets para sa reading at numeracy. Magbubukas ito sa bagong tab.</span>
+        <span class="go">Buksan ang mga materyales
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+        </span>
+      </a>
       <a class="tile vid" id="tileVideos" href="https://projectkabulig-dev.github.io/aral-tutor-videos1/" target="_blank" rel="noopener noreferrer">
         <span class="ico" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M10 9l5 3-5 3z"/></svg>
@@ -785,6 +797,7 @@
           <input type="text" id="atmName" autocomplete="name">
           <p class="name-hint" id="atmHint" aria-live="polite"></p>
           <div class="suggest" id="atmSuggest"></div>
+          <label class="sf-chk" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="atmNoMid"> Wala akong middle name</label>
           <div class="error" id="atmNameErr" role="alert"></div>
         </div>
         <div class="field">
@@ -910,6 +923,7 @@
         <input type="text" id="fullName" name="fullName" autocomplete="name" aria-describedby="nameErr nameHint">
         <div class="name-hint" id="nameHint" aria-live="polite" style="margin-top:6px"></div>
         <div class="suggest" id="nameSuggest"></div>
+        <label class="sf-chk" style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="regNoMid"> Wala akong middle name</label>
         <div class="error" id="nameErr" role="alert"></div>
       </div>
 
@@ -1159,6 +1173,18 @@
     return words.length >= 2;
   }
   function cleanName(value) { return String(value || "").trim().replace(/\s+/g, " "); }
+
+  // Patakaran: ang may FULL middle name ang pangalang sinusunod. Ang kuwit at tuldok ay hindi binibilang.
+  // Ibinabalik ang mensahe ng problema, o "" kung tama.
+  function nameRule(value, noMiddle) {
+    var w = cleanName(value).replace(/,/g, " ").split(" ").filter(function (x) { return /[A-Za-z\u00C0-\u024F]/.test(x); });
+    if (w.length < 2) return "Isulat ang buong pangalan: First name, Middle name, Last name.";
+    if (w.length === 2) return noMiddle ? "" : "Dalawang salita lang ang pangalan. Isulat ang FULL middle name, o lagyan ng tsek ang 'Wala akong middle name'.";
+    for (var i = 1; i < w.length - 1; i++) {
+      if (w[i].replace(/\./g, "").length <= 1) return "Ang middle name ay hindi dapat initial lang (" + w[i] + "). Isulat ang buong middle name.";
+    }
+    return "";
+  }
 
   function postJSON(payload) {
     // text/plain avoids a CORS preflight, which Apps Script does not answer.
@@ -1721,8 +1747,9 @@
     var selected = regSchool.selected();
     var problem = false;
 
-    if (!nameOk(nameEl.value)) {
-      $("nameErr").textContent = "Ilagay ang buong pangalan (first at last name man lang).";
+    var regRule = nameRule(nameEl.value, $("regNoMid").checked);
+    if (regRule) {
+      $("nameErr").textContent = regRule;
       nameEl.setAttribute("aria-invalid", "true");
       nameEl.focus(); problem = true;
     }
@@ -1746,6 +1773,7 @@
 
     var payload = {
       fullName: cleanName(nameEl.value),
+      noMiddle: $("regNoMid").checked,
       sex: sexEl.value,
       school: selected.school,
       district: selected.district,
@@ -2200,7 +2228,8 @@
     ["atmNameErr","atmCardErr","atmBankErr","atmAcctErr","atmAcct2Err"].forEach(function (id) { $(id).textContent = ""; });
     var bad = null;
     function fail(id, msg, focusId) { $(id).textContent = msg; if (!bad) bad = focusId; }
-    if (!nameOk($("atmName").value)) fail("atmNameErr", "Isulat ang buong pangalan: First name, Middle name, Last name.", "atmName");
+    var atmRule = nameRule($("atmName").value, $("atmNoMid").checked);
+    if (atmRule) fail("atmNameErr", atmRule, "atmName");
     if (!nameOk($("atmCard").value)) fail("atmCardErr", "Ilagay ang pangalan na nakasulat sa ATM card.", "atmCard");
     if (!$("atmBank").value) fail("atmBankErr", "Piliin ang bank.", "atmBank");
     else if ($("atmBank").value === "Iba pa" && cleanName($("atmBankOther").value).length < 2) fail("atmBankErr", "Isulat ang pangalan ng bank.", "atmBankOther");
@@ -2254,7 +2283,7 @@
     var d = atmCollect();
     atmSending = true; $("atmSubmit").disabled = true; $("atmSubmit").textContent = "Sine-save...";
     $("atmStatus").className = "status"; $("atmStatus").textContent = "";
-    postJSON({ action: "atm", fullName: d.fullName, cardName: d.cardName, bank: d.bank, bankOther: d.bankOther, account: d.account, level: d.level, rows: d.rows })
+    postJSON({ action: "atm", noMiddle: $("atmNoMid").checked, fullName: d.fullName, cardName: d.cardName, bank: d.bank, bankOther: d.bankOther, account: d.account, level: d.level, rows: d.rows })
     .then(function (res) {
       if (res && res.ok) { atmData = d; atmResult = res; atmShowDone(); return; }
       if (res && res.duplicate) {
@@ -2480,7 +2509,8 @@
       '<option value="alisin">Alisin ang pangalang ito</option>' +
       '<option value="iba">Iba pa</option></select>' +
       '<div class="rq-keepbox"><label>Alin ang tamang pangalan?</label><select class="rq-pick">' + sel + '</select>' +
-      '<input type="text" class="rq-keep" placeholder="O i-type ang tamang buong pangalan" maxlength="120" style="margin-top:6px"></div>' +
+      '<input type="text" class="rq-keep" placeholder="O i-type ang tamang buong pangalan (may FULL middle name)" maxlength="120" style="margin-top:6px">' +
+      '<label class="sf-chk" style="display:flex;gap:8px;align-items:center;margin-top:6px"><input type="checkbox" class="rq-nomid"> Walang middle name ang tamang pangalan</label></div>' +
       '<label>Tala (puwedeng iwan na blangko, kailangan sa "Iba pa")</label><textarea class="rq-note" rows="2" maxlength="300"></textarea>' +
       '<input type="text" class="rq-hp" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">' +
       '<button type="button" class="primary rq-send">Ipadala ang hiling</button><p class="rq-msg" role="status" aria-live="polite"></p></div>';
@@ -2500,10 +2530,11 @@
       var type = form.querySelector(".rq-type").value, keep = (form.querySelector(".rq-keep").value || form.querySelector(".rq-pick").value || "").trim();
       var note = form.querySelector(".rq-note").value, msg = form.querySelector(".rq-msg");
       msg.className = "rq-msg";
-      if ((type === "doble" || type === "spelling") && !nameOk(keep)) { msg.className = "rq-msg bad"; msg.textContent = "Isulat ang tamang buong pangalan (hindi bababa sa dalawang salita)."; return; }
+      var rqRule = (type === "doble" || type === "spelling") ? nameRule(keep, form.querySelector(".rq-nomid").checked) : "";
+      if (rqRule) { msg.className = "rq-msg bad"; msg.textContent = rqRule; return; }
       if (type === "iba" && note.trim().length < 5) { msg.className = "rq-msg bad"; msg.textContent = "Isulat sa Tala kung ano ang kailangang ayusin."; return; }
       t.disabled = true; msg.textContent = "Ipinapadala...";
-      postJSON({ action: "namereq", type: type, name: r.n, keep: type === "alisin" || type === "iba" ? "" : cleanName(keep), drop: type === "iba" ? "" : r.n, school: r.s || "", note: note, website: form.querySelector(".rq-hp").value })
+      postJSON({ action: "namereq", noMiddle: form.querySelector(".rq-nomid").checked, type: type, name: r.n, keep: type === "alisin" || type === "iba" ? "" : cleanName(keep), drop: type === "iba" ? "" : r.n, school: r.s || "", note: note, website: form.querySelector(".rq-hp").value })
         .then(function (res) {
           t.disabled = false;
           if (res && res.ok) { msg.className = "rq-msg ok"; msg.textContent = res.status === "already" ? "Naipadala na ang hiling na ito. Hintayin ang pagsusuri ni Sir Dyon." : "Naipadala na. Susuriin ito ni Sir Dyon bago ipatupad."; t.hidden = true; }
@@ -2590,8 +2621,8 @@
     }
     var nm = cleanName(form.querySelector(".sf-name").value), nomid = form.querySelector(".sf-nomid").checked;
     var sc = form.querySelector(".sf-school").value.replace(/\s+/g, " ").trim(), con = form.querySelector(".sf-con").value;
-    if (!nameOk(nm)) return bad("Isulat ang buong pangalan.");
-    if (nm.split(" ").length === 2 && !nomid) return bad("Dalawang salita lang ang pangalan. Isama ang middle name, o lagyan ng tsek ang 'Wala akong middle name'.");
+    var sfRule = nameRule(nm, nomid);
+    if (sfRule) return bad(sfRule);
     var dist = ""; SCHOOLS.forEach(function (x) { if (plain(x.school) === plain(sc)) { dist = x.district; sc = x.school; } });
     if (sc && !dist && plain(sc) !== plain(r.s || "")) return bad("Piliin ang school mula sa listahan (mag-type at pumili).");
     t.disabled = true; msg.className = "rq-msg"; msg.textContent = "Ina-update ang mga listahan... Maghintay po ng hanggang 1 minuto at huwag pindutin ulit."; try { msg.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) {}
